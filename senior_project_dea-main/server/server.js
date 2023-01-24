@@ -130,24 +130,40 @@ server.post("/questions/:type", async(req,res)=>{
 	try{
 		if(req.params.type == "all") {
 			TraditionalQuestion.find({}).then((data)=>{
-				res.send(data);
+				res.send({status:200, data:data});
 			});
 		}
 		else if(!isNaN(parseInt(req.params.type)))
 		{
 			TraditionalQuestion.find({type: req.params.type}).then((data)=>{
-				res.send(data);
+				res.send({status:200, data:data});
 			});
 		}
 		else
 		{
 			TraditionalQuestion.find({type: questionTypeMap[req.params.type]}).then((data)=>{
-				res.send(data);
+				res.send({status:200, data:data});
 			});
 		}
 	} catch(error){
 		res.sendStatus(500);
 	}
+
+server.post("/questions/create", async(req,res)=>{
+    try{
+        const question = new TraditionalQuestion({
+            qbody: req.body.question,
+            qtype: req.body.type,
+            qtopic: req.body.topic,
+            answers: req.body.options,
+            correctans: req.body.answer,
+        })
+        await question.save();
+        res.sendStatus(201);
+    } catch(error){
+        res.sendStatus(500);
+    }
+
 })
 
 server.listen(5000, ()=>{

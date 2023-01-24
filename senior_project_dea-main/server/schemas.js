@@ -16,11 +16,11 @@ const userDBSchema = new mongoose.Schema(
 
 const traditionalQuestionDBSchema = new mongoose.Schema(
     {
-		qbody:String,
-		qtype:Number,
-		qtopic:Number,
-		answers:Array,
-		correctans:String,
+		question:String,
+		type:Number,
+		topic:Number,
+		options:Array,
+		answer:String,
     },
     {
         collection: "TraditionalQuestionInfo",
