@@ -8,8 +8,7 @@ const server = express()
 const cors=require("cors")
 server.use(cors());
 server.use(express.json())
-require("./userSchema")
-require("./traditionalQuestionSchema")
+require("./schemas")
 const jwtObj = require("jsonwebtoken");
 const Jwt_secret_Obj = "sfhgfhgefugefyfeyf63r36737288gssfgusducb@#$&fvdhfdgfuf76";
 const User = mongoose.model("UserInfo")
