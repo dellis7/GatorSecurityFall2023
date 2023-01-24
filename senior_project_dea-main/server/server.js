@@ -124,6 +124,22 @@ server.put("/updatescore", async(req,res)=>{
 
 })
 
+server.post("/questions/create", async(req,res)=>{
+    try{
+        const question = new TraditionalQuestion({
+            qbody: req.body.question,
+            qtype: req.body.type,
+            qtopic: req.body.topic,
+            answers: req.body.options,
+            correctans: req.body.answer,
+        })
+        await question.save();
+        res.sendStatus(201);
+    } catch(error){
+        res.sendStatus(418);
+    }
+})
+
 server.listen(5000, ()=>{
     console.log("Server started on port 5000");
 })
