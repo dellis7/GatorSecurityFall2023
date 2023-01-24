@@ -148,15 +148,16 @@ server.post("/questions/:type", async(req,res)=>{
 	} catch(error){
 		res.sendStatus(500);
 	}
+})
 
 server.post("/questions/create", async(req,res)=>{
     try{
         const question = new TraditionalQuestion({
-            qbody: req.body.question,
-            qtype: req.body.type,
-            qtopic: req.body.topic,
-            answers: req.body.options,
-            correctans: req.body.answer,
+            question: req.body.question,
+            type: req.body.type,
+            topic: req.body.topic,
+            options: req.body.options,
+            answer: req.body.answer,
         })
         await question.save();
         res.sendStatus(201);
