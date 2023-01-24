@@ -1,6 +1,7 @@
 import React from 'react';
 import './personalProfile.css';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBTypography, MDBIcon, MDBProgress, MDBProgressBar, MDBBtn } from 'mdb-react-ui-kit';
+import { LinkContainer } from "react-router-bootstrap"
 
 export default class ProfilePage extends React.Component {
     constructor(props){
@@ -69,10 +70,13 @@ export default class ProfilePage extends React.Component {
                       <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
                         alt="Avatar" className="my-5" style={{ width: '80px' }} fluid />
                       <MDBTypography tag="h5">{fullName}</MDBTypography>
-                      <MDBCardText>CS Undergraduate</MDBCardText>  
-                      <MDBBtn outline color="light" style={{height: '36px', overflow: 'visible'}}>
-                        Edit profile
-                      </MDBBtn>             
+                      <MDBCardText>CS Undergraduate</MDBCardText>
+                      {/*LinkContainer routes the Edit Profile button /userInfo*/}
+                      <LinkContainer to="/userInfo">
+                        <MDBBtn outline color="light" style={{height: '36px', overflow: 'visible'}}>
+                          Edit profile
+                        </MDBBtn>
+                      </LinkContainer> 
                     </MDBCol>
                     <MDBCol md="8">
                       <MDBCardBody className="p-4">

@@ -16,7 +16,6 @@ export default class Login extends Component {
         e.preventDefault();
         const{email, password} = this.state;
         console.log(email, password);
-
         fetch("http://localhost:5000/login", {
       method: "POST",
       crossDomain:true,
@@ -68,9 +67,7 @@ export default class Login extends Component {
               onChange={e=>this.setState({password:e.target.value})}
             />
           </div>
-
           
-
           <div className="d-grid">
             <button type="submit" className="btn btn-primary">
               Login
