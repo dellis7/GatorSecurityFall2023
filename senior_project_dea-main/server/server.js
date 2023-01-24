@@ -15,6 +15,8 @@ const User = mongoose.model("UserInfo")
 const TraditionalQuestion = mongoose.model("TraditionalQuestionInfo")
 const mongoUrl = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.pfxgixu.mongodb.net/?retryWrites=true&w=majority`
 
+const questionTypeMap = {xss: 0};
+
 mongoose.connect(mongoUrl, {
     useNewUrlParser:true
 })
@@ -122,6 +124,30 @@ server.put("/updatescore", async(req,res)=>{
 		res.sendStatus(500);
     }
 
+})
+
+server.post("/questions/:type", async(req,res)=>{
+	try{
+		if(req.params.type == "all") {
+			TraditionalQuestion.find({}).then((data)=>{
+				res.send(data);
+			});
+		}
+		else if(!isNaN(parseInt(req.params.type)))
+		{
+			TraditionalQuestion.find({type: req.params.type}).then((data)=>{
+				res.send(data);
+			});
+		}
+		else
+		{
+			TraditionalQuestion.find({type: questionTypeMap[req.params.type]}).then((data)=>{
+				res.send(data);
+			});
+		}
+	} catch(error){
+		res.sendStatus(500);
+	}
 })
 
 server.listen(5000, ()=>{
