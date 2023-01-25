@@ -126,9 +126,9 @@ server.put("/updatescore", async(req,res)=>{
 
 })
 
-server.post("/questions/:type", async(req,res)=>{
+server.post("/questions/get/:type", async(req,res)=>{
 	try{
-		if(req.params.type == "all") {
+		if(req.params.type === "all") {
 			TraditionalQuestion.find({}).then((data)=>{
 				res.send({status:200, data:data});
 			});
