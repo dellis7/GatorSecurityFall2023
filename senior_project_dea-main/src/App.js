@@ -12,7 +12,9 @@ import UserInfo from './components/UserInfo'
 import Admin from './components/Admin'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import { useLocation } from 'react-router-dom';
+import QuestionCRUD from './components/QuestionCRUD';
 import { useEffect } from 'react';
+
 
 function App() {
   
@@ -42,6 +44,7 @@ function App() {
               <Route path="/log-out" element={<Logout />} />
               <Route path="/userInfo" element={<UserInfo />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/modify_questions" element={<QuestionCRUD/>} />
             </Routes>
           </div>
         </div>
