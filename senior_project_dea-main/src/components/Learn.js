@@ -28,7 +28,7 @@ function updateScore(token_, section_, index_){
 function checkAnswer1(){
   
   var selectionQ1 = document.getElementById("q1option1");
-  if (selectionQ1.checked == true){
+  if (selectionQ1.checked === true){
     alert("Correct!");
     updateScore(window.localStorage.getItem("token"), "learn", "0");
   }
@@ -41,7 +41,7 @@ function checkAnswer1(){
 function checkAnswer2(){
   
   var selectionQ2 = document.getElementById("q2option3");
-  if (selectionQ2.checked == true){
+  if (selectionQ2.checked === true){
     alert("Correct!");
     updateScore(window.localStorage.getItem("token"), "learn", "1");
   }
@@ -53,7 +53,7 @@ function checkAnswer2(){
 function checkAnswer3(){
   
   var selectionQ3 = document.getElementById("q3option2");
-  if (selectionQ3.checked == true){
+  if (selectionQ3.checked === true){
     alert("Correct!");
     updateScore(window.localStorage.getItem("token"), "learn", "2");
   }
@@ -65,7 +65,7 @@ function checkAnswer3(){
 function checkAnswer4(){
   
   var selectionQ4 = document.getElementById("q4option1");
-  if (selectionQ4.checked == true){
+  if (selectionQ4.checked === true){
     alert("Correct!");
     updateScore(window.localStorage.getItem("token"), "learn", "3");
   }
@@ -77,7 +77,7 @@ function checkAnswer4(){
 function checkAnswer5(){
   
   var selectionQ5 = document.getElementById("q5option3");
-  if (selectionQ5.checked == true){
+  if (selectionQ5.checked === true){
     alert("Correct!");
     updateScore(window.localStorage.getItem("token"), "learn", "4");
   }
@@ -89,7 +89,7 @@ function checkAnswer5(){
 function checkAnswer6(){
   
   var selectionQ6 = document.getElementById("q6option2");
-  if (selectionQ6.checked == true){
+  if (selectionQ6.checked === true){
     alert("Correct!");
     updateScore(window.localStorage.getItem("token"), "learn", "5");
   }
@@ -99,9 +99,7 @@ function checkAnswer6(){
 }
 
 function LearnPage() {
-
-
-
+  
   const container = {
     display: "block",
     width: "80%",

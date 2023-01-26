@@ -35,7 +35,7 @@ export default class SignUp extends Component {
     }).then((res)=>res.json())
     .then((data)=>{
       console.log(data,"userRegister");
-      if(data.status=="ok"){
+      if(data.status==="ok"){
         alert("Registration was successful");
         window.location.href="./sign-in"
       }
@@ -46,7 +46,7 @@ export default class SignUp extends Component {
       <div>
         <LoginBanner/>
         <br/>
-        <img className="gator-image" src={gator}  />
+        <img className="gator-image" src={gator} alt="Gator"/>
         <form onSubmit={this.handleSubmit}>
           <h3 className='title-name'>Sign Up</h3>
 
