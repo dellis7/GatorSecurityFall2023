@@ -11,6 +11,7 @@ import UserInfo from './components/UserInfo'
 import Admin from './components/Admin'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import { useLocation } from 'react-router-dom';
+import QuestionCRUD from './components/QuestionCRUD';
 
 function App() {
   const { pathname } = useLocation();
@@ -30,6 +31,7 @@ function App() {
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/userInfo" element={<UserInfo />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/modify_questions" element={<QuestionCRUD/>} />
             </Routes>
           </div>
         </div>
