@@ -6,6 +6,7 @@ import { LinkContainer } from "react-router-bootstrap"
 
 function MyNavbar() {
 
+/* Navbar CSS? */
 const navbarTitle = {
   color: "white",
   fontFamily: "Gluten",

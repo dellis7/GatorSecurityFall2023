@@ -42,7 +42,7 @@ export default class Admin extends React.Component {
         for(var i=0; i<user["learnscore"].length; i++){
             var message = "Incomplete"
             var textColor = "red"
-            if(user["learnscore"][i] == 1){
+            if(user["learnscore"][i] === 1){
                 message = "Complete   "
                 textColor = "limegreen"
             }
@@ -59,7 +59,7 @@ export default class Admin extends React.Component {
         for(var i=0; i<user["gamescore"].length; i++){
             var message = "Incomplete"
             var textColor = "red"
-            if(user["gamescore"][i] == 1){
+            if(user["gamescore"][i] === 1){
                 message = "Complete   "
                 textColor = "limegreen"
             }
