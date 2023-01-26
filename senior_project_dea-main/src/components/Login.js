@@ -32,7 +32,7 @@ export default class Login extends Component {
     .then((data)=>{
       console.log(data,"userRegister");
       if(data.status === "ok"){
-        alert("Login was successful");
+        alert("Login was successful!");
         window.localStorage.removeItem("token");
         window.localStorage.setItem("token", data.data);
         window.location.href="./welcome"
