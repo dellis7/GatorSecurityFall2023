@@ -150,6 +150,20 @@ server.post("/questions/get/:topic", async(req,res)=>{
 	}
 })
 
+server.delete("/questions/delete/:id", async(req,res) => {
+    try{
+        const _id = req.params.id;
+        const result = await TraditionalQuestion.findByIdAndDelete(_id);
+        if (result) {
+            res.sendStatus(202);
+        } else {
+            res.sendStatus(404);
+        }
+    } catch(error) {
+        res.sendStatus(500);
+    }
+})
+
 server.post("/questions/create", async(req,res)=>{
     try{
         const question = new TraditionalQuestion({
