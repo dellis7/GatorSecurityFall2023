@@ -126,22 +126,22 @@ server.put("/updatescore", async(req,res)=>{
 
 })
 
-server.post("/questions/get/:type", async(req,res)=>{
+server.post("/questions/get/:topic", async(req,res)=>{
 	try{
-		if(req.params.type === "all") {
+		if(req.params.topic === "all") {
 			TraditionalQuestion.find({}).then((data)=>{
 				res.send({status:200, data:data});
 			});
 		}
-		else if(!isNaN(parseInt(req.params.type)))
+		else if(!isNaN(parseInt(req.params.topic)))
 		{
-			TraditionalQuestion.find({type: req.params.type}).then((data)=>{
+			TraditionalQuestion.find({topic: req.params.topic}).then((data)=>{
 				res.send({status:200, data:data});
 			});
 		}
 		else
 		{
-			TraditionalQuestion.find({type: questionTypeMap[req.params.type]}).then((data)=>{
+			TraditionalQuestion.find({topic: questionTypeMap[req.params.topic]}).then((data)=>{
 				res.send({status:200, data:data});
 			});
 		}
