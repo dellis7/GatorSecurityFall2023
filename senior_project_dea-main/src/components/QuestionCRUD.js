@@ -49,23 +49,6 @@ function QuestionCRUD() {
     setOptions(filter);
   };
 
-  const handleSubmitTest = () => {
-    console.log(question);
-    console.log(topic);
-    console.log(type);
-    console.log(options);
-    console.log(answer);
-    console.log(
-      JSON.stringify({
-        question: question,
-        type: type,
-        topic: topic,
-        options: options,
-        answer: answer,
-      })
-    );
-  };
-
   const handleSubmit = () => {
     fetch("http://localhost:5000/questions/create", {
       method: "POST",
@@ -197,7 +180,7 @@ function QuestionCRUD() {
 
                 <div className="container">
                   {options.map((option, index) => (
-                    <div className="row row-cols-2">
+                    <div key="index" className="row row-cols-2">
                       <div className="col-11">
                         <textarea
                           className="form-control"
