@@ -4,7 +4,7 @@ import MyWelcomePage from './components/Welcome';
 import LearnPage from './components/Learn';
 import GamePage from './components/Game';
 import ProfilePage from './components/Profile';
-import { BrowserRouter as Router, Routes, Route} from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import Login from './components/Login'
 import SignUp from './components/SignUp'
 import Logout from './components/Logout'
@@ -25,7 +25,7 @@ function App() {
     if(window.localStorage.getItem("token") === null) {
       window.location.href = "./sign-in";
     }
-  }, [useLocation().key]);
+  }, [pathname]);
   
   return (
     <>

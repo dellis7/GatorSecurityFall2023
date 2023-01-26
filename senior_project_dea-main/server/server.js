@@ -18,7 +18,7 @@ const TraditionalQuestion = mongoose.model("TraditionalQuestionInfo")
 //Database URL
 const mongoUrl = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.pfxgixu.mongodb.net/?retryWrites=true&w=majority`
 
-const questionTypeMap = {xss: 0};
+const questionTypeMap = {other: 0, input_validation: 1, encoding_escaping: 2, xss: 3, sql_injection: 4, crypto: 5, auth: 6};
 
 mongoose.connect(mongoUrl, {
     useNewUrlParser:true
@@ -130,7 +130,6 @@ server.put("/updatescore", async(req,res)=>{
     }
 })
 
-//TODO - Can we make the error messages more specific? Such as if all fails, do a console.log that says no questions in database?
 //POSTing (in functionality GETting) questions in database based on :topic value
 server.post("/questions/get/:topic", async(req,res)=>{
 	try{
@@ -141,13 +140,14 @@ server.post("/questions/get/:topic", async(req,res)=>{
                 //Display all question data
 				res.send({status:200, data:data});
 			});
-        //Else if is not not a number, parse :topic into an integer
+        //Else if the topic is a numerical id
 		} else if(!isNaN(parseInt(req.params.topic))) {
             //Find specific question information in database
 			TraditionalQuestion.find({topic: req.params.topic}).then((data)=>{
                 //Display the question data
 				res.send({status:200, data:data});
 			});
+        //Else the topic is a string identifier
 		} else {
 			TraditionalQuestion.find({topic: questionTypeMap[req.params.topic]}).then((data)=>{
 				res.send({status:200, data:data});
