@@ -18,7 +18,7 @@ const TraditionalQuestion = mongoose.model("TraditionalQuestionInfo")
 //Database URL
 const mongoUrl = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.pfxgixu.mongodb.net/?retryWrites=true&w=majority`
 
-const questionTypeMap = {other: 0, input_validation: 1, encoding_escaping: 2, xss: 3, sql_injection: 4, crypto: 5, auth: 6};
+const questionTopicMap = {other: 0, input_validation: 1, encoding_escaping: 2, xss: 3, sql_injection: 4, crypto: 5, auth: 6};
 
 mongoose.connect(mongoUrl, {
     useNewUrlParser:true
@@ -149,7 +149,7 @@ server.post("/questions/get/:topic", async(req,res)=>{
 			});
         //Else the topic is a string identifier
 		} else {
-			TraditionalQuestion.find({topic: questionTypeMap[req.params.topic]}).then((data)=>{
+			TraditionalQuestion.find({topic: questionTopicMap[req.params.topic]}).then((data)=>{
 				res.send({status:200, data:data});
 			});
 		}
