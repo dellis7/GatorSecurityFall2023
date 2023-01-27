@@ -113,18 +113,24 @@ server.post("/allUsers", async(req,res)=>{
 
 //PUTting a user's updated score in the database
 server.put("/updatescore", async(req,res)=>{
-    const {token,section,index} = req.body;
-    //console.log("/updatescore put called in server.js")
     try{
-        const user = jwtObj.verify(token, Jwt_secret_Obj);
-        const uEmail = user.email;
-        let field = section + "score." + index;
-        let updateQuery= {};
-        updateQuery[field] = 1
-        const result = await User.updateOne({email: uEmail}, {$set: updateQuery});
-        //console.log("result: ");
-        //console.log(result);
-		res.sendStatus(200);
+        //Retrieve the question being answered
+        const questionData = await TraditionalQuestion.findById(req.body.qid)
+        //Check to see if they answered it correctly
+        if(questionData.answer === req.body.answer) {
+            const user = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+            const uEmail = user.email;
+            
+            //TODO: Fix the score schema
+            //let field = section + "score." + index;
+            //let updateQuery= {};
+            //updateQuery[field] = 1
+            //const result = await User.updateOne({email: uEmail}, {$set: updateQuery});
+            
+            res.send({status: 200, data:{correct:true}});
+        } else {
+            res.send({status: 200, data:{correct:false}});
+        }
     } catch(error) {
 		res.sendStatus(500);
     }

@@ -5,6 +5,9 @@ import Tab from 'react-bootstrap/Tab';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
+import TradQuestion from './TraditionalQuestion'
+import { IDLE_FETCHER } from '@remix-run/router';
+
 function updateScore(token_, section_, index_){
   fetch("http://localhost:5000/updatescore", {
           method: "PUT",
@@ -171,6 +174,42 @@ function LearnPage() {
   const [answer6, setSelection6] = React.useState('');
   const onChange6 = e => {
     setSelection6(e.target.value)
+  }
+
+  const [questionData, setQuestionData] = React.useState('');
+  const getQuestions = (topic_) => {
+    fetch("http://localhost:5000/questions/get/" + topic_, {
+      method: "POST",
+      crossDomain:true,
+      headers:{
+          "Content-Type":"application/json",
+          Accept:"application/json",
+          "Access-Control-Allow-Origin":"*",
+      },
+      body:JSON.stringify({}),
+      }).then((res)=>res.json())
+      .then((data)=>{
+        setQuestionData(data);
+      })
+  }
+  if(questionData.length === 0) {
+    getQuestions("all");
+  }
+
+  const createQuestions = (data) => {
+    if(data.length === 0) return (<></>);
+
+    let questions = [];
+
+    for(let i = 0; i < data.data.length; i++) {
+      questions.push((
+      <>
+        <TradQuestion qdata={data.data[i]} num={i + 1} />
+      </>
+      ))
+    }
+  
+    return questions;
   }
 
   return (
@@ -542,6 +581,7 @@ function LearnPage() {
           Sourced from CodePath and TechTarget.
         </Tab>
       </Tabs>
+      {createQuestions(questionData)}
     </div>
   );
 }
