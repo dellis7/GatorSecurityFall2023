@@ -10,7 +10,9 @@ export default class ProfilePage extends React.Component {
         userInfo: null
       };
     }
+    
     componentDidMount(){
+      //See server.js for server.post(/userInfo)
       fetch("http://localhost:5000/userInfo", 
         {
           method: "POST",
@@ -29,14 +31,16 @@ export default class ProfilePage extends React.Component {
           this.setState({traditionalQuestionCount: data.data.traditionalQuestionCount})
         });
     }
+
+    //Everything after this has to do with web page rendering
     render(){
+      //CSS For Profile Page
       const container = {
         display: "block",        
         marginLeft: "auto",
         marginRight: "auto",        
         fontFamily:"Gluten",
         paddingTop: "50px"
-    
       };
       const heading = {
         fontFamily: "Gluten",
@@ -44,12 +48,14 @@ export default class ProfilePage extends React.Component {
         fontSize: "40px",
         paddingBottom: "10px",
         textDecorationLine: "underline"
-    
       };
       
+      //If userInfo doesn't exist, return a blank page
       if(this.state.userInfo == null){
         return <div></div>
       }
+
+      //Set values for return section
       var fullName = this.state.userInfo["fname"] + " " + this.state.userInfo["lname"];
       var email = this.state.userInfo["email"];
       var gameScore = this.state.userInfo["gamescore"].reduce((a, b) => a + b, 0);
@@ -58,8 +64,8 @@ export default class ProfilePage extends React.Component {
       var learnScore = this.state.userInfo["learnscore"].length;
       var learnMax = this.state.traditionalQuestionCount;
       var learnPercentage = Math.floor(learnScore/learnMax * 100);
-      console.log(learnMax);
-      console.log(this.state);
+
+      //What is rendered to the webpage
       return (
         <section style={container}>
           <h4 style={heading}>My Profile</h4>
@@ -74,7 +80,7 @@ export default class ProfilePage extends React.Component {
                         alt="Avatar" className="my-5" style={{ width: '80px' }} fluid />
                       <MDBTypography tag="h5">{fullName}</MDBTypography>
                       <MDBCardText>CS Undergraduate</MDBCardText>
-                      {/*LinkContainer routes the Edit Profile button /userInfo*/}
+                      {/*LinkContainer adds routing to the Edit Profile button. Sends the user to /userInfo*/}
                       <LinkContainer to="/userInfo">
                         <MDBBtn outline color="light" style={{height: '36px', overflow: 'visible'}}>
                           Edit profile
@@ -122,6 +128,5 @@ export default class ProfilePage extends React.Component {
           </MDBContainer>
       </section>
     );
-    }
-    
+  }
 }

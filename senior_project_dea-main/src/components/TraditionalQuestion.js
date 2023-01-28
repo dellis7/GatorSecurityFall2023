@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 function TradQuestion({ qdata, num }) {
+
     const spaceAfterQ = {
     paddingTop: "10px"
     }
@@ -30,7 +31,6 @@ function TradQuestion({ qdata, num }) {
             </>   
             ));
         }
-
         return answerOptions;
     }
 
@@ -48,14 +48,14 @@ function TradQuestion({ qdata, num }) {
                 qid:qdata._id,
                 answer:answer,
             }),
-            }).then((res)=>res.json())
-            .then((data)=>{
-                if(data.data.correct === true) {
-                    alert("Correct!");
-                }
-                else {
-                    alert("Incorrect. Try again!");
-                }
+        }).then((res)=>res.json())
+        .then((data)=>{
+            if(data.data.correct === true) {
+                alert("Correct!");
+            }
+            else {
+                alert("Incorrect. Try again!");
+            }
         })
     }
 

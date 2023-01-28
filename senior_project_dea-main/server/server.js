@@ -77,7 +77,7 @@ server.post("/login", async(req,res)=> {
     res.json({status:"error", error:"Invalid password."})
 })
 
-//POSTing existing user info (User Login)
+//POSTing existing user info (Information that appears on /myprofile)
 server.post("/userInfo", async(req,res)=>{
     const {token} = req.body;
     //console.log("hello")
@@ -99,6 +99,35 @@ server.post("/userInfo", async(req,res)=>{
         });
     } catch(error) {
 		res.sendStatus(500);
+    }
+})
+
+//POSTing existing user info (Edit user profile)
+server.put("/user/update/:id", async(req,res) => {
+    try{
+        //Set _id to the value given in url under :id
+        const _id = req.params.id;
+
+        const result = await User.findByIdAndUpdate(_id, {
+            //Dynamically changes values based on the JSON data in the PUT request
+            fname: req.body.fname,
+            lname: req.body.lname//,
+            //email: req.body.email,
+            //password: req.body.password
+        });
+        //If True
+        if (result) {
+            //Send Status Code 202 (Accepted)
+            res.sendStatus(202);
+        //Else False
+        } else {
+            //Send Status Code 404 (Not Found)
+            res.sendStatus(404);
+        }
+    //Catch any errors
+    } catch(error) {
+        //Send Status Code 500 (Internal Server Error)
+        res.sendStatus(500);
     }
 })
 
