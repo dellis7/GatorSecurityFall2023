@@ -86,7 +86,13 @@ server.post("/userInfo", async(req,res)=>{
         //console.log(user)
         const uEmail = user.email;
         User.findOne({email: uEmail}).then((data)=>{
-            res.send({status:"ok", data: data});
+            TraditionalQuestion.count().then((count)=>{
+                var allData = {traditionalQuestionCount: count, dbUserData: data};
+                res.send({status:"ok", data:allData});
+            })
+            .catch((error)=>{
+                res.send({status: "error", data:error});
+            });
         })
         .catch((error)=>{
             res.send({status: "error", data:error});
@@ -140,8 +146,8 @@ server.post("/allUsers", async(req,res)=>{
     }
 })
 
-//PUTting a user's updated score in the database
-server.put("/updatescore", async(req,res)=>{
+//PUTting a user's updated Learn score in the database
+server.put("/updatelearnscore", async(req,res)=>{
     try{
         //Retrieve the question being answered
         const questionData = await TraditionalQuestion.findById(req.body.qid)
@@ -150,16 +156,49 @@ server.put("/updatescore", async(req,res)=>{
             const user = jwtObj.verify(req.body.token, Jwt_secret_Obj);
             const uEmail = user.email;
             
-            //TODO: Fix the score schema
-            //let field = section + "score." + index;
-            //let updateQuery= {};
-            //updateQuery[field] = 1
-            //const result = await User.updateOne({email: uEmail}, {$set: updateQuery});
+            //Get existing scores
+            User.findOne({email: uEmail}).then((dbUser) => {
+                var existingRawScores = dbUser["learnscore"];
+
+                var existingScores = [];
+                if(existingRawScores !== undefined) {
+                    existingScores = existingRawScores;
+                }
+
+                //If an existing entry for the question is not found, add it
+                if(existingScores.find(element => element === req.body.qid) === undefined) {
+                    existingScores.push(req.body.qid);
+                    User.updateOne({email: uEmail}, {$set: {"learnscore": existingScores}});
+                }
+            });
             
             res.send({status: 200, data:{correct:true}});
         } else {
             res.send({status: 200, data:{correct:false}});
         }
+    } catch(error) {
+		res.sendStatus(500);
+    }
+})
+
+//PUTting a user's updated score in the database (now used only for the Game section)
+server.put("/updatescore", async(req,res)=>{
+    const {token,section,index} = req.body;
+    if(section === "learn"){
+        res.sendStatus(301);
+        return;
+    }
+     //console.log("/updatescore put called in server.js")
+    try{
+        const user = jwtObj.verify(token, Jwt_secret_Obj);
+        const uEmail = user.email;
+        let field = section + "score." + index;
+        let updateQuery= {};
+        updateQuery[field] = 1
+        const result = await User.updateOne({email: uEmail}, {$set: updateQuery});
+        //console.log("result: ");
+        //console.log(result);
+		res.sendStatus(200);
     } catch(error) {
 		res.sendStatus(500);
     }
@@ -204,6 +243,18 @@ server.delete("/questions/delete/:id", async(req,res) => {
         //Set result to true or false depending on if the question 
         //was successfully found and deleted by its id
         const result = await TraditionalQuestion.findByIdAndDelete(_id);
+        
+        //Find all users with references to the old questions and delete the old questions
+        const usersWithOldQuestions = await User.find({learnscore: _id});
+        for(let i = 0; i < (await usersWithOldQuestions).length; i++) {
+            var user = usersWithOldQuestions[i];
+            var index = user.learnscore.indexOf(_id);
+            if(index > -1) {
+                user.learnscore.splice(index, 1);
+                await User.findOneAndUpdate({_id: user._id}, {$set: {learnscore:user.learnscore}});
+            }
+        }
+
         //If True
         if (result) {
             //Send Status Code 202 (Accepted)
