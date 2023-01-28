@@ -25,7 +25,8 @@ export default class ProfilePage extends React.Component {
         }),
         }).then((res)=>res.json())
         .then(data=>{
-          this.setState({userInfo: data.data});
+          this.setState({userInfo: data.data.dbUserData});
+          this.setState({traditionalQuestionCount: data.data.traditionalQuestionCount})
         });
     }
     render(){
@@ -54,9 +55,11 @@ export default class ProfilePage extends React.Component {
       var gameScore = this.state.userInfo["gamescore"].reduce((a, b) => a + b, 0);
       var gameMax = this.state.userInfo["gamescore"].length;
       var gamePercentage = Math.floor(gameScore/gameMax * 100);
-      var learnScore = this.state.userInfo["learnscore"].reduce((a, b) => a + b, 0);
-      var learnMax = this.state.userInfo["learnscore"].length;
+      var learnScore = this.state.userInfo["learnscore"].length;
+      var learnMax = this.state.traditionalQuestionCount;
       var learnPercentage = Math.floor(learnScore/learnMax * 100);
+      console.log(learnMax);
+      console.log(this.state);
       return (
         <section style={container}>
           <h4 style={heading}>My Profile</h4>

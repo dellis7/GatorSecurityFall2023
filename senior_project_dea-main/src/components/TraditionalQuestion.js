@@ -1,49 +1,9 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import Tab from 'react-bootstrap/Tab';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 function TradQuestion({ qdata, num }) {
-    const container = {
-    display: "block",
-    width: "80%",
-    marginLeft: "auto",
-    marginRight: "auto",
-    paddingTop: "50px"
-
-    };
-
-    const heading = {
-    fontFamily: "Gluten",
-    color: "#2613fe",
-    fontSize: "40px",
-    paddingBottom: "50px",
-    textDecorationLine: "underline"
-
-    };
-
-    const tabs = {
-    fontFamily: "Gluten",
-    color: "#2613fe"
-
-    };
-
-    const tab = {
-
-    padding: "30px",
-    boxShadow: "0 3px 10px rgba(0,0,0,.3)",
-    fontFamily: "Gluten",
-    marginBottom: "80px"
-
-    };
-
-    const list = {
-    listStyleType: "circle",
-    listStylePosition: "inside",
-    display: "inline-block"
-    };
-
     const spaceAfterQ = {
     paddingTop: "10px"
     }
@@ -75,7 +35,7 @@ function TradQuestion({ qdata, num }) {
     }
 
     const checkAnswer = () => {
-        fetch("http://localhost:5000/updatescore", {
+        fetch("http://localhost:5000/updatelearnscore", {
             method: "PUT",
             crossDomain:true,
             headers:{
