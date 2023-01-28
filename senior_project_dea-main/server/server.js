@@ -18,7 +18,7 @@ const TraditionalQuestion = mongoose.model("TraditionalQuestionInfo")
 //Database URL
 const mongoUrl = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.pfxgixu.mongodb.net/?retryWrites=true&w=majority`
 
-const questionTypeMap = {xss: 0};
+const questionTopicMap = {other: 0, input_validation: 1, encoding_escaping: 2, xss: 3, sql_injection: 4, crypto: 5, auth: 6};
 
 mongoose.connect(mongoUrl, {
     useNewUrlParser:true
@@ -143,18 +143,24 @@ server.post("/allUsers", async(req,res)=>{
 
 //PUTting a user's updated score in the database
 server.put("/updatescore", async(req,res)=>{
-    const {token,section,index} = req.body;
-    //console.log("/updatescore put called in server.js")
     try{
-        const user = jwtObj.verify(token, Jwt_secret_Obj);
-        const uEmail = user.email;
-        let field = section + "score." + index;
-        let updateQuery= {};
-        updateQuery[field] = 1
-        const result = await User.updateOne({email: uEmail}, {$set: updateQuery});
-        //console.log("result: ");
-        //console.log(result);
-		res.sendStatus(200);
+        //Retrieve the question being answered
+        const questionData = await TraditionalQuestion.findById(req.body.qid)
+        //Check to see if they answered it correctly
+        if(questionData.answer === req.body.answer) {
+            const user = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+            const uEmail = user.email;
+            
+            //TODO: Fix the score schema
+            //let field = section + "score." + index;
+            //let updateQuery= {};
+            //updateQuery[field] = 1
+            //const result = await User.updateOne({email: uEmail}, {$set: updateQuery});
+            
+            res.send({status: 200, data:{correct:true}});
+        } else {
+            res.send({status: 200, data:{correct:false}});
+        }
     } catch(error) {
 		res.sendStatus(500);
     }
@@ -170,15 +176,16 @@ server.post("/questions/get/:topic", async(req,res)=>{
                 //Display all question data
 				res.send({status:200, data:data});
 			});
-        //Else if is not not a number, parse :topic into an integer
+        //Else if the topic is a numerical id
 		} else if(!isNaN(parseInt(req.params.topic))) {
             //Find specific question information in database
 			TraditionalQuestion.find({topic: req.params.topic}).then((data)=>{
                 //Display the question data
 				res.send({status:200, data:data});
 			});
+        //Else the topic is a string identifier
 		} else {
-			TraditionalQuestion.find({topic: questionTypeMap[req.params.topic]}).then((data)=>{
+			TraditionalQuestion.find({topic: questionTopicMap[req.params.topic]}).then((data)=>{
 				res.send({status:200, data:data});
 			});
 		}
