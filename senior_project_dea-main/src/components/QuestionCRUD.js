@@ -49,14 +49,15 @@ function QuestionCRUD() {
     setOptions(filter);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     fetch("http://localhost:5000/questions/create", {
       method: "POST",
       crossDomain: true,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3000",
+        "Access-Control-Allow-Origin":"*",
       },
       body: JSON.stringify({
         question: question,
@@ -66,10 +67,11 @@ function QuestionCRUD() {
         answer: answer,
       }),
     }).then(() => {
-      alert("Question has been added successfully");
+      alert("Question has been added successfully.");
     });
   };
 
+  //CSS
   const container = {
     display: "block",
     mx: "auto",
@@ -89,6 +91,7 @@ function QuestionCRUD() {
     color: "#2613fe",
   };
 
+  //This is what is rendered to the user
   return (
     <div className="container" style={container}>
       <h4 style={heading}>Add a New Question</h4>
@@ -96,36 +99,32 @@ function QuestionCRUD() {
         <div className="card-body">
           <form onSubmit={handleSubmit}>
             <div className="form-group" style={{ textAlign: "left" }}>
-              <label for="formQuestion" style={text}>
+              <label htmlFor="formQuestion" style={text}>
                 Question
               </label>
               <textarea
+                required
                 className="form-control"
                 id="formQuestion"
                 rows="2"
                 placeholder="Enter your question here"
-                onChange={(e) => {
-                  handleQuestionChange(e.target.value);
-                }}
-                required
+                onChange={(e) => {handleQuestionChange(e.target.value);}}
               ></textarea>
             </div>
             <div
               className="form-group"
               style={{ textAlign: "left", marginTop: 10 }}
             >
-              <label for="form-topic" style={text}>
+              <label htmlFor="form-topic" style={text}>
                 Topic
               </label>
               <select
+                required
                 className="form-select"
                 id="form-topic"
-                required
-                onChange={(e) => {
-                  handleTopicChange(e.target.value);
-                }}
+                onChange={(e) => {handleTopicChange(e.target.value);}}
               >
-                <option selected value="">
+                <option value="">
                   Choose a Topic
                 </option>
                 <option value="1">Input Validation</option>
@@ -140,18 +139,16 @@ function QuestionCRUD() {
               className="form-group"
               style={{ textAlign: "left", marginTop: 10 }}
             >
-              <label for="form-type" style={text}>
+              <label htmlFor="form-type" style={text}>
                 Type
               </label>
               <select
                 className="form-select"
                 id="form-type"
                 required
-                onChange={(e) => {
-                  handleTypeChange(e.target.value);
-                }}
+                onChange={(e) => {handleTypeChange(e.target.value);}}
               >
-                <option selected value="">
+                <option value="">
                   Choose Question Type
                 </option>
                 <option value="1">Text Response</option>
@@ -170,40 +167,34 @@ function QuestionCRUD() {
                     type="button"
                     className="btn btn-primary btn-sm"
                     style={{ marginLeft: 10 }}
-                    onClick={() => {
-                      handleAddOption();
-                    }}
+                    onClick={() => {handleAddOption();}}
                   >
                     +
                   </button>
                 </div>
-
                 <div className="container">
                   {options.map((option, index) => (
-                    <div key="index" className="row row-cols-2">
+                    <div key={index} className="row row-cols-2">
                       <div className="col-11">
                         <textarea
+                          required 
                           className="form-control"
                           rows="1"
                           style={{ marginTop: 10 }}
                           value={option}
                           placeholder="Enter your option here"
-                          required
-                          onChange={(e) => {
-                            handleOptionsChange(index, e.target.value);
-                          }}
-                        ></textarea>
+                          onChange={(e)=>{handleOptionsChange(index, e.target.value);}}
+                        >
+                        </textarea>
                       </div>
                       {index >= 2 && (
                         <div className="col-1">
                           <button
+                            required
                             type="button"
                             className="btn btn-danger btn-sm"
-                            required
                             style={{ marginTop: 13 }}
-                            onClick={() => {
-                              handleRemoveOption(index);
-                            }}
+                            onClick={() => {handleRemoveOption(index);}}
                           >
                             X
                           </button>
@@ -218,7 +209,7 @@ function QuestionCRUD() {
               className="form-group"
               style={{ textAlign: "left", marginTop: 10 }}
             >
-              <label for="form-answer" style={text}>
+              <label htmlFor="form-answer" style={text}>
                 Answer
               </label>
               <textarea
@@ -226,10 +217,9 @@ function QuestionCRUD() {
                 rows="1"
                 placeholder="Enter your solution to the question here"
                 required
-                onChange={(e) => {
-                  handleAnswerChange(e.target.value);
-                }}
-              ></textarea>
+                onChange={(e)=>{handleAnswerChange(e.target.value);}}
+              >
+              </textarea>
             </div>
             <button
               type="submit"

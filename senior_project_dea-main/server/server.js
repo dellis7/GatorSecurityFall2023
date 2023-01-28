@@ -101,8 +101,7 @@ server.put("/user/update/:id", async(req,res) => {
     try{
         //Set _id to the value given in url under :id
         const _id = req.params.id;
-        //Set result to true or false depending on if the question was
-        //successfully found by its id and updated
+
         const result = await User.findByIdAndUpdate(_id, {
             //Dynamically changes values based on the JSON data in the PUT request
             fname: req.body.fname,

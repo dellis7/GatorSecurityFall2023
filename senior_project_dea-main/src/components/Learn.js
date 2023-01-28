@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 import TradQuestion from './TraditionalQuestion'
-import { IDLE_FETCHER } from '@remix-run/router';
+//import { IDLE_FETCHER } from '@remix-run/router';
 
 function updateScore(token_, section_, index_){
   fetch("http://localhost:5000/updatescore", {
@@ -412,8 +412,6 @@ function LearnPage() {
                       value="Most privilege principle"
                       checked={answer4==="Most privilege principle"}
                       onChange={onChange4}
-                      
-
                     />
                     <Form.Check id="q4option3"
                       inline
@@ -422,8 +420,7 @@ function LearnPage() {
                       type={type}
                       value="Cleaning"
                       checked={answer4==="Cleaning"}
-                      onChange={onChange2}
-
+                      onChange={onChange4}
                     />
                     <Form.Check id="q4option4"
                       inline
@@ -433,7 +430,6 @@ function LearnPage() {
                       value="Sweeping"
                       checked={answer4==="Sweeping"}
                       onChange={onChange4}
-
                     />
                   </Form.Group>
                 </div>
