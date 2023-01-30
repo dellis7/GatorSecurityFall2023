@@ -65,6 +65,7 @@ function QuestionCRUD() {
         topic: topic,
         options: options,
         answer: answer,
+        token: window.localStorage.getItem("token"),
       }),
     }).then(() => {
       alert("Question has been added successfully.");
