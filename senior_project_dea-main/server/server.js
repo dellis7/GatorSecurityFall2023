@@ -74,17 +74,22 @@ server.post("/login", async(req,res)=> {
     res.json({status:"error", error:"Invalid password."})
 })
 
-//POSTing existing user info (Information that appears on /myprofile)
+//POSTing existing user info
 server.post("/userInfo", async(req,res)=>{
+    //"Grab" token from request body (req.body)
     const {token} = req.body;
-    //console.log("hello")
     try{
+        //Decode token, get email
         const user = jwtObj.verify(token, Jwt_secret_Obj);
-        //console.log(user)
+        //Set uEmail to email
         const uEmail = user.email;
+        //Find a user based on email, then data?
         User.findOne({email: uEmail}).then((data)=>{
+            //Get count of all questions
             TraditionalQuestion.count().then((count)=>{
+                //
                 var allData = {traditionalQuestionCount: count, dbUserData: data};
+                //
                 res.send({status:"ok", data:allData});
             })
             .catch((error)=>{
