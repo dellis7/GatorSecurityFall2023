@@ -86,6 +86,16 @@ export default class WelcomePage extends React.Component {
         <h5 style={title}>The Creators</h5>
         <p style={caption}>This website was created by University of Florida students Daymao Silva, Erick Gonzalez, and Annalina Becker for their Fall 2022 senior project. They were advised under Professor Cheryl Resch.</p>
       </MDBCarouselItem>
+      <MDBCarouselItem        
+        className='w-100 d-block'
+        itemId={3}
+        src='./welcomeBkgdOrange.png'
+        alt='...'
+      >
+        <img src='./creatorImg.png' style={image} alt="Lightbulb"></img>
+        <h5 style={title}>The Creators</h5>
+        <p style={caption}>Development of this website was continued in Spring 2023 by University of Florida seniors Kerry Hannigan, Dylan Tosh, Connor Wojtak, Jacob Boney, and Brian Hoblin under Professor Cheryl Resch.</p>
+      </MDBCarouselItem>
     </MDBCarousel>
   );
 }}
