@@ -67,8 +67,19 @@ function QuestionCRUD() {
         answer: answer,
         token: window.localStorage.getItem("token"),
       }),
-    }).then(() => {
-      alert("Question has been added successfully.");
+    }).then((response) => {
+      if(response.status === 500)
+      {
+        alert("Internal server error. Please try again")
+      }
+      else if (response.status === 422)
+      {
+        alert("Please ensure all fields are properly filled out and try again.")
+      }
+      else if (response.status === 201)
+      {
+        alert("Question has been added successfully.");
+      }
     });
   };
 
