@@ -94,7 +94,7 @@ export default class WelcomePage extends React.Component {
       >
         <img src='./creatorImg.png' style={image} alt="Lightbulb"></img>
         <h5 style={title}>The Creators</h5>
-        <p style={caption}>Development of this website was continued in Spring 2023 by University of Florida Seniors Kerry Hannigan, Dylan Tosh, Connor Wojtak, and Jacob Boney under Professor Cheryl Resch.</p>
+        <p style={caption}>Development of this website was continued in Spring 2023 by University of Florida seniors Kerry Hannigan, Dylan Tosh, Connor Wojtak, and Jacob Boney under Professor Cheryl Resch.</p>
       </MDBCarouselItem>
     </MDBCarousel>
   );
