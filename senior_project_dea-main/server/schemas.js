@@ -8,6 +8,7 @@ const userDBSchema = new mongoose.Schema(
         password:String,
         learnscore:Array,
         gamescore: { type: Array, default: [0,0,0,0,0] },
+        isAdmin:{type:Boolean, default:false},
     },
     {
         collection: "UserInfo",

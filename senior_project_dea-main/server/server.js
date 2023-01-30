@@ -44,7 +44,6 @@ server.post("/register", async(req, res)=>{
             lname,
             email,
             password:encryptedPass,
-            score
         });
         res.send({status:"ok"})
     } catch(error) {
@@ -131,6 +130,25 @@ server.put("/user/update/:id", async(req,res) => {
 
 //POSTing (in functionality GETting) all user information in the database
 server.post("/allUsers", async(req,res)=>{
+    //Check administrative status
+    try {
+        if(req.body.token === null || req.body.token === undefined) {
+            res.send({status: 403});
+            return;
+        }
+        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminEmail = adminFromToken.email;
+        var admin = await User.findOne({email: adminEmail});
+        if(admin.isAdmin !== true) {
+            res.send({status: 403});
+            return;
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error});
+        return;
+    }
+
     //console.log("/allUsers")
     try{
         User.find({}).then((data)=>{
@@ -234,6 +252,25 @@ server.post("/questions/get/:topic", async(req,res)=>{
 
 //DELETE a question in the database based on its id
 server.delete("/questions/delete/:id", async(req,res) => {
+    //Check administrative status
+    try {
+        if(req.body.token === null || req.body.token === undefined) {
+            res.send({status: 403});
+            return;
+        }
+        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminEmail = adminFromToken.email;
+        var admin = await User.findOne({email: adminEmail});
+        if(admin.isAdmin !== true) {
+            res.send({status: 403});
+            return;
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error});
+        return;
+    }
+
     //Try these options
     try{
         //Set _id to the value given in url under :id
@@ -286,6 +323,24 @@ body('options').custom((value, {req}) => {
     }
 }),
 async(req,res)=>{
+    //Check administrative status
+    try {
+        if(req.body.token === null || req.body.token === undefined) {
+            res.send({status: 403});
+            return;
+        }
+        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminEmail = adminFromToken.email;
+        var admin = await User.findOne({email: adminEmail});
+        if(admin.isAdmin !== true) {
+            res.send({status: 403});
+            return;
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error});
+        return;
+    }
     try{
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -310,6 +365,25 @@ async(req,res)=>{
 
 //PUT updated information for a question already in the database based on its id
 server.put("/questions/update/:id", async(req,res) => {
+    //Check administrative status
+    try {
+        if(req.body.token === null || req.body.token === undefined) {
+            res.send({status: 403});
+            return;
+        }
+        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminEmail = adminFromToken.email;
+        var admin = await User.findOne({email: adminEmail});
+        if(admin.isAdmin !== true) {
+            res.send({status: 403});
+            return;
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error});
+        return;
+    }
+
     try{
         //Set _id to the value given in url under :id
         const _id = req.params.id;
@@ -336,6 +410,32 @@ server.put("/questions/update/:id", async(req,res) => {
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
         res.sendStatus(500);
+    }
+})
+
+//POSTing (in functionality GETting) whether a user is an administrator
+server.post("/checkPrivileges", async(req,res) => {
+    //Check administrative status
+    try {
+        if(req.body.token === null || req.body.token === undefined) {
+            res.send({status: 403});
+            return;
+        }
+        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminEmail = adminFromToken.email;
+        var admin = await User.findOne({email: adminEmail});
+        if(admin.isAdmin !== true) {
+            res.send({status: 403});
+            return;
+        }
+        else {
+            res.send({status: 200});
+            return;
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error});
+        return;
     }
 })
 
