@@ -24,20 +24,7 @@ function QuestionCRUD() {
       .then((data) => {
         handleQuestionsData(data.data);
         console.log(data);
-      }).then((response) => {
-      if(response.status === 500)
-      {
-        alert("Internal server error. Please try again")
-      }
-      else if (response.status === 422)
-      {
-        alert("Please ensure all fields are properly filled out and try again.")
-      }
-      else if (response.status === 201)
-      {
-        alert("Question has been added successfully.");
-      }
-    });
+      })
   };
 
   useEffect(() => {
@@ -57,11 +44,6 @@ function QuestionCRUD() {
     fontSize: "40px",
     paddingBottom: "50px",
     textDecorationLine: "underline",
-  };
-
-  const text = {
-    fontFamily: "Gluten",
-    color: "#2613fe",
   };
 
   //This is what is rendered to the user

@@ -183,7 +183,9 @@ const DeleteQuestion = (removeID) => {
       Accept: "application/json",
       "Access-Control-Allow-Origin": "*",
     },
-    body: JSON.stringify({}),
+    body: JSON.stringify({
+      token: window.localStorage.getItem("token"),
+    }),
   }).then(() => {
     alert("Question was successfully deleted.");
   });

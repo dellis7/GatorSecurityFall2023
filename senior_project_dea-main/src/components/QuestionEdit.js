@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function QuestionEdit(props) {
   const [editQuestion, setEditQuestion] = useState(props.editQuestion);
@@ -64,6 +64,7 @@ export default function QuestionEdit(props) {
         topic: editTopic,
         options: editOptions,
         answer: editAnswer,
+        token: window.localStorage.getItem("token"),
       }),
     }).then(() => {
       alert("Question has been updated successfully.");
