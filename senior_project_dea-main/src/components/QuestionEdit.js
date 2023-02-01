@@ -56,7 +56,7 @@ export default function QuestionEdit(props) {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin": "http://localhost:3000/",
       },
       body: JSON.stringify({
         question: editQuestion,

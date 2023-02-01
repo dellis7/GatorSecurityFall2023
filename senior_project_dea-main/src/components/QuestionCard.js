@@ -1,7 +1,6 @@
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { useState } from "react";
-import QuestionForm from "./QuestionForm";
 import QuestionEdit from "./QuestionEdit";
 
 const text = {
@@ -181,7 +180,7 @@ const DeleteQuestion = (removeID) => {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": "http://localhost:3000/",
     },
     body: JSON.stringify({
       token: window.localStorage.getItem("token"),
