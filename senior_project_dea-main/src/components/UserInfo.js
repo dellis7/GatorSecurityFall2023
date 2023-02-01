@@ -35,7 +35,7 @@ export default class UserInfo extends Component{
         //Use the user data from the response
         .then((data)=>{
             //Set the state of userInfo to info of user retrieved from database
-            this.setState({userInfo: data.data});
+            this.setState({userInfo: data.data.dbUserData});
         })
     }
 
@@ -51,7 +51,7 @@ export default class UserInfo extends Component{
         const{fname, lname} = this.state;
         
         //Console data check to make sure nothing is wonky in the data
-        //console.log(_id, fname, lname);
+        console.log(_id, fname, lname);
 
         //Make a PUT HTTP request to backend (See server.js for server.put(/user/update/:id))
         fetch(`http://localhost:5000/user/update/${_id}`, {
