@@ -19,11 +19,35 @@ import { useEffect } from 'react';
 function App() {
   
   const { pathname } = useLocation();
-  
+
   useEffect(() => {
+    async function getAdminStatus() {
+      fetch("http://localhost:5000/checkPrivileges", 
+        {
+          method: "POST",
+          crossDomain:true,
+          headers:{
+            "Content-Type":"application/json",
+            Accept:"application/json",
+            "Access-Control-Allow-Origin":"*",
+        },
+        body:JSON.stringify({
+          token:window.localStorage.getItem("token"),
+        }),
+        }).then((res)=>res.json())
+        .then(data=>{
+          if(data.status !== 200) {
+            window.location.href = "./welcome";
+          }
+        });
+    }
+
     if(pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/' || pathname === '/log-out') return;
     if(window.localStorage.getItem("token") === null) {
       window.location.href = "./sign-in";
+    }
+    if(pathname === '/admin' || pathname === '/modify_questions') {
+      getAdminStatus();
     }
   }, [pathname]);
   

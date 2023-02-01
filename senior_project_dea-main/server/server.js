@@ -1,5 +1,6 @@
 const cors = require("cors")
 const express = require("express")
+const { body, validationResult } = require('express-validator')
 const mongoose = require("mongoose")
 const bcrypt = require("bcryptjs")
 const dotenv = require("dotenv")
@@ -9,15 +10,12 @@ server.use(cors());
 server.use(express.json())
 const jwtObj = require("jsonwebtoken");
 const Jwt_secret_Obj = "sfhgfhgefugefyfeyf63r36737288gssfgusducb@#$&fvdhfdgfuf76";
-
 //User and TraditionalQuestion Models for MongooseDB (see schemas.js for actual model definitions)
 require("./schemas")
 const User = mongoose.model("UserInfo")
 const TraditionalQuestion = mongoose.model("TraditionalQuestionInfo")
-
 //Database URL
 const mongoUrl = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.pfxgixu.mongodb.net/?retryWrites=true&w=majority`
-
 const questionTopicMap = {other: 0, input_validation: 1, encoding_escaping: 2, xss: 3, sql_injection: 4, crypto: 5, auth: 6};
 
 mongoose.connect(mongoUrl, {
@@ -46,7 +44,6 @@ server.post("/register", async(req, res)=>{
             lname,
             email,
             password:encryptedPass,
-            score
         });
         res.send({status:"ok"})
     } catch(error) {
@@ -77,17 +74,22 @@ server.post("/login", async(req,res)=> {
     res.json({status:"error", error:"Invalid password."})
 })
 
-//POSTing existing user info (Information that appears on /myprofile)
+//POSTing existing user info
 server.post("/userInfo", async(req,res)=>{
+    //"Grab" token from request body (req.body)
     const {token} = req.body;
-    //console.log("hello")
     try{
+        //Decode token, get email
         const user = jwtObj.verify(token, Jwt_secret_Obj);
-        //console.log(user)
+        //Set uEmail to email
         const uEmail = user.email;
+        //Find a user based on email, then data?
         User.findOne({email: uEmail}).then((data)=>{
+            //Get count of all questions
             TraditionalQuestion.count().then((count)=>{
+                //
                 var allData = {traditionalQuestionCount: count, dbUserData: data};
+                //
                 res.send({status:"ok", data:allData});
             })
             .catch((error)=>{
@@ -133,6 +135,25 @@ server.put("/user/update/:id", async(req,res) => {
 
 //POSTing (in functionality GETting) all user information in the database
 server.post("/allUsers", async(req,res)=>{
+    //Check administrative status
+    try {
+        if(req.body.token === null || req.body.token === undefined) {
+            res.send({status: 403});
+            return;
+        }
+        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminEmail = adminFromToken.email;
+        var admin = await User.findOne({email: adminEmail});
+        if(admin.isAdmin !== true) {
+            res.send({status: 403});
+            return;
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error});
+        return;
+    }
+
     //console.log("/allUsers")
     try{
         User.find({}).then((data)=>{
@@ -236,6 +257,25 @@ server.post("/questions/get/:topic", async(req,res)=>{
 
 //DELETE a question in the database based on its id
 server.delete("/questions/delete/:id", async(req,res) => {
+    //Check administrative status
+    try {
+        if(req.body.token === null || req.body.token === undefined) {
+            res.send({status: 403});
+            return;
+        }
+        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminEmail = adminFromToken.email;
+        var admin = await User.findOne({email: adminEmail});
+        if(admin.isAdmin !== true) {
+            res.send({status: 403});
+            return;
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error});
+        return;
+    }
+
     //Try these options
     try{
         //Set _id to the value given in url under :id
@@ -272,8 +312,45 @@ server.delete("/questions/delete/:id", async(req,res) => {
 })
 
 //POST a new question in the database
-server.post("/questions/create", async(req,res)=>{
+server.post("/questions/create",
+body('question').notEmpty().withMessage("Question cannot be empty"),
+body('type').notEmpty().withMessage("Type cannot be empty"),
+body('topic').notEmpty().withMessage("Topic cannot be empty"),
+body('topic').isFloat({ min:0, max:6 }).withMessage("The topic must be a numeric identifier between 0 and 6"),
+body('options').notEmpty().withMessage("Options cannot be empty"),
+body('answer').notEmpty().withMessage("Answer cannot be empty"),
+body('options').custom((value, {req}) => {
+    if (!value.includes(req.body.answer))
+    {
+        throw new Error("The correct answer must be present in the answer options")
+    } else {
+        return value
+    }
+}),
+async(req,res)=>{
+    //Check administrative status
+    try {
+        if(req.body.token === null || req.body.token === undefined) {
+            res.send({status: 403});
+            return;
+        }
+        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminEmail = adminFromToken.email;
+        var admin = await User.findOne({email: adminEmail});
+        if(admin.isAdmin !== true) {
+            res.send({status: 403});
+            return;
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error});
+        return;
+    }
     try{
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(422).json({ errors: errors.array() });
+        }
         const question = new TraditionalQuestion({
             //Dynamically changes values based on the JSON data in the POST request
             question: req.body.question,
@@ -293,6 +370,25 @@ server.post("/questions/create", async(req,res)=>{
 
 //PUT updated information for a question already in the database based on its id
 server.put("/questions/update/:id", async(req,res) => {
+    //Check administrative status
+    try {
+        if(req.body.token === null || req.body.token === undefined) {
+            res.send({status: 403});
+            return;
+        }
+        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminEmail = adminFromToken.email;
+        var admin = await User.findOne({email: adminEmail});
+        if(admin.isAdmin !== true) {
+            res.send({status: 403});
+            return;
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error});
+        return;
+    }
+
     try{
         //Set _id to the value given in url under :id
         const _id = req.params.id;
@@ -319,6 +415,32 @@ server.put("/questions/update/:id", async(req,res) => {
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
         res.sendStatus(500);
+    }
+})
+
+//POSTing (in functionality GETting) whether a user is an administrator
+server.post("/checkPrivileges", async(req,res) => {
+    //Check administrative status
+    try {
+        if(req.body.token === null || req.body.token === undefined) {
+            res.send({status: 403});
+            return;
+        }
+        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminEmail = adminFromToken.email;
+        var admin = await User.findOne({email: adminEmail});
+        if(admin.isAdmin !== true) {
+            res.send({status: 403});
+            return;
+        }
+        else {
+            res.send({status: 200});
+            return;
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error});
+        return;
     }
 })
 

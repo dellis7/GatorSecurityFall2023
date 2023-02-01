@@ -69,6 +69,10 @@ export default class Admin extends React.Component {
         return <th style={{whiteSpace:"pre-wrap", wordWrap:"break-word"}}>{totalScore}{gameView}</th>
       }
 
+      if(this.state.allUsers.status === 403) {
+        return (<>You are not authorized to access this page.</>)
+      }
+
       return (
         <Table striped bordered hover>
             <thead>

@@ -18,13 +18,26 @@ function QuestionCRUD() {
         Accept: "application/json",
         "Access-Control-Allow-Origin": "*",
       },
-      body: JSON.stringify({}),
+      body: JSON.stringify({token: window.localStorage.getItem("token")}),
     })
       .then((res) => res.json())
       .then((data) => {
         handleQuestionsData(data.data);
         console.log(data);
-      });
+      }).then((response) => {
+      if(response.status === 500)
+      {
+        alert("Internal server error. Please try again")
+      }
+      else if (response.status === 422)
+      {
+        alert("Please ensure all fields are properly filled out and try again.")
+      }
+      else if (response.status === 201)
+      {
+        alert("Question has been added successfully.");
+      }
+    });
   };
 
   useEffect(() => {
