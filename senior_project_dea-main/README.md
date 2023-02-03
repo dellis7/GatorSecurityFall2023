@@ -39,7 +39,7 @@ If changes are made in the repo, you will need to pull those changes in by doing
 
 There are 2 approaches to creating a branch.
 ### Option 1: Create branch from terminal
-From the `senior_project_dea-main` directory run `git checkout -b \<branch-name\>` (i.e., `git checkout -b this-is-my-branch`). This will 
+From the `senior_project_dea-main` directory run `git checkout -b <branch-name>` (i.e., `git checkout -b this-is-my-branch`). This will 
 automatically switch you and all of you changes over to your new branch. See **Section 6** for the alternate `push` command you will need 
 to run.
 
@@ -48,7 +48,7 @@ to run.
 * Click the `New Branch` button
 * Name the branch whatever you like
 * Complete steps from **Section 3**
-* Run `git checkout \<branch-name\>` (i.e., `git checkout this-is-my-branch`)
+* Run `git checkout <branch-name>` (i.e., `git checkout this-is-my-branch`)
 
 
 ## Section 6: Pushing you changes to the repo
@@ -56,7 +56,7 @@ If you've made changes locally and you want to commit and push those changes to 
 * `cd` to the `senior_project_dea-main` directory (if not already there)
 * Run `git add .` to stage all changed files
 * Run `git commit -m "your commit message"` to commit your local changes
-* Run `git push` (If you created your branch through the terminal, an error will pop up with the alternative command that you need to run.)
+* Run `git push` (If you created your branch through the terminal, an error will pop up with the alternative command that you need to run. The command with look like this, `git push --set-upstream origin <branch-name>`)
 
 ## Section 7: Running the app locally
 To start the backend run the following commands:
