@@ -28,7 +28,20 @@ export default class ProfilePage extends React.Component {
         }).then((res)=>res.json())
         .then(data=>{
           this.setState({userInfo: data.data.dbUserData});
-          this.setState({traditionalQuestionCount: data.data.traditionalQuestionCount})
+        });
+        fetch("http://localhost:5000/questions/getCount", 
+        {
+          method: "POST",
+          crossDomain:true,
+          headers:{
+            "Content-Type":"application/json",
+            Accept:"application/json",
+            "Access-Control-Allow-Origin":"*",
+        },
+        body:JSON.stringify({}),
+        }).then((res)=>res.json())
+        .then(data=>{
+          this.setState({traditionalQuestionCount: data.data})
         });
     }
 

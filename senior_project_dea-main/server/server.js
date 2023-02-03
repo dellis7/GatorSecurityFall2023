@@ -85,16 +85,8 @@ server.post("/userInfo", async(req,res)=>{
         const uEmail = user.email;
         //Find a user based on email, then data?
         User.findOne({email: uEmail}).then((data)=>{
-            //Get count of all questions
-            TraditionalQuestion.count().then((count)=>{
-                //
-                var allData = {traditionalQuestionCount: count, dbUserData: data};
-                //
-                res.send({status:"ok", data:allData});
-            })
-            .catch((error)=>{
-                res.send({status: "error", data:error});
-            });
+            var allData = {dbUserData: data};
+            res.send({status:"ok", data:allData});
         })
         .catch((error)=>{
             res.send({status: "error", data:error});
@@ -223,6 +215,15 @@ server.put("/updatescore", async(req,res)=>{
     } catch(error) {
 		res.sendStatus(500);
     }
+})
+
+server.post("/questions/getCount", async(req,res) =>{
+    TraditionalQuestion.count().then((count)=>{
+        res.send({status:"ok", data:count});
+    })
+    .catch((error)=>{
+        res.send({status: "error", data:error});
+    });
 })
 
 //POSTing (in functionality GETting) questions in database based on :topic value
