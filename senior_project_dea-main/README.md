@@ -2,8 +2,8 @@
 
 ## Section 1: Cloning the repo:
 * Make a folder somewhere on your computer
-* cd to that folder from the command line
-* Run git clone https://github.com/erickcgt/senior_project_dea.git
+* `cd` to that folder from the command line
+* Run `git clone https://github.com/erickcgt/senior_project_dea.git` to clone the repo
 
 ## Section 2: Installing Node.js packages
 Start by deleting the package.json and package-lock.json from the server folder.
@@ -44,22 +44,22 @@ automatically switch you and all of you changes over to your new branch. See **S
 to run.
 
 ### Option 2: Create branch in Github and pull into you local repo
-* Login to Githuband go to `code` -> `branches`
+* Login to Github and go to `code` -> `branches`
 * Click the `New Branch` button
 * Name the branch whatever you like
-* Complete steps from **Section 3**
+* Complete steps from **Section 4**
 * Run `git checkout <branch-name>` (i.e., `git checkout this-is-my-branch`)
 
 
-## Section 6: Pushing you changes to the repo
+## Section 6: Pushing your changes to the repo
 If you've made changes locally and you want to commit and push those changes to the repo, do the following:
 * `cd` to the `senior_project_dea-main` directory (if not already there)
 * Run `git add .` to stage all changed files
 * Run `git commit -m "your commit message"` to commit your local changes
-* Run `git push` (If you created your branch through the terminal, an error will pop up with the alternative command that you need to run. The command with look like this, `git push --set-upstream origin <branch-name>`)
+* Run `git push` to push your changes to the repo (If you created your branch through the terminal, an error will pop up with the alternative command that you need to run the first time you push changes from this branch. The command will look like this, `git push --set-upstream origin <branch-name>`. Any additional pushes from this branch will only require the `git push` command.) 
 
 ## Section 7: Running the app locally
-To start the backend run the following commands:
+To start the backend run the following commands from the `senior_project_dea-main` directory:
 * `cd server`
 * `npm run start`
 
