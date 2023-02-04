@@ -1,5 +1,6 @@
 const cors = require("cors")
 const express = require("express")
+const { body, validationResult } = require('express-validator')
 const mongoose = require("mongoose")
 const bcrypt = require("bcryptjs")
 const dotenv = require("dotenv")
@@ -9,15 +10,12 @@ server.use(cors());
 server.use(express.json())
 const jwtObj = require("jsonwebtoken");
 const Jwt_secret_Obj = "sfhgfhgefugefyfeyf63r36737288gssfgusducb@#$&fvdhfdgfuf76";
-
 //User and TraditionalQuestion Models for MongooseDB (see schemas.js for actual model definitions)
 require("./schemas")
 const User = mongoose.model("UserInfo")
 const TraditionalQuestion = mongoose.model("TraditionalQuestionInfo")
-
 //Database URL
 const mongoUrl = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.pfxgixu.mongodb.net/?retryWrites=true&w=majority`
-
 const questionTopicMap = {other: 0, input_validation: 1, encoding_escaping: 2, xss: 3, sql_injection: 4, crypto: 5, auth: 6};
 
 mongoose.connect(mongoUrl, {
@@ -76,17 +74,32 @@ server.post("/login", async(req,res)=> {
     res.json({status:"error", error:"Invalid password."})
 })
 
-//POSTing existing user info (Information that appears on /myprofile)
+//POSTing existing user info
 server.post("/userInfo", async(req,res)=>{
+    //"Grab" token from request body (req.body)
     const {token} = req.body;
-    //console.log("hello")
     try{
+        //Decode token, get email
         const user = jwtObj.verify(token, Jwt_secret_Obj);
-        //console.log(user)
+        //Set uEmail to email
         const uEmail = user.email;
+        //Find a user based on email, then data?
         User.findOne({email: uEmail}).then((data)=>{
+<<<<<<< HEAD
             var allData = {dbUserData: data};
             res.send({status:"ok", data:allData});
+=======
+            //Get count of all questions
+            TraditionalQuestion.count().then((count)=>{
+                //
+                var allData = {traditionalQuestionCount: count, dbUserData: data};
+                //
+                res.send({status:"ok", data:allData});
+            })
+            .catch((error)=>{
+                res.send({status: "error", data:error});
+            });
+>>>>>>> 31774325dc4ff7d3600f3ed01e35dbba85923d7f
         })
         .catch((error)=>{
             res.send({status: "error", data:error});
@@ -313,7 +326,22 @@ server.delete("/questions/delete/:id", async(req,res) => {
 })
 
 //POST a new question in the database
-server.post("/questions/create", async(req,res)=>{
+server.post("/questions/create",
+body('question').notEmpty().withMessage("Question cannot be empty"),
+body('type').notEmpty().withMessage("Type cannot be empty"),
+body('topic').notEmpty().withMessage("Topic cannot be empty"),
+body('topic').isFloat({ min:0, max:6 }).withMessage("The topic must be a numeric identifier between 0 and 6"),
+body('options').notEmpty().withMessage("Options cannot be empty"),
+body('answer').notEmpty().withMessage("Answer cannot be empty"),
+body('options').custom((value, {req}) => {
+    if (!value.includes(req.body.answer))
+    {
+        throw new Error("The correct answer must be present in the answer options")
+    } else {
+        return value
+    }
+}),
+async(req,res)=>{
     //Check administrative status
     try {
         if(req.body.token === null || req.body.token === undefined) {
@@ -332,8 +360,11 @@ server.post("/questions/create", async(req,res)=>{
         res.send({status: 500, error:error});
         return;
     }
-
     try{
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(422).json({ errors: errors.array() });
+        }
         const question = new TraditionalQuestion({
             //Dynamically changes values based on the JSON data in the POST request
             question: req.body.question,
