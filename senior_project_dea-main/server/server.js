@@ -83,23 +83,10 @@ server.post("/userInfo", async(req,res)=>{
         const user = jwtObj.verify(token, Jwt_secret_Obj);
         //Set uEmail to email
         const uEmail = user.email;
-        //Find a user based on email, then data?
+        //Find a user based on email, then send the data
         User.findOne({email: uEmail}).then((data)=>{
-<<<<<<< HEAD
             var allData = {dbUserData: data};
             res.send({status:"ok", data:allData});
-=======
-            //Get count of all questions
-            TraditionalQuestion.count().then((count)=>{
-                //
-                var allData = {traditionalQuestionCount: count, dbUserData: data};
-                //
-                res.send({status:"ok", data:allData});
-            })
-            .catch((error)=>{
-                res.send({status: "error", data:error});
-            });
->>>>>>> 31774325dc4ff7d3600f3ed01e35dbba85923d7f
         })
         .catch((error)=>{
             res.send({status: "error", data:error});
