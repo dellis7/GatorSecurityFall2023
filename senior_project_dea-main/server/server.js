@@ -83,7 +83,7 @@ server.post("/userInfo", async(req,res)=>{
         const user = jwtObj.verify(token, Jwt_secret_Obj);
         //Set uEmail to email
         const uEmail = user.email;
-        //Find a user based on email, then data?
+        //Find a user based on email, then send the data
         User.findOne({email: uEmail}).then((data)=>{
             var allData = {dbUserData: data};
             res.send({status:"ok", data:allData});
