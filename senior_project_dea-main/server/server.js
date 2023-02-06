@@ -102,12 +102,10 @@ server.put("/user/update/:id", async(req,res) => {
         //Set _id to the value given in url under :id
         const _id = req.params.id;
 
+        req.body.password = await bcrypt.hash(req.body.password, 10);
+
         const result = await User.findByIdAndUpdate(_id, {
-            //Dynamically changes values based on the JSON data in the PUT request
-            fname: req.body.fname,
-            lname: req.body.lname//,
-            //email: req.body.email,
-            //password: req.body.password
+            $set: req.body
         });
         //If True
         if (result) {

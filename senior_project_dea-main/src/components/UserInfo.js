@@ -48,10 +48,10 @@ export default class UserInfo extends Component{
         const _id = this.state.userInfo._id;
 
         //TODO - State what's going on here.
-        const{fname, lname} = this.state;
+        const{fname, lname, email, password} = this.state;
         
         //Console data check to make sure nothing is wonky in the data
-        console.log(_id, fname, lname);
+        console.log(_id, fname, lname, email, password);
 
         //Make a PUT HTTP request to backend (See server.js for server.put(/user/update/:id))
         fetch(`http://localhost:5000/user/update/${_id}`, {
@@ -66,7 +66,9 @@ export default class UserInfo extends Component{
           //Turns the token received from the backend into a string???
           body:JSON.stringify({
             fname,
-            lname
+            lname,
+            email, 
+            password
             }),
         //Get a response (res) from the server
         }).then((res)=>{
@@ -116,9 +118,9 @@ export default class UserInfo extends Component{
                     placeholder={this.state.userInfo.lname}
                     onChange={e=>this.setState({lname:e.target.value})}
                     />
-                </div>
-                
-                {/*
+                </div>  
+
+                {/*Email Input*/}
                 <div className="mb-3">
                     <label>Email </label>
                     <input
@@ -129,7 +131,7 @@ export default class UserInfo extends Component{
                     />
                 </div>
 
-                Password Text Area
+                {/*Password Input*/}
                 <div className="mb-3">
                     <label>Password</label>
                     <input
@@ -139,7 +141,6 @@ export default class UserInfo extends Component{
                     onChange={e=>this.setState({password:e.target.value})}
                     />
                 </div>
-                */}
 
                 {/*Submit Button*/}
                 <div className="d-grid">
