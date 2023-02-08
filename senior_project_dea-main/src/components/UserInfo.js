@@ -87,6 +87,10 @@ export default class UserInfo extends Component{
                     window.localStorage.removeItem("token");
                     window.location.href = "./sign-in";
                 }
+                else if (res.status === 422)
+                {
+                    alert("Unsuccessful update. This email address may already be in use.")
+                }
                 //Else a bad response
                 else {
                     //Send a popup stating unsuccessful update
