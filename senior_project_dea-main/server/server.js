@@ -102,7 +102,10 @@ server.put("/user/update/:id", async(req,res) => {
         //Set _id to the value given in url under :id
         const _id = req.params.id;
 
-        req.body.password = await bcrypt.hash(req.body.password, 10);
+        if (req.body.password != undefined)
+        {
+            req.body.password = await bcrypt.hash(req.body.password, 10);
+        }
 
         const result = await User.findByIdAndUpdate(_id, {
             $set: req.body
