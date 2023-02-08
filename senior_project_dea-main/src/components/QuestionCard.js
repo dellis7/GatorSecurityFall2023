@@ -39,7 +39,7 @@ export default function QuestionCard({
                   className="btn btn-primary btn-sm mx-1"
                   onClick={() => setEditModalShow(true)}
                 >
-                  edit
+                  Edit
                 </button>
                 <button
                   type="button"

@@ -228,24 +228,65 @@ server.post("/questions/getCount", async(req,res) =>{
 
 //POSTing (in functionality GETting) questions in database based on :topic value
 server.post("/questions/get/:topic", async(req,res)=>{
-	try{
+    //Check administrative status
+    var isAdmin = false;
+
+    try {
+        if(req.body.token !== null && req.body.token !== undefined) {
+            const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+            const adminEmail = adminFromToken.email;
+            var admin = await User.findOne({email: adminEmail});
+            if(admin.isAdmin === true) {
+                isAdmin = true;
+            }
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error});
+        return;
+    }
+    
+    try{
         //If url is /questions/get/all (more literally if :topic is equal to all)
 		if(req.params.topic === "all") {
-            //Retrieve all question data in database
+            //Retrieve all question data in database and send it
 			TraditionalQuestion.find({}).then((data)=>{
-                //Display all question data
+                console.log(data);
+                //Ensure answers aren't sent to the frontend unless you are an admin
+                if(!isAdmin) {
+                    for(let i = 0; i < data.length; i++) {
+                        data[i].answer = "The answer is available only as an administrator.";
+                    }
+                }
+                console.log(data);
 				res.send({status:200, data:data});
 			});
         //Else if the topic is a numerical id
 		} else if(!isNaN(parseInt(req.params.topic))) {
-            //Find specific question information in database
+            //Find specific question information in database and send it
 			TraditionalQuestion.find({topic: req.params.topic}).then((data)=>{
-                //Display the question data
+                console.log(data);
+                //Ensure answers aren't sent to the frontend unless you are an admin
+                if(!isAdmin) {
+                    for(let i = 0; i < data.length; i++) {
+                        data[i].answer = "The answer is available only as an administrator.";
+                    }
+                }
+                console.log(data);
 				res.send({status:200, data:data});
 			});
         //Else the topic is a string identifier
 		} else {
+            //Find specific question information in database and send it
 			TraditionalQuestion.find({topic: questionTopicMap[req.params.topic]}).then((data)=>{
+                console.log(data);
+                //Ensure answers aren't sent to the frontend unless you are an admin
+                if(!isAdmin) {
+                    for(let i = 0; i < data.length; i++) {
+                        data[i].answer = "The answer is available only as an administrator.";
+                    }
+                }
+                console.log(data);
 				res.send({status:200, data:data});
 			});
 		}
