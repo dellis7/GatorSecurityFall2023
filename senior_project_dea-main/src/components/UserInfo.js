@@ -44,48 +44,61 @@ export default class UserInfo extends Component{
         //Catches errors with form before submitting
         e.preventDefault();
         
-        //Defines the current user _id
-        const _id = this.state.userInfo._id;
+        const confirm = window.confirm("Are you sure you want to make these changes? You will be logged out upon saving.")
 
-        //TODO - State what's going on here.
-        const{fname, lname} = this.state;
-        
-        //Console data check to make sure nothing is wonky in the data
-        console.log(_id, fname, lname);
+        if (confirm)
+        {
+            //Defines the current user _id
+            const _id = this.state.userInfo._id;
 
-        //Make a PUT HTTP request to backend (See server.js for server.put(/user/update/:id))
-        fetch(`http://localhost:5000/user/update/${_id}`, {
-          method: "PUT",
-          crossDomain: true,
-          headers:{
-            "Content-Type":"application/json",
-            Accept:"application/json",
-            "Access-Control-Allow-Origin":"*",
-          },
-          //TODO - Change my comment to be more accurate or precise.
-          //Turns the token received from the backend into a string???
-          body:JSON.stringify({
-            fname,
-            lname
-            }),
-        //Get a response (res) from the server
-        }).then((res)=>{
-            //If a good response
-            if (res.ok) {
-                //Send a popup stating successful edit, then reload page
-                //alert("Update successful! Reloading page.")
-                //window.location.reload()
+            //TODO - State what's going on here.
+            const{fname, lname, email, password} = this.state;
+            
+            //Console data check to make sure nothing is wonky in the data
+            console.log(_id, fname, lname, email, password);
 
-                //Send a popup stating successful edit, then redirect page to user profile (/myprofile)
-                alert("Update successful! Redirecting to profile page.")
-                window.location.href = "./myprofile";
-            }
-            //Else a bad response
-            else {
-                //Send a popup stating unsuccessful update
-                alert("Unsuccessful update.")
-            }
-        });
+            //Make a PUT HTTP request to backend (See server.js for server.put(/user/update/:id))
+            fetch(`http://localhost:5000/user/update/${_id}`, {
+            method: "PUT",
+            crossDomain: true,
+            headers:{
+                "Content-Type":"application/json",
+                Accept:"application/json",
+                "Access-Control-Allow-Origin":"*",
+            },
+            //TODO - Change my comment to be more accurate or precise.
+            //Turns the token received from the backend into a string???
+            body:JSON.stringify({
+                fname,
+                lname,
+                email, 
+                password
+                }),
+            //Get a response (res) from the server
+            }).then((res)=>{
+                //If a good response
+                if (res.ok) {
+                    //Send a popup stating successful edit, then reload page
+                    //alert("Update successful! Reloading page.")
+                    //window.location.reload()
+
+                    //Send a popup stating successful edit, then redirect page to user profile (/myprofile)
+                    alert("Update successful! You will now be logged out.")
+                    window.localStorage.removeItem("token");
+                    window.location.href = "./sign-in";
+                }
+                else if (res.status === 422)
+                {
+                    alert("Unsuccessful update. This email address may already be in use.")
+                }
+                //Else a bad response
+                else {
+                    //Send a popup stating unsuccessful update
+                    alert("Unsuccessful update.")
+                }
+            });
+        }
+        // else they didn't confirm, do nothing
     }
 
     //render() displays what the web page will actually look like
@@ -116,9 +129,9 @@ export default class UserInfo extends Component{
                     placeholder={this.state.userInfo.lname}
                     onChange={e=>this.setState({lname:e.target.value})}
                     />
-                </div>
-                
-                {/*
+                </div>  
+
+                {/*Email Input*/}
                 <div className="mb-3">
                     <label>Email </label>
                     <input
@@ -129,7 +142,7 @@ export default class UserInfo extends Component{
                     />
                 </div>
 
-                Password Text Area
+                {/*Password Input*/}
                 <div className="mb-3">
                     <label>Password</label>
                     <input
@@ -139,7 +152,6 @@ export default class UserInfo extends Component{
                     onChange={e=>this.setState({password:e.target.value})}
                     />
                 </div>
-                */}
 
                 {/*Submit Button*/}
                 <div className="d-grid">
