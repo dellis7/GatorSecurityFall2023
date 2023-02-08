@@ -251,42 +251,36 @@ server.post("/questions/get/:topic", async(req,res)=>{
 		if(req.params.topic === "all") {
             //Retrieve all question data in database and send it
 			TraditionalQuestion.find({}).then((data)=>{
-                console.log(data);
                 //Ensure answers aren't sent to the frontend unless you are an admin
                 if(!isAdmin) {
                     for(let i = 0; i < data.length; i++) {
                         data[i].answer = "The answer is available only as an administrator.";
                     }
                 }
-                console.log(data);
 				res.send({status:200, data:data});
 			});
         //Else if the topic is a numerical id
 		} else if(!isNaN(parseInt(req.params.topic))) {
             //Find specific question information in database and send it
 			TraditionalQuestion.find({topic: req.params.topic}).then((data)=>{
-                console.log(data);
                 //Ensure answers aren't sent to the frontend unless you are an admin
                 if(!isAdmin) {
                     for(let i = 0; i < data.length; i++) {
                         data[i].answer = "The answer is available only as an administrator.";
                     }
                 }
-                console.log(data);
 				res.send({status:200, data:data});
 			});
         //Else the topic is a string identifier
 		} else {
             //Find specific question information in database and send it
 			TraditionalQuestion.find({topic: questionTopicMap[req.params.topic]}).then((data)=>{
-                console.log(data);
                 //Ensure answers aren't sent to the frontend unless you are an admin
                 if(!isAdmin) {
                     for(let i = 0; i < data.length; i++) {
                         data[i].answer = "The answer is available only as an administrator.";
                     }
                 }
-                console.log(data);
 				res.send({status:200, data:data});
 			});
 		}
