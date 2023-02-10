@@ -203,10 +203,6 @@ const create = (async(req,res)=>{
         return;
     }
     try{
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
-        }
         const question = new TraditionalQuestion({
             //Dynamically changes values based on the JSON data in the POST request
             question: req.body.question,

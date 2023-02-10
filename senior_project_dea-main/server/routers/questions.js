@@ -17,8 +17,8 @@ router.post('/get/:topic', getByTopic)
 
 router.delete('/delete/:id', deleteById)
 
-router.post('/update/:id', update)
+router.put('/update/:id', update)
 
-router.put('/create', validateQuestion, create)
+router.post('/create', validateQuestion, create)
 
 module.exports = router
