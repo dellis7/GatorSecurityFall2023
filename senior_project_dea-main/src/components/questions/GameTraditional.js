@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
 
 function updateScore(token_, section_, index_){
-    fetch("http://localhost:5000/updatescore", {
+    fetch("http://localhost:5000/users/updatescore", {
             method: "PUT",
             crossDomain:true,
             headers:{

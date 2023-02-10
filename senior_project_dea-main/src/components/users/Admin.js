@@ -9,7 +9,7 @@ export default class Admin extends React.Component {
       };
     }
     componentDidMount(){
-      fetch("http://localhost:5000/allUsers", 
+      fetch("http://localhost:5000/users/allUsers", 
         {
           method: "POST",
           crossDomain:true,

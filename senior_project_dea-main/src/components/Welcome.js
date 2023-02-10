@@ -9,7 +9,7 @@ export default class WelcomePage extends React.Component {
     };
   }
   componentDidMount(){
-    fetch("http://localhost:5000/userInfo", 
+    fetch("http://localhost:5000/users/userInfo", 
       {
         method: "POST",
         crossDomain:true,
