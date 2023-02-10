@@ -28,5 +28,17 @@ const traditionalQuestionDBSchema = new mongoose.Schema(
     }
 );
 
+const gameQuestionDBSchema = new mongoose.Schema(
+    {
+        questionData:Array,
+        topic:Number,
+        type:Number,
+    },
+    {
+        collection: "GameQuestionInfo",
+    }
+)
+
 mongoose.model("UserInfo", userDBSchema);
 mongoose.model("TraditionalQuestionInfo", traditionalQuestionDBSchema);
+mongoose.model("GameQuestionInfo", gameQuestionDBSchema)
