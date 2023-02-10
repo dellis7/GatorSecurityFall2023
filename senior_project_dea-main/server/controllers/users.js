@@ -80,16 +80,16 @@ const updateUser = (async (req, res) => {
         //Set _id to the value given in url under :id
         const _id = req.params.id;
 
-        if (req.body.password != undefined) {
+        if (req.body.password !== undefined) {
             req.body.password = await bcrypt.hash(req.body.password, 10);
         }
 
-        if (req.body.email != undefined) {
+        if (req.body.email !== undefined) {
             const email = req.body.email
             const existingUser = await User.findOne({email});
 
             //If another user besides the one we're updating has the same email
-            if (existingUser && existingUser._id != _id) {
+            if (existingUser && existingUser._id !== _id) {
                 return res.sendStatus(422);
             }
         }

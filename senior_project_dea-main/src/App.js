@@ -1,11 +1,11 @@
 import './css/App.css';
 import MyNavbar from './components/Navbar';
 import MyWelcomePage from './components/Welcome';
-import LearnPage from './components/Learn';
-import GamePage from './components/Game';
-import GameTraditionalPage from './components/GameTraditional';
-import GameAdventurePage from './components/GameAdventure';
-import ProfilePage from './components/Profile';
+import LearnPage from './components/questions/Learn';
+import GamePage from './components/questions/Game';
+import GameTraditionalPage from './components/questions/GameTraditional';
+import GameAdventurePage from './components/questions/GameAdventure';
+import ProfilePage from './components/users/Profile';
 import { Routes, Route } from "react-router-dom"
 import Login from './components/users/Login'
 import SignUp from './components/users/SignUp'
