@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import './LoginAndSignUp.css';
+import './css/LoginAndSignUp.css';
 
 export default class UserInfo extends Component{
 
@@ -17,7 +17,7 @@ export default class UserInfo extends Component{
     //componentDidMount sends a HTTP POST request to backend
     componentDidMount(){
         //See server.js for server.post(/userInfo)
-        fetch("http://localhost:5000/userInfo", {
+        fetch("http://localhost:5000/users/userInfo", {
         method: "POST",
         crossDomain:true,
         headers:{
@@ -58,7 +58,7 @@ export default class UserInfo extends Component{
             console.log(_id, fname, lname, email, password);
 
             //Make a PUT HTTP request to backend (See server.js for server.put(/user/update/:id))
-            fetch(`http://localhost:5000/user/update/${_id}`, {
+            fetch(`http://localhost:5000/users/update/${_id}`, {
             method: "PUT",
             crossDomain: true,
             headers:{

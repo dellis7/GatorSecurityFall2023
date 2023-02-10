@@ -35,7 +35,7 @@ function TradQuestion({ qdata, num }) {
     }
 
     const checkAnswer = () => {
-        fetch("http://localhost:5000/updatelearnscore", {
+        fetch("http://localhost:5000/users/updatelearnscore", {
             method: "PUT",
             crossDomain:true,
             headers:{

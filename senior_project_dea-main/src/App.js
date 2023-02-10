@@ -1,18 +1,18 @@
-import './App.css';
+import './css/App.css';
 import MyNavbar from './components/Navbar';
 import MyWelcomePage from './components/Welcome';
-import LearnPage from './components/Learn';
-import GamePage from './components/Game';
-import ProfilePage from './components/Profile';
+import LearnPage from './components/questions/Learn';
+import GamePage from './components/questions/Game';
+import ProfilePage from './components/users/Profile';
 import { Routes, Route } from "react-router-dom"
-import Login from './components/Login'
-import SignUp from './components/SignUp'
-import Logout from './components/Logout'
-import UserInfo from './components/UserInfo'
-import Admin from './components/Admin'
+import Login from './components/users/Login'
+import SignUp from './components/users/SignUp'
+import Logout from './components/users/Logout'
+import UserInfo from './components/users/UserInfo'
+import Admin from './components/users/Admin'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import { useLocation } from 'react-router-dom';
-import QuestionCRUD from './components/QuestionCRUD';
+import QuestionCRUD from './components/questions/QuestionCRUD';
 import { useEffect } from 'react';
 
 
@@ -22,7 +22,7 @@ function App() {
 
   useEffect(() => {
     async function getAdminStatus() {
-      fetch("http://localhost:5000/checkPrivileges", 
+      fetch("http://localhost:5000/users/checkPrivileges", 
         {
           method: "POST",
           crossDomain:true,

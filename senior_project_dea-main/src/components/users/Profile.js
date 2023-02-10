@@ -1,5 +1,5 @@
 import React from 'react';
-import './personalProfile.css';
+import './css/personalProfile.css';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBTypography, MDBProgress, MDBProgressBar, MDBBtn } from 'mdb-react-ui-kit';
 import { LinkContainer } from "react-router-bootstrap"
 
@@ -13,7 +13,7 @@ export default class ProfilePage extends React.Component {
     
     componentDidMount(){
       //See server.js for server.post(/userInfo)
-      fetch("http://localhost:5000/userInfo", 
+      fetch("http://localhost:5000/users/userInfo", 
         {
           method: "POST",
           crossDomain:true,

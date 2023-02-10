@@ -1,24 +1,22 @@
 import React, { Component } from 'react'
-import './LoginAndSignUp.css';
 import LoginBanner from './LoginBanner';
-import gator from '../images/gator.png';
+import './css/LoginAndSignUp.css';
+import gator from '../../images/gator.png';
 
-export default class SignUp extends Component {
-  constructor(props){
-    super (props)
-    this.state={
-      fname:"",
-      lname:"",
-      email:"",
-      password:""
+export default class Login extends Component {
+    constructor(props){
+        super(props)
+        this.state={
+            email:"",
+            password:""
+        };
+        this.handleSubmit = this.handleSubmit.bind(this);
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  handleSubmit(e){
-    e.preventDefault();
-    const{fname, lname, email, password} = this.state;
-    console.log(fname, lname, email, password);
-    fetch("http://localhost:5000/register", {
+    handleSubmit(e){
+        e.preventDefault();
+        const{email, password} = this.state;
+        console.log(email, password);
+        fetch("http://localhost:5000/users/login", {
       method: "POST",
       crossDomain:true,
       headers:{
@@ -27,43 +25,34 @@ export default class SignUp extends Component {
         "Access-Control-Allow-Origin":"*",
       },
       body:JSON.stringify({
-        fname,
-        lname,
         email,
         password
       }),
     }).then((res)=>res.json())
     .then((data)=>{
       console.log(data,"userRegister");
-      if(data.status==="ok"){
-        alert("Registration was successful");
-        window.location.href="./sign-in"
+      if(data.status === "ok"){
+        alert("Login was successful!");
+        window.localStorage.removeItem("token");
+        window.localStorage.setItem("token", data.data);
+        window.location.href="./welcome"
       }
-    })
-  }
+      else {
+        alert("Login was unsuccessful. Please try again.");
+      }
+    });
+    }
   render() {
     return (
+      
       <div>
         <LoginBanner/>
-        <br/>
+        <div className='bannerSpacer'></div>
+        
         <img className="gator-image" src={gator} alt="Gator"/>
+
         <form onSubmit={this.handleSubmit}>
-          <h3 className='title-name'>Sign Up</h3>
-
-          <div className="mb-3">
-            <label>First name</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Enter first name..."
-              onChange={e=>this.setState({fname:e.target.value})}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label>Last name</label>
-            <input type="text" className="form-control" placeholder="Enter last name..." onChange={e=>this.setState({lname:e.target.value})}/>
-          </div>
+          <h3 className='title-name'>Sign In</h3>
 
           <div className="mb-3">
             <label>Email </label>
@@ -84,14 +73,14 @@ export default class SignUp extends Component {
               onChange={e=>this.setState({password:e.target.value})}
             />
           </div>
-
+          
           <div className="d-grid">
             <button type="submit" className="btn btn-primary">
-              Sign Up
+              Login
             </button>
           </div>
           <p className="forgot-password text-right">
-            Already registered? <a href="/sign-in">Sign in!</a>
+            Not registered? <a href="/sign-up">Sign up!</a>
           </p>
         </form>
       </div>
