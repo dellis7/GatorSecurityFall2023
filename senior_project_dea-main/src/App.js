@@ -1,9 +1,11 @@
 import './css/App.css';
 import MyNavbar from './components/Navbar';
 import MyWelcomePage from './components/Welcome';
-import LearnPage from './components/questions/Learn';
-import GamePage from './components/questions/Game';
-import ProfilePage from './components/users/Profile';
+import LearnPage from './components/Learn';
+import GamePage from './components/Game';
+import GameTraditionalPage from './components/GameTraditional';
+import GameAdventurePage from './components/GameAdventure';
+import ProfilePage from './components/Profile';
 import { Routes, Route } from "react-router-dom"
 import Login from './components/users/Login'
 import SignUp from './components/users/SignUp'
@@ -14,7 +16,6 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import { useLocation } from 'react-router-dom';
 import QuestionCRUD from './components/questions/QuestionCRUD';
 import { useEffect } from 'react';
-
 
 function App() {
   
@@ -61,6 +62,8 @@ function App() {
               <Route path="/welcome" element={<MyWelcomePage />} />
               <Route path="/learn" element={<LearnPage />} />
               <Route path="/game" element={<GamePage />} />
+              <Route path="/gameTraditional" element={<GameTraditionalPage />} />
+              <Route path="/gameAdventure" element={<GameAdventurePage />} />
               <Route path="/myprofile" element={<ProfilePage />} />
               <Route exact path="/" element={<Login />} />
               <Route path="/sign-in" element={<Login />} />
