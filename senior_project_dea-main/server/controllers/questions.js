@@ -2,6 +2,9 @@ require("../schemas")
 
 const mongoose = require("mongoose")
 const TraditionalQuestion = mongoose.model("TraditionalQuestionInfo")
+const User = mongoose.model("UserInfo")
+const jwtObj = require("jsonwebtoken");
+const Jwt_secret_Obj = "sfhgfhgefugefyfeyf63r36737288gssfgusducb@#$&fvdhfdgfuf76";
 
 const getCount = (async(req,res) =>{
     TraditionalQuestion.count().then((count)=>{
