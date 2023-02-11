@@ -4,6 +4,7 @@ const express = require("express")
 const server = express()
 server.use(cors());
 server.use(express.json())
+server.use(express.urlencoded({extended:true}))
 
 const userRoutes = require('./routers/users')
 const questionRoutes = require('./routers/questions')

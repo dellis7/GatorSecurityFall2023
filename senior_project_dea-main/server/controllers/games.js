@@ -99,6 +99,23 @@ const deleteGameById = (async(req,res) =>{
     try{
         //Set _id to the value given in url under :id
         const _id = req.params.id;
+
+        const question = await GameQuestion.findById(_id);
+        if(question.type === 0) {
+            for(let subquestion of question.questionData) {
+                await CYOAQuestion.findByIdAndDelete(subquestion);
+            }
+        }
+        else if(question.type === 1) {
+            for(let subquestion in question.questionData) {
+                await DNDQuestion.findByIdAndDelete(subquestion);
+            }
+        }
+        else {
+            res.send({status:500, error:"Cannot delete a question with a malformed topic."});
+            return;
+        }
+
         //Set result to true or false depending on if the question 
         //was successfully found and deleted by its id
         const result = await GameQuestion.findByIdAndDelete(_id);
@@ -226,19 +243,212 @@ const createGame = (async(req,res) =>{
 
 //CYOA Subquestion Routes ==================================================
 const getCYOAById = (async(req,res) =>{
+    try{
+        var id = mongoose.Types.ObjectId(req.params.id);
 
+        //Find the game question and send it
+        CYOAQuestion.findOne({_id: id}).then((data) =>{
+            res.send({status:200, data:data});
+        })
+    //Catch any errors
+    } catch(error) {
+        //Send Status Code 500 (Internal Server Error)
+        res.sendStatus(500);
+    }
 })
 
 const deleteCYOAById = (async(req,res) =>{
+//Check administrative status
+try {
+    if(req.body.token === null || req.body.token === undefined) {
+        res.send({status: 403});
+        return;
+    }
+    const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+    const adminEmail = adminFromToken.email;
+    var admin = await User.findOne({email: adminEmail});
+    if(admin.isAdmin !== true) {
+        res.send({status: 403});
+        return;
+    }
+}
+catch(error) {
+    res.send({status: 500, error:error});
+    return;
+}
 
+//Try these options
+try{
+    //Set _id to the value given in url under :id
+    const _id = req.params.id;
+
+    const subquestion = await CYOAQuestion.findById(_id);
+    const parentQuestion = await GameQuestion.findById(subquestion.parentQuestionId);
+    var tempQuestionData = parentQuestion.questionData;
+ 
+    //Remove the parent's reference to the child
+    const indexToRemove = tempQuestionData.indexOf(_id);
+    if(indexToRemove > -1) {
+        tempQuestionData.splice(indexToRemove, 1);
+    }
+
+    await GameQuestion.findByIdAndUpdate(subquestion.parentQuestionId, {questionData: tempQuestionData});
+
+    //Set result to true or false depending on if the question 
+    //was successfully found and deleted by its id
+    const result = await CYOAQuestion.findByIdAndDelete(_id);
+
+    //If True
+    if (result) {
+        //Send Status Code 202 (Accepted)
+        res.sendStatus(202);
+    //Else False
+    } else {
+        //Send Status Code 404 (Not Found)
+        res.sendStatus(404);
+    }
+//Catch any errors
+} catch(error) {
+    //Send Status Code 500 (Internal Server Error)
+    res.sendStatus(500);
+}
 })
 
+//NOTE: This request MUST be made as a multipart/form-data with zero or one files that is less than 16 MB.
 const updateCYOA = (async(req,res) =>{
+    //Check administrative status
+    try {
+        if(req.body.token === null || req.body.token === undefined) {
+            res.send({status: 403});
+            return;
+        }
+        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminEmail = adminFromToken.email;
+        var admin = await User.findOne({email: adminEmail});
+        if(admin.isAdmin !== true) {
+            res.send({status: 403});
+            return;
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error});
+        return;
+    }
 
+    try{
+        //Set _id to the value given in url under :id
+        const _id = req.params.id;
+
+        var result = false;
+
+        if(req.files.length === 1) {
+            //Set result to true or false depending on if the question was 
+            //successfully found by its id and updated
+            result = await CYOAQuestion.findByIdAndUpdate(_id, {
+                //Dynamically changes values based on the JSON data in the PUT request
+                questionNumber: req.body.questionNumber,
+                question: req.body.question,
+                options: req.body.options,
+                answer: req.body.answer,
+                stimulus: req.files[0].buffer,
+                //NOTE: do not ever allow for the update of the parent question id. Instead, delete the subquestion and remake it under the correct parent.
+            });
+        }
+        else {
+            //Set result to true or false depending on if the question was 
+            //successfully found by its id and updated
+            result = await CYOAQuestion.findByIdAndUpdate(_id, {
+                //Dynamically changes values based on the JSON data in the PUT request
+                questionNumber: req.body.questionNumber,
+                question: req.body.question,
+                options: req.body.options,
+                answer: req.body.answer,
+                //NOTE: do not ever allow for the update of the parent question id. Instead, delete the subquestion and remake it under the correct parent.
+            });
+        }
+
+        //If True
+        if (result) {
+            //Send Status Code 202 (Accepted)
+            res.sendStatus(202);
+            return;
+        //Else False
+        } else {
+            //Send Status Code 404 (Not Found)
+            res.sendStatus(404);
+            return;
+        }
+    //Catch any errors
+    } catch(error) {
+        //Send Status Code 500 (Internal Server Error)
+        res.sendStatus(500);
+        return;
+    }
 })
 
+//NOTE: This request MUST be made as a multipart/form-data with one file that is less than 16 MB.
 const createCYOA = (async(req,res) =>{
+    //Check administrative status
+    try {
+        if(req.body.token === null || req.body.token === undefined) {
+            res.send({status: 403});
+            return;
+        }
+        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminEmail = adminFromToken.email;
+        var admin = await User.findOne({email: adminEmail});
+        if(admin.isAdmin !== true) {
+            res.send({status: 403});
+            return;
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error});
+        return;
+    }
+    try{
+        const pid = mongoose.Types.ObjectId(req.body.parentQuestionId);
 
+        //Verify that the parent question exists in GameQuestion
+        const parentQuestion = await GameQuestion.findOne({_id: pid});
+
+        if(parentQuestion === null || parentQuestion === undefined) {
+            res.send({status: 404, error: "The parent question was not found in the database."});
+            return;
+        }
+        else if(parentQuestion.type !== 0) {
+            res.send({status: 400, error: "The parent question is not a CYOA question."});
+            return;
+        }
+
+        if(req.files.length !== 1) {
+            res.send({status: 400, error: "Exactly one image file must be uploaded."});
+            return;
+        }
+
+        const question = new CYOAQuestion({
+            //Dynamically changes values based on the JSON data in the POST request
+            parentQuestionId: pid,
+            questionNumber: req.body.questionNumber,
+            question: req.body.question,
+            options: req.body.options,
+            answer: req.body.answer,
+            stimulus: req.files[0].buffer,
+        })
+        await question.save();
+        
+        var tempQuestionData = parentQuestion.questionData;
+        tempQuestionData.push(question._id);
+
+        await GameQuestion.findByIdAndUpdate(pid, {questionData: tempQuestionData});
+        
+        res.sendStatus(201);
+    //Catch any errors
+    } catch(error) {
+        //Send Status Code 500 (Internal Server Error)
+        res.sendStatus(500);
+        return;
+    }
 })
 
 //DND Subquestion Routes ==================================================

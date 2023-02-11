@@ -1,5 +1,9 @@
 const express = require('express')
+const multer = require('multer')
+
 const router = express.Router()
+const storage = multer.memoryStorage()
+const upload = multer({storage: storage});
 
 const {
     getGameCount,
@@ -39,9 +43,9 @@ router.post('/cyoa/getById/:id', getCYOAById);
 
 router.delete('/cyoa/delete/:id', deleteCYOAById);
 
-router.put('/cyoa/update/:id', updateCYOA);
+router.put('/cyoa/update/:id', upload.any(), updateCYOA);
 
-router.post('/cyoa/create', createCYOA);
+router.post('/cyoa/create', upload.any(), createCYOA);
 
 //DND Subquestion Routes
 router.post('/dnd/getById/:id', getDNDById);

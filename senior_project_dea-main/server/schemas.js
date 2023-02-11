@@ -43,7 +43,7 @@ const gameQuestionDBSchema = new mongoose.Schema(
 const CYOAQuestionDBSchema = new mongoose.Schema(
     {
         parentQuestionId:mongoose.Schema.Types.ObjectId,
-        questionnumber:Number,
+        questionNumber:Number,
         question:String,
         options:Array,
         answer:String,
