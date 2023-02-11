@@ -30,6 +30,7 @@ const traditionalQuestionDBSchema = new mongoose.Schema(
 
 const gameQuestionDBSchema = new mongoose.Schema(
     {
+        name:String,
         questionData:Array,
         topic:Number,
         type:Number,
@@ -39,6 +40,34 @@ const gameQuestionDBSchema = new mongoose.Schema(
     }
 )
 
+const CYOAQuestionDBSchema = new mongoose.Schema(
+    {
+        parentQuestionId:mongoose.Schema.Types.ObjectId,
+        questionnumber:Number,
+        question:String,
+        options:Array,
+        answer:String,
+        stimulus: Buffer,
+    },
+    {
+        collection: "CYOAQuestionInfo"
+    }
+)
+
+const DNDQuestionDBSchema = new mongoose.Schema(
+    {
+        parentQuestionId:mongoose.Schema.Types.ObjectId,
+        question:String,
+        images:Array, //This should be a map with a unique id as the key and the raw image data as a value
+        answerMatrix:Array, //This should be a 2D array that contains the correct ordering of the unique image ids
+    },
+    {
+        collection: "DNDQuestionInfo"
+    }
+)
+
 mongoose.model("UserInfo", userDBSchema);
 mongoose.model("TraditionalQuestionInfo", traditionalQuestionDBSchema);
-mongoose.model("GameQuestionInfo", gameQuestionDBSchema)
+mongoose.model("GameQuestionInfo", gameQuestionDBSchema);
+mongoose.model("CYOAQuestionInfo", CYOAQuestionDBSchema);
+mongoose.model("DNDQuestionInfo", DNDQuestionDBSchema);
