@@ -5,6 +5,7 @@ const TraditionalQuestion = mongoose.model("TraditionalQuestionInfo")
 const User = mongoose.model("UserInfo")
 const jwtObj = require("jsonwebtoken");
 const Jwt_secret_Obj = "sfhgfhgefugefyfeyf63r36737288gssfgusducb@#$&fvdhfdgfuf76";
+const questionTopicMap = {other: 0, input_validation: 1, encoding_escaping: 2, xss: 3, sql_injection: 4, crypto: 5, auth: 6};
 
 const getCount = (async(req,res) =>{
     TraditionalQuestion.count().then((count)=>{
@@ -72,11 +73,11 @@ const getByTopic = (async(req,res)=>{
 				res.send({status:200, data:data});
 			});
 		}
-        //Catch any errors
-        } catch(error) {
-            //Send Status Code 500 (Internal Server Error)
-            res.sendStatus(500);
-        }
+    //Catch any errors
+    } catch(error) {
+        //Send Status Code 500 (Internal Server Error)
+        res.sendStatus(500);
+    }
 })
 
 const deleteById = (async(req,res) => {
