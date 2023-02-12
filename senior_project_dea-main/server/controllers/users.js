@@ -151,27 +151,26 @@ const updateLearnScore = (async (req, res) => {
     try{
         //Retrieve the question being answered
         const questionData = await TraditionalQuestion.findById(req.body.qid)
-  
+
         //Check to see if they answered it correctly
         if(questionData.answer === req.body.answer) {
             const user = jwtObj.verify(req.body.token, Jwt_secret_Obj);
             const uEmail = user.email;
-            
+
             //Get existing scores
-            User.findOne({email: uEmail}).then((dbUser) => {
-                var existingRawScores = dbUser["learnscore"];
+            const dbUser = await User.findOne({email: uEmail});
+            var existingRawScores = dbUser["learnscore"];
 
-                var existingScores = [];
-                if(existingRawScores !== undefined) {
-                    existingScores = existingRawScores;
-                }
+            var existingScores = [];
+            if(existingRawScores !== undefined) {
+                existingScores = existingRawScores;
+            }
 
-                //If an existing entry for the question is not found, add it
-                if(existingScores.find(element => element === req.body.qid) === undefined) {
-                    existingScores.push(req.body.qid);
-                    User.updateOne({email: uEmail}, {$set: {"learnscore": existingScores}});
-                }
-            });
+            //If an existing entry for the question is not found, add it
+            if(existingScores.find(element => element === req.body.qid) === undefined) {
+                existingScores.push(req.body.qid);
+                await User.updateOne({email: uEmail}, {$set: {"learnscore": existingScores}});
+            }
             
             res.send({status: 200, data:{correct:true}});
         } else {

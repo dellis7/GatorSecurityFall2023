@@ -45,6 +45,7 @@ const CYOAQuestionDBSchema = new mongoose.Schema(
         parentQuestionId:mongoose.Schema.Types.ObjectId,
         questionNumber:Number,
         question:String,
+        type:Number,
         options:Array,
         answer:String,
         stimulus: Buffer,
