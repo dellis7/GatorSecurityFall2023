@@ -361,6 +361,7 @@ const updateCYOA = (async(req,res) =>{
                 //Dynamically changes values based on the JSON data in the PUT request
                 questionNumber: req.body.questionNumber,
                 question: req.body.question,
+                type: req.body.type,
                 options: req.body.options,
                 answer: req.body.answer,
                 //NOTE: do not ever allow for the update of the parent question id. Instead, delete the subquestion and remake it under the correct parent.
@@ -431,6 +432,7 @@ const createCYOA = (async(req,res) =>{
             parentQuestionId: pid,
             questionNumber: req.body.questionNumber,
             question: req.body.question,
+            type: req.body.type,
             options: req.body.options,
             answer: req.body.answer,
             stimulus: req.files[0].buffer,
