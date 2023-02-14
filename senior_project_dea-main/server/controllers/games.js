@@ -1,6 +1,8 @@
 require("../schemas")
 
 const mongoose = require("mongoose")
+const fs = require("fs")
+const path = require("path")
 const GameQuestion = mongoose.model("GameQuestionInfo")
 const CYOAQuestion = mongoose.model("CYOAQuestionInfo")
 const DNDQuestion = mongoose.model("DNDQuestionInfo")
@@ -103,6 +105,14 @@ const deleteGameById = (async(req,res) =>{
         const question = await GameQuestion.findById(_id);
         if(question.type === 0) {
             for(let subquestion of question.questionData) {
+                //Remove any existing file
+                fs.readdirSync(path.join(__dirname, '..', 'uploads')).forEach(file => {
+                    if(file.indexOf(subquestion.toString()) !== -1) {
+                        fs.unlinkSync(path.join(__dirname, '..', 'uploads', file));
+                        return;
+                    }
+                })
+
                 await CYOAQuestion.findByIdAndDelete(subquestion);
             }
         }
@@ -144,7 +154,7 @@ const deleteGameById = (async(req,res) =>{
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
-        res.sendStatus(500);
+        res.send({status: 500, error:error});
     }
 })
 
@@ -248,6 +258,14 @@ const getCYOAById = (async(req,res) =>{
 
         //Find the game question and send it
         CYOAQuestion.findOne({_id: id}).then((data) =>{
+            //Find any existing file
+            fs.readdirSync(path.join(__dirname, '..', 'uploads')).forEach(file => {
+                if(file.indexOf(id) !== -1) {
+                    data.stimulus = fs.readFileSync(path.join(__dirname, '..', 'uploads', file), "binary");
+                    return;
+                }
+            })
+
             res.send({status:200, data:data});
         })
     //Catch any errors
@@ -297,6 +315,14 @@ try{
     //Set result to true or false depending on if the question 
     //was successfully found and deleted by its id
     const result = await CYOAQuestion.findByIdAndDelete(_id);
+
+    //Remove any existing file
+    fs.readdirSync(path.join(__dirname, '..', 'uploads')).forEach(file => {
+        if(file.indexOf(_id.toString()) !== -1) {
+            fs.unlinkSync(path.join(__dirname, '..', 'uploads', file));
+            return;
+        }
+    })
 
     //If True
     if (result) {
@@ -350,9 +376,22 @@ const updateCYOA = (async(req,res) =>{
                 question: req.body.question,
                 options: req.body.options,
                 answer: req.body.answer,
-                stimulus: req.files[0].buffer,
+                //stimulus: req.files[0].buffer, //If you'd like to store file contents in the database, uncomment this line.
                 //NOTE: do not ever allow for the update of the parent question id. Instead, delete the subquestion and remake it under the correct parent.
             });
+
+            //Remove any existing file
+            fs.readdirSync(path.join(__dirname, '..', 'uploads')).forEach(file => {
+                if(file.indexOf(_id.toString()) !== -1) {
+                    fs.unlinkSync(path.join(__dirname, '..', 'uploads', file));
+                    return;
+                }
+            })
+
+            //Store file contents in the filesystem
+            const dot = req.files[0].originalname.indexOf('.');
+            const ext = req.files[0].originalname.substring(dot);
+            fs.writeFileSync(path.join(__dirname, '..', 'uploads', _id.toString() + ext), req.files[0].buffer, "binary");
         }
         else {
             //Set result to true or false depending on if the question was 
@@ -382,7 +421,7 @@ const updateCYOA = (async(req,res) =>{
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
-        res.sendStatus(500);
+        res.send({status: 500, error: error})
         return;
     }
 })
@@ -435,9 +474,14 @@ const createCYOA = (async(req,res) =>{
             type: req.body.type,
             options: req.body.options,
             answer: req.body.answer,
-            stimulus: req.files[0].buffer,
+            //stimulus: req.files[0].buffer, //If you'd like to store file contents in the database, uncomment this line.
         })
         await question.save();
+
+        //Store file contents in the filesystem
+        const dot = req.files[0].originalname.indexOf('.');
+        const ext = req.files[0].originalname.substring(dot);
+        fs.writeFileSync(path.join(__dirname, '..', 'uploads', question._id.toString() + ext), req.files[0].buffer, "binary");
         
         var tempQuestionData = parentQuestion.questionData;
         tempQuestionData.push(question._id);
@@ -448,7 +492,7 @@ const createCYOA = (async(req,res) =>{
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
-        res.sendStatus(500);
+        res.send({status: 500, error: error})
         return;
     }
 })
