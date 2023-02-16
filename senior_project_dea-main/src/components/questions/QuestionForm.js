@@ -7,12 +7,14 @@ export default function QuestionForm({
   options_form,
   answer_form,
   id_form,
+  displayType_form,
 }) {
   const [newQuestion, setNewQuestion] = useState("");
   const [newTopic, setNewTopic] = useState("");
   const [newType, setNewType] = useState("");
   const [newOptions, setNewOptions] = useState([""]);
   const [newAnswer, setNewAnswer] = useState("");
+  const [newDisplayType, setNewDisplayType] = useState("");
 
   const handleQuestionChange = (value) => {
     setNewQuestion(value);
@@ -20,6 +22,10 @@ export default function QuestionForm({
 
   const handleTopicChange = (value) => {
     setNewTopic(value);
+  };
+
+  const handleDisplayTypeChange = (value) => {
+    setNewDisplayType(value);
   };
 
   const handleTypeChange = (value) => {
@@ -71,6 +77,7 @@ export default function QuestionForm({
         topic: newTopic,
         options: newOptions,
         answer: newAnswer,
+        displayType: newDisplayType,
         token: window.localStorage.getItem("token"),
       }),
     }).then((response) => {
@@ -141,6 +148,26 @@ export default function QuestionForm({
             className="form-group"
             style={{ textAlign: "left", marginTop: 10 }}
           >
+            <label htmlFor="form-topic" style={text}>
+              Display Type
+            </label>
+            <select
+              required
+              className="form-select"
+              id="form-topic"
+              onChange={(e) => {
+                handleDisplayTypeChange(e.target.value);
+              }}
+            >
+              <option value="">Choose a Display Type</option>
+              <option value="learn">Learn Page</option>
+              <option value="game">Game Page</option>
+            </select>
+          </div>
+          <div
+            className="form-group"
+            style={{ textAlign: "left", marginTop: 10 }}
+          >
             <label htmlFor="form-type" style={text}>
               Type
             </label>
@@ -152,7 +179,7 @@ export default function QuestionForm({
                 handleTypeChange(e.target.value);
               }}
             >
-              <option value="">Choose Question Type</option>
+              <option value="">Choose a Question Type</option>
               <option value="1">Text Response</option>
               <option value="2">True/False</option>
               <option value="3">Multiple Choice</option>

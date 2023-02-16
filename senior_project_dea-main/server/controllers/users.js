@@ -172,7 +172,7 @@ const updateLearnScore = (async (req, res) => {
                 await User.updateOne({email: uEmail}, {$set: {"learnscore": existingScores}});
             }
             
-            res.send({status: 200, data:{correct:true}});
+            res.send({status: 200, data:{correct:true, qid:req.body.qid}});
         } else {
             res.send({status: 200, data:{correct:false}});
         }

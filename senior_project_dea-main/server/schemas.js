@@ -22,6 +22,10 @@ const traditionalQuestionDBSchema = new mongoose.Schema(
 		topic:Number,
 		options:Array,
 		answer:String,
+        displayType: { 
+            type: String, 
+            enum: ['learn','game']
+        }
     },
     {
         collection: "TraditionalQuestionInfo",

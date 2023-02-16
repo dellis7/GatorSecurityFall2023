@@ -21,13 +21,9 @@ const getByTopic = (async(req,res)=>{
     var isAdmin = false;
 
     try {
-        if(req.body.token !== null && req.body.token !== undefined) {
-            const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-            const adminEmail = adminFromToken.email;
-            var admin = await User.findOne({email: adminEmail});
-            if(admin.isAdmin === true) {
-                isAdmin = true;
-            }
+        if(checkAdmin(req.body.token))
+        {
+            isAdmin = true;
         }
     }
     catch(error) {
@@ -51,7 +47,7 @@ const getByTopic = (async(req,res)=>{
         //Else if the topic is a numerical id
 		} else if(!isNaN(parseInt(req.params.topic))) {
             //Find specific question information in database and send it
-			TraditionalQuestion.find({topic: req.params.topic}).then((data)=>{
+			TraditionalQuestion.find({topic: req.params.topic, displayType: req.body.displayType}).then((data)=>{
                 //Ensure answers aren't sent to the frontend unless you are an admin
                 if(!isAdmin) {
                     for(let i = 0; i < data.length; i++) {
@@ -63,7 +59,7 @@ const getByTopic = (async(req,res)=>{
         //Else the topic is a string identifier
 		} else {
             //Find specific question information in database and send it
-			TraditionalQuestion.find({topic: questionTopicMap[req.params.topic]}).then((data)=>{
+			TraditionalQuestion.find({topic: questionTopicMap[req.params.topic], displayType: req.body.displayType}).then((data)=>{
                 //Ensure answers aren't sent to the frontend unless you are an admin
                 if(!isAdmin) {
                     for(let i = 0; i < data.length; i++) {
@@ -83,14 +79,7 @@ const getByTopic = (async(req,res)=>{
 const deleteById = (async(req,res) => {
     //Check administrative status
     try {
-        if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403});
-            return;
-        }
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
-        var admin = await User.findOne({email: adminEmail});
-        if(admin.isAdmin !== true) {
+        if(!checkAdmin(req.body.token)) {
             res.send({status: 403});
             return;
         }
@@ -138,14 +127,7 @@ const deleteById = (async(req,res) => {
 const update = (async(req,res) => {
     //Check administrative status
     try {
-        if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403});
-            return;
-        }
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
-        var admin = await User.findOne({email: adminEmail});
-        if(admin.isAdmin !== true) {
+        if(!checkAdmin(req.body.token)) {
             res.send({status: 403});
             return;
         }
@@ -166,7 +148,8 @@ const update = (async(req,res) => {
             type: req.body.type,
             topic: req.body.topic,
             options: req.body.options,
-            answer: req.body.answer
+            answer: req.body.answer,
+            displayType: req.body.displayType,
         });
         //If True
         if (result) {
@@ -187,14 +170,7 @@ const update = (async(req,res) => {
 const create = (async(req,res)=>{
     //Check administrative status
     try {
-        if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403});
-            return;
-        }
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
-        var admin = await User.findOne({email: adminEmail});
-        if(admin.isAdmin !== true) {
+        if(!checkAdmin(req.body.token)) {
             res.send({status: 403});
             return;
         }
@@ -211,6 +187,7 @@ const create = (async(req,res)=>{
             topic: req.body.topic,
             options: req.body.options,
             answer: req.body.answer,
+            displayType: req.body.displayType,
         })
         await question.save();
         res.sendStatus(201);
@@ -219,6 +196,19 @@ const create = (async(req,res)=>{
         //Send Status Code 500 (Internal Server Error)
         res.sendStatus(500);
     }
+})
+
+const checkAdmin = (async(token) => {
+    if(token === null || token === undefined) {
+        return false;
+    }
+    const adminFromToken = jwtObj.verify(token, Jwt_secret_Obj);
+    const adminEmail = adminFromToken.email;
+    var admin = await User.findOne({email: adminEmail});
+    if(admin.isAdmin !== true) {
+        return false;
+    }
+    return true;
 })
 
 module.exports = {
