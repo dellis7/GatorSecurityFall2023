@@ -7,7 +7,7 @@ const userDBSchema = new mongoose.Schema(
         email:{type:String, unique:true},
         password:String,
         learnscore:Array,
-        gamescore: { type: Array, default: [0,0,0,0,0] },
+        gamescore:Array,
         isAdmin:{type:Boolean, default:false},
     },
     {
