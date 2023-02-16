@@ -8,7 +8,7 @@ const Jwt_secret_Obj = "sfhgfhgefugefyfeyf63r36737288gssfgusducb@#$&fvdhfdgfuf76
 const questionTopicMap = {other: 0, input_validation: 1, encoding_escaping: 2, xss: 3, sql_injection: 4, crypto: 5, auth: 6};
 
 const getCount = (async(req,res) =>{
-    TraditionalQuestion.count().then((count)=>{
+    TraditionalQuestion.count({displayType:req.body.displayType}).then((count)=>{
         res.send({status:"ok", data:count});
     })
     .catch((error)=>{
