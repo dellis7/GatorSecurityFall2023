@@ -3,6 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
 
+// TODO: Deprecate
 function updateScore(token_, section_, index_){
     fetch("http://localhost:5000/users/updatescore", {
             method: "PUT",

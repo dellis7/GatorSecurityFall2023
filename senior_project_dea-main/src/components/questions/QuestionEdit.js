@@ -6,6 +6,7 @@ export default function QuestionEdit(props) {
   const [editType, setEditType] = useState(props.editType);
   const [editOptions, setEditOptions] = useState(props.editOptions);
   const [editAnswer, setEditAnswer] = useState(props.editAnswer);
+  const [editDisplayType, setEditDisplayType] = useState(props.editDisplayType);
 
   const handleQuestionChange = (value) => {
     setEditQuestion(value);
@@ -14,6 +15,10 @@ export default function QuestionEdit(props) {
   const handleTopicChange = (value) => {
     setEditTopic(value);
   };
+
+  const handleDisplayTypeChange = (value) => {
+    setEditDisplayType(value);
+  }
 
   const handleTypeChange = (value) => {
     if (value === "1") {
@@ -64,6 +69,7 @@ export default function QuestionEdit(props) {
         topic: editTopic,
         options: editOptions,
         answer: editAnswer,
+        displayType: editDisplayType,
         token: window.localStorage.getItem("token"),
       }),
     }).then(() => {
@@ -101,6 +107,26 @@ export default function QuestionEdit(props) {
             style={{ textAlign: "left", marginTop: 10 }}
           >
             <label htmlFor="form-topic" style={text}>
+              Display Type
+            </label>
+            <select
+              required
+              className="form-select"
+              id="form-topic"
+              value={editDisplayType}
+              onChange={(e) => {
+                handleDisplayTypeChange(e.target.value);
+              }}
+            >
+              <option value="learn">Learn Page</option>
+              <option value="game">Game Page</option>
+            </select>
+          </div>
+          <div
+            className="form-group"
+            style={{ textAlign: "left", marginTop: 10 }}
+          >
+            <label htmlFor="form-topic" style={text}>
               Topic
             </label>
             <select
@@ -119,6 +145,8 @@ export default function QuestionEdit(props) {
               <option value="4">SQL Injection</option>
               <option value="5">Cryptography</option>
               <option value="6">User Authentication</option>
+              <option value="7">URL SQL Injection</option>
+              <option value="8">Login SQL Injection</option>
             </select>
           </div>
           <div
