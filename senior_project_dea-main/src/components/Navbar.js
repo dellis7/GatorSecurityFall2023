@@ -2,9 +2,46 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { LinkContainer } from "react-router-bootstrap"
+import { LinkContainer } from "react-router-bootstrap";
+import { useEffect, useRef } from 'react';
+// import UserInfo from './users/UserInfo';
 
 function MyNavbar() {
+  let isAdmin = useRef(false);
+  // const userInfo = UserInfo.getItem.isAdmin;
+  // console.log("userInfo: " + userInfo);
+
+  useEffect(() => {
+    async function adminStatus() {
+      fetch("http://localhost:5000/users/checkPrivileges", 
+        {
+          method: "POST",
+          crossDomain:true,
+          headers:{
+            "Content-Type":"application/json",
+            Accept:"application/json",
+            "Access-Control-Allow-Origin":"*",
+        },
+        body:JSON.stringify({
+          token:window.localStorage.getItem("token"),
+        }),
+        }).then((res)=>res.json())
+        .then((data)=>{
+          if(data.status === 200) {
+            isAdmin.current = true;
+            console.log("if block: " + isAdmin.current);
+          }
+          else {
+            isAdmin.current = false;
+            console.log("else block: " + isAdmin.current);
+          }
+        });
+    }
+  
+    console.log("isAdmin before: " + isAdmin.current);
+    adminStatus();
+    console.log("isAdmin after: " + isAdmin.current);
+}, []);
 
 /* Navbar CSS? */
 const navbarTitle = {
@@ -46,7 +83,7 @@ const navbarStyle = {
 };
 
   return (
-    <Navbar style={navbarStyle} expand="lg">
+    <Navbar style={navbarStyle} expand="lg" >
       <Container>
         <LinkContainer to="/welcome" style={navbarTitle}>
           <Navbar.Brand style={navbarTitle}>
@@ -78,8 +115,19 @@ const navbarStyle = {
                   My Profile
                 </NavDropdown.Item>
               </LinkContainer>
+              { isAdmin.current && 
+              <><LinkContainer to="/admin" style={dropdownItem}>
+                  <NavDropdown.Item style={dropdownItem} eventKey={3.2}>
+                    Admin Panel
+                  </NavDropdown.Item>
+                </LinkContainer><LinkContainer to="/modify_questions" style={dropdownItem}>
+                    <NavDropdown.Item style={dropdownItem} eventKey={3.3}>
+                      Question Editor
+                    </NavDropdown.Item>
+                  </LinkContainer></>
+              }
               <LinkContainer to="/log-out" style={dropdownItem}>
-                <NavDropdown.Item style={dropdownItem} eventKey={3.2}>
+                <NavDropdown.Item style={dropdownItem} eventKey={3.4}>
                   Logout
                 </NavDropdown.Item> 
               </LinkContainer>
