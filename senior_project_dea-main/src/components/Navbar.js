@@ -3,13 +3,10 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { LinkContainer } from "react-router-bootstrap";
-import { useEffect, useRef } from 'react';
-// import UserInfo from './users/UserInfo';
+import { useEffect, useState } from 'react';
 
 function MyNavbar() {
-  let isAdmin = useRef(false);
-  // const userInfo = UserInfo.getItem.isAdmin;
-  // console.log("userInfo: " + userInfo);
+  const [isAdmin, setIsAdmin] = useState({isAdmin: false});
 
   useEffect(() => {
     async function adminStatus() {
@@ -28,19 +25,14 @@ function MyNavbar() {
         }).then((res)=>res.json())
         .then((data)=>{
           if(data.status === 200) {
-            isAdmin.current = true;
-            console.log("if block: " + isAdmin.current);
+            setIsAdmin(true);
           }
           else {
-            isAdmin.current = false;
-            console.log("else block: " + isAdmin.current);
+            setIsAdmin(false);
           }
         });
     }
-  
-    console.log("isAdmin before: " + isAdmin.current);
     adminStatus();
-    console.log("isAdmin after: " + isAdmin.current);
 }, []);
 
 /* Navbar CSS? */
@@ -115,7 +107,7 @@ const navbarStyle = {
                   My Profile
                 </NavDropdown.Item>
               </LinkContainer>
-              { isAdmin.current && 
+              { isAdmin && 
               <><LinkContainer to="/admin" style={dropdownItem}>
                   <NavDropdown.Item style={dropdownItem} eventKey={3.2}>
                     Admin Panel
