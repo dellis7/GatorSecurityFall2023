@@ -2,9 +2,38 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { LinkContainer } from "react-router-bootstrap"
+import { LinkContainer } from "react-router-bootstrap";
+import { useEffect, useState } from 'react';
 
 function MyNavbar() {
+  const [isAdmin, setIsAdmin] = useState({isAdmin: false});
+
+  useEffect(() => {
+    async function adminStatus() {
+      fetch("http://localhost:5000/users/checkPrivileges", 
+        {
+          method: "POST",
+          crossDomain:true,
+          headers:{
+            "Content-Type":"application/json",
+            Accept:"application/json",
+            "Access-Control-Allow-Origin":"*",
+        },
+        body:JSON.stringify({
+          token:window.localStorage.getItem("token"),
+        }),
+        }).then((res)=>res.json())
+        .then((data)=>{
+          if(data.status === 200) {
+            setIsAdmin(true);
+          }
+          else {
+            setIsAdmin(false);
+          }
+        });
+    }
+    adminStatus();
+}, []);
 
 /* Navbar CSS? */
 const navbarTitle = {
@@ -46,7 +75,7 @@ const navbarStyle = {
 };
 
   return (
-    <Navbar style={navbarStyle} expand="lg">
+    <Navbar style={navbarStyle} expand="lg" >
       <Container>
         <LinkContainer to="/welcome" style={navbarTitle}>
           <Navbar.Brand style={navbarTitle}>
@@ -78,8 +107,19 @@ const navbarStyle = {
                   My Profile
                 </NavDropdown.Item>
               </LinkContainer>
+              { isAdmin && 
+              <><LinkContainer to="/admin" style={dropdownItem}>
+                  <NavDropdown.Item style={dropdownItem} eventKey={3.2}>
+                    Admin Panel
+                  </NavDropdown.Item>
+                </LinkContainer><LinkContainer to="/modify_questions" style={dropdownItem}>
+                    <NavDropdown.Item style={dropdownItem} eventKey={3.3}>
+                      Question Editor
+                    </NavDropdown.Item>
+                  </LinkContainer></>
+              }
               <LinkContainer to="/log-out" style={dropdownItem}>
-                <NavDropdown.Item style={dropdownItem} eventKey={3.2}>
+                <NavDropdown.Item style={dropdownItem} eventKey={3.4}>
                   Logout
                 </NavDropdown.Item> 
               </LinkContainer>
