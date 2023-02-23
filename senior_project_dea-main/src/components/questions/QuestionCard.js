@@ -20,6 +20,7 @@ export default function QuestionCard({
   options_Card,
   answer_Card,
   id_Card,
+  displayType_Card,
 }) {
   const [deleteModalShow, setDeleteModalShow] = useState(false);
   const [editModalShow, setEditModalShow] = useState(false);
@@ -32,6 +33,9 @@ export default function QuestionCard({
             <div className="row my-3">
               <div className="col">
                 <p style={text}>Topic: {topic_Card}</p>
+              </div>
+              <div className="col">
+                <p style={text}>Display Type: {displayType_Card}</p>
               </div>
               <div className="col" style={{ textAlign: "right" }}>
                 <button
@@ -91,6 +95,7 @@ export default function QuestionCard({
         options_editmodal={options_Card}
         answer_editmodal={answer_Card}
         id_editmodal={id_Card}
+        displayType_editmodal={displayType_Card}
         onHide={() => setEditModalShow(false)}
       />
     </div>
@@ -158,6 +163,7 @@ function EditModal(props) {
           editOptions={props.options_editmodal}
           editAnswer={props.answer_editmodal}
           editID={props.id_editmodal}
+          editDisplayType={props.displayType_editmodal}
         />
       </Modal.Body>
       <Modal.Footer>

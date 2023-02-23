@@ -64,6 +64,7 @@ function QuestionCRUD() {
             options_Card={entry.options}
             answer_Card={entry.answer}
             id_Card={entry._id}
+            displayType_Card={entry.displayType}
           />
         ))}
       </div>

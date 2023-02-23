@@ -38,10 +38,24 @@ export default class ProfilePage extends React.Component {
             Accept:"application/json",
             "Access-Control-Allow-Origin":"*",
         },
-        body:JSON.stringify({}),
+        body:JSON.stringify({displayType:'learn'}),
         }).then((res)=>res.json())
         .then(data=>{
-          this.setState({traditionalQuestionCount: data.data})
+          this.setState({learnQuestionCount: data.data})
+        });
+        fetch("http://localhost:5000/questions/getCount", 
+        {
+          method: "POST",
+          crossDomain:true,
+          headers:{
+            "Content-Type":"application/json",
+            Accept:"application/json",
+            "Access-Control-Allow-Origin":"*",
+        },
+        body:JSON.stringify({displayType:'game'}),
+        }).then((res)=>res.json())
+        .then(data=>{
+          this.setState({gameQuestionCount: data.data})
         });
     }
 
@@ -71,11 +85,11 @@ export default class ProfilePage extends React.Component {
       //Set values for return section
       var fullName = this.state.userInfo["fname"] + " " + this.state.userInfo["lname"];
       var email = this.state.userInfo["email"];
-      var gameScore = this.state.userInfo["gamescore"].reduce((a, b) => a + b, 0);
-      var gameMax = this.state.userInfo["gamescore"].length;
+      var gameScore = this.state.userInfo["gamescore"].length;
+      var gameMax = this.state.gameQuestionCount;
       var gamePercentage = Math.floor(gameScore/gameMax * 100);
       var learnScore = this.state.userInfo["learnscore"].length;
-      var learnMax = this.state.traditionalQuestionCount;
+      var learnMax = this.state.learnQuestionCount;
       var learnPercentage = Math.floor(learnScore/learnMax * 100);
 
       //What is rendered to the webpage
