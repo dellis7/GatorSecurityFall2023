@@ -39,9 +39,9 @@ export default class SignUp extends Component {
         alert("Registration was successful");
         window.location.href="./sign-in"
       }
-      else {
-        alert("A GatorSecurity account already exists with this email address.");
-      }
+      //else {
+        //alert("A GatorSecurity account already exists with this email address.");
+      //}
     })
   }
   render() {
