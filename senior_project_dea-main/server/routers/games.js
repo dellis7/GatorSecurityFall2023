@@ -23,6 +23,8 @@ const {
     createDND
 } = require('../controllers/games.js')
 
+const { validateCYOAQuestion, validateDNDQuestion } = require('../validators/questionValidator')
+
 //Overarching Game Question Routes
 router.post('/getcount', getGameCount);
 
@@ -45,7 +47,7 @@ router.delete('/cyoa/delete/:id', deleteCYOAById);
 
 router.put('/cyoa/update/:id', upload.any(), updateCYOA);
 
-router.post('/cyoa/create', upload.any(), createCYOA);
+router.post('/cyoa/create', upload.any(), validateCYOAQuestion, createCYOA);
 
 //DND Subquestion Routes
 router.post('/dnd/getById/:id', getDNDById);
@@ -54,6 +56,6 @@ router.delete('/dnd/delete/:id', deleteDNDById);
 
 router.put('/dnd/update/:id', updateDND);
 
-router.post('/dnd/create', createDND);
+router.post('/dnd/create', upload.any(), validateDNDQuestion, createDND);
 
 module.exports = router
