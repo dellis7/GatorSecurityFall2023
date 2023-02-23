@@ -3,6 +3,7 @@ require("../schemas")
 const mongoose = require("mongoose")
 const TraditionalQuestion = mongoose.model("TraditionalQuestionInfo")
 const User = mongoose.model("UserInfo")
+const CYOAQuestion = mongoose.model("CYOAQuestionInfo")
 const jwtObj = require("jsonwebtoken");
 const Jwt_secret_Obj = "sfhgfhgefugefyfeyf63r36737288gssfgusducb@#$&fvdhfdgfuf76";
 const questionTopicMap = {other: 0, input_validation: 1, encoding_escaping: 2, xss: 3, sql_injection: 4, crypto: 5, auth: 6};
@@ -198,6 +199,34 @@ const create = (async(req,res)=>{
     }
 })
 
+// takes a quesiton id (as a param) and the selected answer (from the request body)
+// will return 200 along with T/F if the question is found, otherwise 401
+const checkAnswer = (async(req, res) => {
+    try{
+        const _id = req.params.id;
+        const questionData = await CYOAQuestion.findById(_id)
+
+        if (req.body.answer === questionData.answer){
+            res.send({status:"ok", data:true});
+        }
+        else{
+            res.send({status:"ok", data:false});
+        }
+    } catch(error) {
+        res.sendStatus(401);
+    }
+})
+
+// we can move this to a dedicated CYOA controller if we decide we need one
+const getCYOAQuestionCount = (async(req,res) =>{
+    CYOAQuestion.count({}).then((count)=>{
+        res.send({status:"ok", data:count});
+    })
+    .catch((error)=>{
+        res.send({status: "error", data:error});
+    });
+})
+
 const checkAdmin = (async(token) => {
     if(token === null || token === undefined) {
         return false;
@@ -216,5 +245,7 @@ module.exports = {
     getByTopic,
     deleteById,
     create,
-    update
+    update,
+    checkAnswer,
+    getCYOAQuestionCount
 }
