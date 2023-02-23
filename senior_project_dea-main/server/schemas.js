@@ -63,8 +63,8 @@ const DNDQuestionDBSchema = new mongoose.Schema(
     {
         parentQuestionId:mongoose.Schema.Types.ObjectId,
         question:String,
-        images:Array, //This should be a map with a unique id as the key and the raw image data as a value
-        answerMatrix:Array, //This should be a 2D array that contains the correct ordering of the unique image ids
+        anchoredMatrix:Array, //This should be a 2D array that contains the correct ordering of text that should be displayed that cannot be moved by the user. Format: [["x", "a"], ["", "y"]]
+        answerMatrix:Array, //This should be a 2D array that contains the correct ordering of the unique image ids or text. Format: [[{image: id}, {text: "some text"}], [{text: "this is the next row"}, {image: id}]]
     },
     {
         collection: "DNDQuestionInfo"
