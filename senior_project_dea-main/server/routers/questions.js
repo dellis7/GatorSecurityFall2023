@@ -11,6 +11,8 @@ const {
 
 const { validateQuestion } = require('../validators/questionValidator')
 
+//Overarching Traditional Question Routes (NOTE: Each / should be preceded by /questions when testing with Postman e.g. localhost:5000/questions/getcount)
+
 router.post('/getcount', getCount)
 
 router.post('/get/:topic', getByTopic)

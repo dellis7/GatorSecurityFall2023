@@ -34,7 +34,32 @@ function TradQuestion({ qdata, num }) {
         return answerOptions;
     }
 
+    const createTable = () => {
+        let question = document.getElementById("text-answer-63ed420afc16e08fd2c00e46");
+
+        let usernamesArr = ["codebike", "neithercostume", "itachi123", "randomturtle", "volcanoshark", "orangegator", "purpledonkey", "hotdogsoup", "greenlizard"];
+        let table = document.createElement("TABLE");
+
+        for(let i = 0; i < usernamesArr.length; i++){
+            var row = table.insertRow(i);
+            row.style.border = "1px solid black";
+            row.insertCell(0).innerHTML = usernamesArr[i];
+        }
+
+        let header = table.createTHead();
+        let headerRow = header.insertRow(0);
+        header.style.fontWeight = 'bold';
+        header.style.border = "1px solid black";
+        headerRow.insertCell(0).innerHTML = "Usernames";
+
+        question.appendChild(table); 
+    }
+
     const checkAnswer = () => {
+        var theAnswer = answer;
+        if(qdata.type === 1) {
+            theAnswer = document.getElementById("answer-box-" + qdata._id).value;
+        }
         fetch("http://localhost:5000/users/updatelearnscore", {
             method: "PUT",
             crossDomain:true,
@@ -46,12 +71,16 @@ function TradQuestion({ qdata, num }) {
             body:JSON.stringify({
                 token:window.localStorage.getItem("token"),
                 qid:qdata._id,
-                answer:answer,
+                answer:theAnswer,
             }),
         }).then((res)=>res.json())
         .then((data)=>{
             if(data.data.correct === true) {
                 alert("Correct!");
+                if (data.data.qid === '63ed420afc16e08fd2c00e46')
+                {
+                    createTable();
+                }
             }
             else {
                 alert("Incorrect. Try again!");
@@ -59,33 +88,56 @@ function TradQuestion({ qdata, num }) {
         })
     }
 
-    return (
-        <>
-            <div style={spaceAfterQ}></div>
-            {num}: {qdata.question}
-            <div style={spaceAfterQ}></div>
-            <div>
-                <Form>
-                {['radio'].map((type) => (
-                    <div className="mb-4">
-                    <Form.Group>
-                        {createAnswerOptions(type)}
-                    </Form.Group>                  
+    //Display T/F and MC questions
+    if(qdata.type === 2 || qdata.type === 3) {
+        return (
+            <>
+                <div style={spaceAfterQ}></div>
+                {num}. {qdata.question}
+                <div style={spaceAfterQ}></div>
+                <div>
+                    <Form>
+                    {['radio'].map((type) => (
+                        <div className="mb-4">
+                        <Form.Group>
+                            {createAnswerOptions(type)}
+                        </Form.Group>                  
+                        </div>
+                    ))}
+                    </Form>
+                    <Button type="submit" onClick={checkAnswer}>Submit</Button>
+                    <div style={spaceAfterQ}></div>
+                    <div style={spaceAfterQ}></div>
+                    <div style={spaceAfterQ}></div>
+                    You selected: <strong>{answer}</strong>
+                    <div style={spaceAfterQ}></div>
+                    <div style={spaceAfterQ}></div>
+                    <div style={spaceAfterQ}></div>
+                    <div style={spaceAfterQ}></div>
+                </div>
+            </>
+        );
+    }
+    //Display typed answer questions
+    else {
+        return (
+            <>
+                <div style={spaceAfterQ}></div>
+                {num}. {qdata.question}
+                <div style={spaceAfterQ}></div>
+                <div id={"text-answer-" + qdata._id}>
+                    <div id={"answer-container-" + qdata._id}>
+                        <input type="text" placeholder="Enter your answer here..." id={"answer-box-" + qdata._id}></input>
+                        <button className="button" onClick={checkAnswer}>Submit</button>
                     </div>
-                ))}
-                </Form>
-                <Button type="submit" onClick={checkAnswer}>Submit</Button>
-                <div style={spaceAfterQ}></div>
-                <div style={spaceAfterQ}></div>
-                <div style={spaceAfterQ}></div>
-                You selected: <strong>{answer}</strong>
-                <div style={spaceAfterQ}></div>
-                <div style={spaceAfterQ}></div>
-                <div style={spaceAfterQ}></div>
-                <div style={spaceAfterQ}></div>
-            </div>
-        </>
-    );
+                    <div style={spaceAfterQ}></div>
+                    <div style={spaceAfterQ}></div>
+                    <div style={spaceAfterQ}></div>
+                    <div style={spaceAfterQ}></div>
+                </div>
+            </>
+        );
+    }
 }
 
 export default TradQuestion;
