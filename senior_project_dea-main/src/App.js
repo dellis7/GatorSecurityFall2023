@@ -16,7 +16,6 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import { useLocation } from 'react-router-dom';
 import QuestionCRUD from './components/questions/QuestionCRUD';
 import { useEffect } from 'react';
-import NewGameTraditionalPage from './components/questions/NewGameTraditional';
 
 function App() {
   
@@ -63,7 +62,7 @@ function App() {
               <Route path="/welcome" element={<MyWelcomePage />} />
               <Route path="/learn" element={<LearnPage />} />
               <Route path="/game" element={<GamePage />} />
-              <Route path="/gameTraditional" element={<NewGameTraditionalPage />} />
+              <Route path="/gameTraditional" element={<GameTraditionalPage />} />
               <Route path="/gameAdventure" element={<GameAdventurePage />} />
               <Route path="/myprofile" element={<ProfilePage />} />
               <Route exact path="/" element={<Login />} />
@@ -73,7 +72,6 @@ function App() {
               <Route path="/userInfo" element={<UserInfo />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/modify_questions" element={<QuestionCRUD/>} />
-              <Route path="/oldGame" element={<GameTraditionalPage/>} />
             </Routes>
           </div>
         </div>

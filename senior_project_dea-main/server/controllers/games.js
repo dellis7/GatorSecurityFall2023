@@ -492,6 +492,15 @@ const createCYOA = (async(req,res) =>{
     }
 })
 
+const getCYOAQuestionCount = (async(req,res) =>{
+    CYOAQuestion.count({}).then((count)=>{
+        res.send({status:"ok", data:count});
+    })
+    .catch((error)=>{
+        res.send({status: "error", data:error});
+    });
+})
+
 //DND Subquestion Routes ==================================================
 const getDNDById = (async(req,res) =>{
     try{
@@ -761,4 +770,5 @@ module.exports = {
     deleteDNDById,
     updateDND,
     createDND,
+    getCYOAQuestionCount
 }

@@ -17,6 +17,7 @@ const {
     deleteCYOAById,
     updateCYOA,
     createCYOA,
+    getCYOAQuestionCount,
     getDNDById,
     deleteDNDById,
     updateDND,
@@ -48,6 +49,8 @@ router.delete('/cyoa/delete/:id', deleteCYOAById);
 router.put('/cyoa/update/:id', upload.any(), updateCYOA);
 
 router.post('/cyoa/create', upload.any(), validateCYOAQuestion, createCYOA);
+
+router.post('/getCYOACount', getCYOAQuestionCount)
 
 //DND Subquestion Routes
 router.post('/dnd/getById/:id', getDNDById);
