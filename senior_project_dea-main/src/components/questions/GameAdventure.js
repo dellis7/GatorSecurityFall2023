@@ -14,14 +14,14 @@ function GameAdventurePage() {
             
             //If gameQuestionData not loaded yet, get it from the DB
             if(gameQuestionData.length === 0) {
-                const game = await getGameQuestion("1", setGameQuestionData);
+                getGameQuestion("1", setGameQuestionData);
             }
     
             //If gameQuestionData has been loaded
             if(gameQuestionData.length !== 0) {
                 //If CYOAQuestionData has not been loaded, get it from the DB
                 if(CYOAQuestionData.length === 0) {
-                    const CYOA = await getCYOAQuestion(gameQuestionData.questionData[count], setCYOAQuestionData);
+                    getCYOAQuestion(gameQuestionData.questionData[count], setCYOAQuestionData);
                 }
             }
         }
@@ -70,67 +70,33 @@ function GameAdventurePage() {
         })
     }
 
-    //Function to check if user has submitted correct answer or not
-    async function submit1() {
-        if (CYOAQuestionData.options[1] === CYOAQuestionData.answer) {
-            alert("Correct!");
-            //Increase counter to get to next question, Force update of page
-        }
-        else {
-            alert("Incorrect!");
-        }
+    //Function to update counter value
+    const increase = () => {
+        setCounter(count => count + 1)
     }
 
     //Function to check if user has submitted correct answer or not
-    async function submit2() {
-        if (CYOAQuestionData.options[2] === CYOAQuestionData.answer) {
-            alert("Correct!");
-            //Increase counter to get to next question, Force update of page
+    const submit = (index) => {
+        //If option matches answer
+        if (CYOAQuestionData.options[index] === CYOAQuestionData.answer) {
+            //If this is not the last question
+            if (gameQuestionData.questionData.length !== count + 1) {
+                //Give correct alert to end-user, and update page to next question
+                alert("Correct!");
+                increase();
+                getCYOAQuestion(gameQuestionData.questionData[count + 1], setCYOAQuestionData);
+            }
+            //Else this is the last question
+            else {
+                //Congratulate end-user, and redirect them to game selection page
+                alert("Congratulations! You beat the game!");
+                window.location.href="./game"
+            } 
         }
+        //Else option does not match, alert end-user incorrect
         else {
             alert("Incorrect!");
         }
-    }
-
-    //Function to check if user has submitted correct answer or not
-    async function submit3() {
-        if (CYOAQuestionData.options[3] === CYOAQuestionData.answer) {
-            alert("Correct!");
-            //Increase counter to get to next question, Force update of page
-        }
-        else {
-            alert("Incorrect!");
-        }
-    }
-
-    //Function to check if user has submitted correct answer or not
-    async function submit4() {
-        if (CYOAQuestionData.options[4] === CYOAQuestionData.answer) {
-            alert("Correct!");
-            //Increase counter to get to next question, Force update of page
-        }
-        else {
-            alert("Incorrect!");
-        }
-    }
-
-    async function loadOptions() {
-
-        //If CYOAQuestionData hasn't been loaded yet
-        if(CYOAQuestionData.length === 0) {
-            //Display loading page
-            return <div>Loading...</div>;
-        }
-
-        //Dynamically render the user's answer options as buttons
-        let options = [];
-    
-        for(let i = 0; i < CYOAQuestionData.options.length; i++) {
-          //options.push(<button onClick={submit} type="button" className="btn btn-primary btn-lg btn-block">{CYOAQuestionData.options[i]}</button>)
-        }
-
-        //Return the options to load on the HTML page
-        return options;
     }
 
     //If CYOAQuestionData hasn't been loaded yet
@@ -142,15 +108,20 @@ function GameAdventurePage() {
         //HTML elements that will be rendered to page
         return (
             <div>
+                {/* Code to replace Template Picture when we add actual images to CYOAQuestionData objects */}
+                {/* <img src={CYOAQuestionData.stimulus} className='img-fluid' alt='...' /> */}
+
                 {/* Template Picture */}
                 <img src='https://mdbootstrap.com/img/new/slides/041.webp' className='img-fluid' alt='...' />
                 
-                {/* btn-block = List of buttons to represent options */}
+                {/* btn-block - List of buttons to represent options */}
                 <div className="btn-block img-fluid shadow-4 d-grid gap-2 col-6 mx-auto justify-content-center">
-                    <button onClick={submit1} type="button" className="btn btn-primary btn-lg btn-block">{CYOAQuestionData.options[1]}</button>
-                    <button onClick={submit2} type="button" className="btn btn-primary btn-lg btn-block">Option 2</button>
-                    <button onClick={submit3} type="button" className="btn btn-primary btn-lg btn-block">Option 3</button>
-                    <button onClick={submit4} type="button" className="btn btn-primary btn-lg btn-block">Option 4</button>
+                {/* A loop that dynamically populates buttons with the current CYOAQuestionData options */}
+                {CYOAQuestionData.options.map((option, index) => (
+                    <div key={index}>
+                        <button onClick={() => {submit(index)}} type="button" className="btn btn-primary btn-lg btn-block">{option}</button>
+                    </div>
+                ))}
                 </div>
             </div>
         );
