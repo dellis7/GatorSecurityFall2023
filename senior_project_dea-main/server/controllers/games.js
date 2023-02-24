@@ -261,11 +261,11 @@ const getCYOAById = (async(req,res) =>{
             //Find any existing file
             fs.readdirSync(path.join(__dirname, '..', 'uploads', 'cyoa')).forEach(file => {
                 if(file.indexOf(id) !== -1) {
-                    data.stimulus = fs.readFileSync(path.join(__dirname, '..', 'uploads', 'cyoa', file), "binary");
+                    data.stimulus = file;
                     return;
                 }
             })
-
+            console.log(data);
             res.send({status:200, data:data});
         })
     //Catch any errors
@@ -516,7 +516,7 @@ const getDNDById = (async(req,res) =>{
                         //Find any existing file
                         fs.readdirSync(path.join(__dirname, '..', 'uploads', 'dnd')).forEach(file => {
                             if(file.indexOf(id + "_" + imgid) !== -1) {
-                                data.answerMatrix[x][y]["image"] = fs.readFileSync(path.join(__dirname, '..', 'uploads', 'dnd', file), "binary");
+                                data.answerMatrix[x][y]["image"] = file;
                                 return;
                             }
                         })

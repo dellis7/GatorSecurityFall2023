@@ -18,6 +18,10 @@ server.listen(5000, ()=>{
     console.log("Server started on port 5000");
 })
 
+server.use(express.static('/uploads'))
+server.use('/uploads/cyoa', express.static('./uploads/cyoa'))
+server.use('uploads/dnd', express.static('./uploads/dnd'))
+
 server.use('/users', userRoutes)
 server.use('/questions', questionRoutes)
 server.use('/games', gameRoutes)
