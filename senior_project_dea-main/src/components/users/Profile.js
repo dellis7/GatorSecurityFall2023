@@ -57,7 +57,7 @@ export default class ProfilePage extends React.Component {
         .then(data=>{
           this.setState({gameQuestionCount: data.data})
         });
-        fetch("http://localhost:5000/questions/getCYOACount", 
+        fetch("http://localhost:5000/games/getCYOACount", 
         {
           method: "POST",
           crossDomain:true,

@@ -27,6 +27,4 @@ router.post('/create', validateQuestion, create)
 
 router.post('/checkAnswer/:id', checkAnswer)
 
-router.post('/getCYOACount', getCYOAQuestionCount)
-
 module.exports = router

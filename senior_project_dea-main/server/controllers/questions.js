@@ -217,16 +217,6 @@ const checkAnswer = (async(req, res) => {
     }
 })
 
-// we can move this to a dedicated CYOA controller if we decide we need one
-const getCYOAQuestionCount = (async(req,res) =>{
-    CYOAQuestion.count({}).then((count)=>{
-        res.send({status:"ok", data:count});
-    })
-    .catch((error)=>{
-        res.send({status: "error", data:error});
-    });
-})
-
 const checkAdmin = (async(token) => {
     if(token === null || token === undefined) {
         return false;
@@ -246,6 +236,5 @@ module.exports = {
     deleteById,
     create,
     update,
-    checkAnswer,
-    getCYOAQuestionCount
+    checkAnswer
 }
