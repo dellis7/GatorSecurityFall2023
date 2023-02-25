@@ -114,6 +114,7 @@ function GameAdventurePage() {
         return (
             <div>
                 <div style={spaceAfterQ}></div>
+                {/* Dynamically loaded CYOA question image */}
                 <img src={`http://localhost:5000/uploads/cyoa/${CYOAQuestionData.stimulus}`} className='img-fluid' alt='...' />
                 <div style={spaceAfterQ}></div>
                 {CYOAQuestionData.questionNumber}. {CYOAQuestionData.question}

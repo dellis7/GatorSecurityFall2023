@@ -15,7 +15,7 @@ export default class Login extends Component {
     handleSubmit(e){
         e.preventDefault();
         const{email, password} = this.state;
-        console.log(email, password);
+        //console.log(email, password);
         fetch("http://localhost:5000/users/login", {
       method: "POST",
       crossDomain:true,
@@ -30,7 +30,7 @@ export default class Login extends Component {
       }),
     }).then((res)=>res.json())
     .then((data)=>{
-      console.log(data,"userRegister");
+      //console.log(data,"userRegister");
       if(data.status === "ok"){
         alert("Login was successful!");
         window.localStorage.removeItem("token");

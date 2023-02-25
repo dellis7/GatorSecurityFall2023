@@ -23,7 +23,7 @@ function QuestionCRUD() {
       .then((res) => res.json())
       .then((data) => {
         handleQuestionsData(data.data);
-        console.log(data);
+        //console.log(data);
       })
   };
 
