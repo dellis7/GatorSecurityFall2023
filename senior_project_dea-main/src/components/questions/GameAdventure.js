@@ -44,6 +44,7 @@ function GameAdventurePage() {
           body:JSON.stringify({}),
           }).then((res) => res.json())
           .then((data)=>{
+            //console.log(data)
             //console.log(data.data[0].questionData);
             setGameQuestionData_(data.data[0]);
             //console.log(data.data[0]);
@@ -64,7 +65,6 @@ function GameAdventurePage() {
           body:JSON.stringify({}),
           }).then((res) => res.json())
           .then((data)=>{
-            //console.log(data);
             setCYOAQuestionData_(data.data);
             //console.log(data.data)
         })
@@ -108,11 +108,7 @@ function GameAdventurePage() {
         //HTML elements that will be rendered to page
         return (
             <div>
-                {/* Code to replace Template Picture when we add actual images to CYOAQuestionData objects */}
-                {/* <img src={CYOAQuestionData.stimulus} className='img-fluid' alt='...' /> */}
-
-                {/* Template Picture */}
-                <img src='https://mdbootstrap.com/img/new/slides/041.webp' className='img-fluid' alt='...' />
+                <img src={`http://localhost:5000/uploads/cyoa/${CYOAQuestionData.stimulus}`} className='img-fluid' alt='...' />
                 
                 {/* btn-block - List of buttons to represent options */}
                 <div className="btn-block img-fluid shadow-4 d-grid gap-2 col-6 mx-auto justify-content-center">
