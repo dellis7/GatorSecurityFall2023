@@ -7,8 +7,6 @@ const {
     deleteById,
     update,
     create,
-    checkAnswer,
-    getCYOAQuestionCount
 } = require('../controllers/questions.js')
 
 const { validateQuestion } = require('../validators/questionValidator')
@@ -24,7 +22,5 @@ router.delete('/delete/:id', deleteById)
 router.put('/update/:id', update)
 
 router.post('/create', validateQuestion, create)
-
-router.post('/checkAnswer/:id', checkAnswer)
 
 module.exports = router

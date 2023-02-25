@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 function TradQuestion({ qdata, num }) {
 
     const spaceAfterQ = {
-    paddingTop: "10px"
+        paddingTop: "10px"
     }
 
     const [answer, setSelection] = React.useState('');
