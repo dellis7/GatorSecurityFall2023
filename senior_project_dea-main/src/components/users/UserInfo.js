@@ -55,7 +55,7 @@ export default class UserInfo extends Component{
             const{fname, lname, email, password} = this.state;
             
             //Console data check to make sure nothing is wonky in the data
-            console.log(_id, fname, lname, email, password);
+            //console.log(_id, fname, lname, email, password);
 
             //Make a PUT HTTP request to backend (See server.js for server.put(/user/update/:id))
             fetch(`http://localhost:5000/users/update/${_id}`, {
