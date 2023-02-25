@@ -265,7 +265,7 @@ const getCYOAById = (async(req,res) =>{
                     return;
                 }
             })
-            console.log(data);
+            //console.log(data);
             res.send({status:200, data:data});
         })
     //Catch any errors

@@ -108,6 +108,7 @@ function GameAdventurePage() {
         //HTML elements that will be rendered to page
         return (
             <div>
+                {/* Dynamically loaded CYOA question image */}
                 <img src={`http://localhost:5000/uploads/cyoa/${CYOAQuestionData.stimulus}`} className='img-fluid' alt='...' />
                 
                 {/* btn-block - List of buttons to represent options */}
