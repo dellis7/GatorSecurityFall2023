@@ -14,7 +14,8 @@ function GameAdventurePage() {
             
             //If gameQuestionData not loaded yet, get it from the DB
             if(gameQuestionData.length === 0) {
-                getGameQuestion("1", setGameQuestionData);
+                const ind = window.location.href.lastIndexOf('/');
+                getGameQuestion(window.location.href.substring(ind + 1), setGameQuestionData);
             }
     
             //If gameQuestionData has been loaded
@@ -31,9 +32,9 @@ function GameAdventurePage() {
     },[gameQuestionData, CYOAQuestionData, count])
     
     //Function that pulls gameQuestion data from backend
-    const getGameQuestion = (topic_, setGameQuestionData_) => {
+    const getGameQuestion = (id_, setGameQuestionData_) => {
 
-        fetch("http://localhost:5000/games/getByTopic/" + topic_, {
+        fetch("http://localhost:5000/games/getById/" + id_, {
           method: "POST",
           crossDomain:true,
           headers:{
@@ -46,7 +47,7 @@ function GameAdventurePage() {
           .then((data)=>{
             //console.log(data)
             //console.log(data.data[0].questionData);
-            setGameQuestionData_(data.data[0]);
+            setGameQuestionData_(data.data);
             //console.log(data.data[0]);
         })
     }
@@ -90,13 +91,17 @@ function GameAdventurePage() {
             else {
                 //Congratulate end-user, and redirect them to game selection page
                 alert("Congratulations! You beat the game!");
-                window.location.href="./game"
+                window.location.href="/game"
             } 
         }
         //Else option does not match, alert end-user incorrect
         else {
             alert("Incorrect!");
         }
+    }
+
+    const spaceAfterQ = {
+        paddingTop: "10px"
     }
 
     //If CYOAQuestionData hasn't been loaded yet
@@ -108,9 +113,12 @@ function GameAdventurePage() {
         //HTML elements that will be rendered to page
         return (
             <div>
+                <div style={spaceAfterQ}></div>
                 {/* Dynamically loaded CYOA question image */}
                 <img src={`http://localhost:5000/uploads/cyoa/${CYOAQuestionData.stimulus}`} className='img-fluid' alt='...' />
-                
+                <div style={spaceAfterQ}></div>
+                {CYOAQuestionData.questionNumber}. {CYOAQuestionData.question}
+                <div style={spaceAfterQ}></div>
                 {/* btn-block - List of buttons to represent options */}
                 <div className="btn-block img-fluid shadow-4 d-grid gap-2 col-6 mx-auto justify-content-center">
                 {/* A loop that dynamically populates buttons with the current CYOAQuestionData options */}

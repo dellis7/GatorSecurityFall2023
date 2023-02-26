@@ -76,19 +76,19 @@ function GameTraditionalPage() {
                 <Col sm={3}>
                 <Nav variant="pills" className="flex-column">
                     <Nav.Item>
-                    <Nav.Link eventKey="first">Q1: Cross-Site Scripting</Nav.Link>
+                    <Nav.Link eventKey="first">Cross-Site Scripting</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                    <Nav.Link eventKey="second">Q2: URL SQL Injection</Nav.Link>
+                    <Nav.Link eventKey="second">URL SQL Injection</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                    <Nav.Link eventKey="third">Q3: Login SQL Injection</Nav.Link>
+                    <Nav.Link eventKey="third">Login SQL Injection</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                    <Nav.Link eventKey="fourth">Q4: Input Sanitization </Nav.Link>
+                    <Nav.Link eventKey="fourth">Input Sanitization </Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                    <Nav.Link eventKey="fifth">Q5: Cryptography</Nav.Link>
+                    <Nav.Link eventKey="fifth">Cryptography</Nav.Link>
                     </Nav.Item>
                 </Nav>
                 </Col>

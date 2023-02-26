@@ -199,24 +199,6 @@ const create = (async(req,res)=>{
     }
 })
 
-// takes a quesiton id (as a param) and the selected answer (from the request body)
-// will return 200 along with T/F if the question is found, otherwise 401
-const checkAnswer = (async(req, res) => {
-    try{
-        const _id = req.params.id;
-        const questionData = await CYOAQuestion.findById(_id)
-
-        if (req.body.answer === questionData.answer){
-            res.send({status:"ok", data:true});
-        }
-        else{
-            res.send({status:"ok", data:false});
-        }
-    } catch(error) {
-        res.sendStatus(401);
-    }
-})
-
 const checkAdmin = (async(token) => {
     if(token === null || token === undefined) {
         return false;
@@ -235,6 +217,5 @@ module.exports = {
     getByTopic,
     deleteById,
     create,
-    update,
-    checkAnswer
+    update
 }
