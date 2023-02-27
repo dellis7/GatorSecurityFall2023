@@ -55,7 +55,9 @@ function LearnPage() {
           Accept:"application/json",
           "Access-Control-Allow-Origin":"*",
       },
-      body:JSON.stringify({}),
+      body:JSON.stringify({
+        displayType: 'learn'
+      }),
       }).then((res)=>res.json())
       .then((data)=>{
         setQuestionData_(data);

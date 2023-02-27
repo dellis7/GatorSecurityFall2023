@@ -151,29 +151,46 @@ const updateLearnScore = (async (req, res) => {
     try{
         //Retrieve the question being answered
         const questionData = await TraditionalQuestion.findById(req.body.qid)
-  
+
         //Check to see if they answered it correctly
         if(questionData.answer === req.body.answer) {
             const user = jwtObj.verify(req.body.token, Jwt_secret_Obj);
             const uEmail = user.email;
-            
+
             //Get existing scores
-            User.findOne({email: uEmail}).then((dbUser) => {
+            const dbUser = await User.findOne({email: uEmail});
+
+            if (questionData.displayType === 'learn')
+            {
                 var existingRawScores = dbUser["learnscore"];
 
                 var existingScores = [];
                 if(existingRawScores !== undefined) {
                     existingScores = existingRawScores;
                 }
-
+    
                 //If an existing entry for the question is not found, add it
                 if(existingScores.find(element => element === req.body.qid) === undefined) {
                     existingScores.push(req.body.qid);
-                    User.updateOne({email: uEmail}, {$set: {"learnscore": existingScores}});
+                    await User.updateOne({email: uEmail}, {$set: {"learnscore": existingScores}});
                 }
-            });
-            
-            res.send({status: 200, data:{correct:true}});
+            }
+            // displayType === 'game'
+            else
+            {
+                var existingRawScores = dbUser["gamescore"];
+
+                var existingScores = [];
+                if(existingRawScores !== undefined) {
+                    existingScores = existingRawScores;
+                }
+    
+                if(existingScores.find(element => element === req.body.qid) === undefined) {
+                    existingScores.push(req.body.qid);
+                    await User.updateOne({email: uEmail}, {$set: {"gamescore": existingScores}});
+                }
+            }
+            res.send({status: 200, data:{correct:true, qid:req.body.qid}});
         } else {
             res.send({status: 200, data:{correct:false}});
         }
@@ -182,13 +199,13 @@ const updateLearnScore = (async (req, res) => {
     }
 })
 
+// TODO: Deprecate
 const updateScore = (async (req, res) => {
     const {token,section,index} = req.body;
     if(section === "learn"){
         res.sendStatus(301);
         return;
     }
-     //console.log("/updatescore put called in server.js")
     try{
         const user = jwtObj.verify(token, Jwt_secret_Obj);
         const uEmail = user.email;
@@ -196,8 +213,6 @@ const updateScore = (async (req, res) => {
         let updateQuery= {};
         updateQuery[field] = 1
         const result = await User.updateOne({email: uEmail}, {$set: updateQuery});
-        //console.log("result: ");
-        //console.log(result);
 		res.sendStatus(200);
     } catch(error) {
 		res.sendStatus(500);
