@@ -104,27 +104,21 @@ function LearnPage() {
       <Tabs fill justify defaultActiveKey="first" style={tabs}>
       <Tab eventKey="first" title="Input Validation" style={tab}>
           {createQuestions(questionData1)}
-          Sourced from OWASP.
         </Tab>
         <Tab eventKey="second" title="Encoding & Escaping" style={tab}>
           {createQuestions(questionData2)}
-          Sourced from OWASP.
         </Tab>
         <Tab eventKey="third" title="Cross-Site Scripting" style={tab}>
           {createQuestions(questionData3)}
-          Sourced from CodePath, OWASP, and Veracode.
         </Tab>
         <Tab eventKey="fourth" title="SQL Injection" style={tab}>
           {createQuestions(questionData4)}
-          Sourced from PortSwigger, CodePath, OWASP, and W3Schools.
         </Tab>
         <Tab eventKey="fifth" title="Cryptography" style={tab}>
           {createQuestions(questionData5)}
-          Sourced from CodePath and GeeksForGeeks.
         </Tab>
         <Tab eventKey="sixth" title="User Authentication" style={tab}>
           {createQuestions(questionData6)}
-          Sourced from CodePath and TechTarget.
         </Tab>
       </Tabs>
     </div>

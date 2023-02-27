@@ -104,6 +104,11 @@ function GameAdventurePage() {
         paddingTop: "10px"
     }
 
+    const textCenter = {
+        marginLeft: "25%",
+        width: "50%"
+    }
+
     //If CYOAQuestionData hasn't been loaded yet
     if(CYOAQuestionData.length === 0) {
         //Display loading page
@@ -117,7 +122,7 @@ function GameAdventurePage() {
                 {/* Dynamically loaded CYOA question image */}
                 <img src={`http://localhost:5000/uploads/cyoa/${CYOAQuestionData.stimulus}`} className='img-fluid' alt='...' />
                 <div style={spaceAfterQ}></div>
-                {CYOAQuestionData.questionNumber}. {CYOAQuestionData.question}
+                <div style={textCenter}>{CYOAQuestionData.questionNumber}. {CYOAQuestionData.question}</div>
                 <div style={spaceAfterQ}></div>
                 {/* btn-block - List of buttons to represent options */}
                 <div className="btn-block img-fluid shadow-4 d-grid gap-2 col-6 mx-auto justify-content-center">
