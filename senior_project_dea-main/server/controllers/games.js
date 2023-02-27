@@ -375,6 +375,7 @@ const updateCYOA = (async(req,res) =>{
                 question: req.body.question,
                 options: req.body.options,
                 answer: req.body.answer,
+                explanation: req.body.explanation,
                 //stimulus: req.files[0].buffer, //If you'd like to store file contents in the database, uncomment this line.
                 //NOTE: do not ever allow for the update of the parent question id. Instead, delete the subquestion and remake it under the correct parent.
             });
@@ -402,6 +403,7 @@ const updateCYOA = (async(req,res) =>{
                 type: req.body.type,
                 options: req.body.options,
                 answer: req.body.answer,
+                explanation: req.body.explanation,
                 //NOTE: do not ever allow for the update of the parent question id. Instead, delete the subquestion and remake it under the correct parent.
             });
         }
@@ -468,7 +470,7 @@ const createCYOA = (async(req,res) =>{
             type: req.body.type,
             options: req.body.options,
             answer: req.body.answer,
-            //stimulus: req.files[0].buffer, //If you'd like to store file contents in the database, uncomment this line.
+            explanation: req.body.explanation,
         })
         await question.save();
 

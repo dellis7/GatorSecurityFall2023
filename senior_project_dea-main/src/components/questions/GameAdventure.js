@@ -83,14 +83,14 @@ function GameAdventurePage() {
             //If this is not the last question
             if (gameQuestionData.questionData.length !== count + 1) {
                 //Give correct alert to end-user, and update page to next question
-                alert("Correct!");
+                alert("Correct! Answer explanation: " + CYOAQuestionData.explanation);
                 increase();
                 getCYOAQuestion(gameQuestionData.questionData[count + 1], setCYOAQuestionData);
             }
             //Else this is the last question
             else {
                 //Congratulate end-user, and redirect them to game selection page
-                alert("Congratulations! You beat the game!");
+                alert("Congratulations! You beat the game! Answer explanation: " + CYOAQuestionData.explanation);
                 window.location.href="/game"
             } 
         }

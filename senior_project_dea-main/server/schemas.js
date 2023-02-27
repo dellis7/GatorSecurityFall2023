@@ -53,6 +53,7 @@ const CYOAQuestionDBSchema = new mongoose.Schema(
         options:Array,
         answer:String,
         stimulus:String,
+        explanation:String,
     },
     {
         collection: "CYOAQuestionInfo"
