@@ -6,7 +6,7 @@ const {
     getByTopic,
     deleteById,
     update,
-    create
+    create,
 } = require('../controllers/questions.js')
 
 const { validateQuestion } = require('../validators/questionValidator')

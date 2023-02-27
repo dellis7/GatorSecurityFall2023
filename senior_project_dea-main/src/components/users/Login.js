@@ -4,19 +4,19 @@ import "./css/LoginAndSignUp.css";
 import gator from "../../images/gator.png";
 
 export default class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: "",
-      password: "",
+    constructor(props){
+        super(props)
+        this.state={
+            email:"",
+            password:""
+        };
+        this.handleSubmit = this.handleSubmit.bind(this);
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  handleSubmit(e) {
-    e.preventDefault();
-    const { email, password } = this.state;
-    console.log(email, password);
-    fetch("http://localhost:5000/users/login", {
+    handleSubmit(e){
+        e.preventDefault();
+        const{email, password} = this.state;
+        //console.log(email, password);
+        fetch("http://localhost:5000/users/login", {
       method: "POST",
       crossDomain: true,
       headers: {
@@ -28,20 +28,20 @@ export default class Login extends Component {
         email,
         password,
       }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data, "userRegister");
-        if (data.status === "ok") {
-          alert("Login was successful!");
-          window.localStorage.removeItem("token");
-          window.localStorage.setItem("token", data.data);
-          window.location.href = "./welcome";
-        } else {
-          alert("Login was unsuccessful. Please try again.");
-        }
-      });
-  }
+    }).then((res)=>res.json())
+    .then((data)=>{
+      //console.log(data,"userRegister");
+      if(data.status === "ok"){
+        alert("Login was successful!");
+        window.localStorage.removeItem("token");
+        window.localStorage.setItem("token", data.data);
+        window.location.href="./welcome"
+      }
+      else {
+        alert("Login was unsuccessful. Please try again.");
+      }
+    });
+    }
   render() {
     return (
       <div

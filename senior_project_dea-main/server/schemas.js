@@ -52,7 +52,8 @@ const CYOAQuestionDBSchema = new mongoose.Schema(
         type:Number,
         options:Array,
         answer:String,
-        stimulus: Buffer,
+        stimulus:String,
+        explanation:String,
     },
     {
         collection: "CYOAQuestionInfo"
