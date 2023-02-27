@@ -57,7 +57,7 @@ export default class ProfilePage extends React.Component {
         .then(data=>{
           this.setState({gameQuestionCount: data.data})
         });
-        fetch("http://localhost:5000/games/getCYOACount", 
+        fetch("http://localhost:5000/games/getAllGamesCount", 
         {
           method: "POST",
           crossDomain:true,
@@ -69,7 +69,7 @@ export default class ProfilePage extends React.Component {
         body:JSON.stringify({}),
         }).then((res)=>res.json())
         .then(data=>{
-          this.setState({CYOAQuestionCount: data.data})
+          this.setState({allGamesCount: data.data})
         });
     }
 
@@ -100,9 +100,8 @@ export default class ProfilePage extends React.Component {
       var fullName = this.state.userInfo["fname"] + " " + this.state.userInfo["lname"];
       var email = this.state.userInfo["email"];
       var gameScore = this.state.userInfo["gamescore"].length;
-      // var CYOACount = this.state.CYOAQuestionCount;
-      // add CYOACount to gameMax once we have CYOA questions populated
-      var gameMax = this.state.gameQuestionCount;
+      var gameMax = this.state.gameQuestionCount + this.state.allGamesCount;
+      console.log(this.state.allGamesCount);
       var gamePercentage = Math.floor(gameScore/gameMax * 100);
       var learnScore = this.state.userInfo["learnscore"].length;
       var learnMax = this.state.learnQuestionCount;

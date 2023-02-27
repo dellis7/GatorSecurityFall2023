@@ -21,6 +21,25 @@ const getGameCount = (async(req,res) =>{
     });
 })
 
+const getAllGamesCount = (async(req,res) =>{
+    try{
+        const gameCount = GameQuestion.count();
+        const CYOACount = CYOAQuestion.count();
+        const DNDCount = DNDQuestion.count();
+
+        Promise
+        .all([gameCount, CYOACount, DNDCount])
+        .then((values) => {
+            const total = values[0] + values[1] + values[2];
+            console.log(total)
+            return res.send({status:"ok", data:total});
+        })
+    }
+    catch(error) {
+        res.send({status: "error", data:error});
+    };
+})
+
 const getGameByTopic = (async(req,res) =>{
     try{
         //If the topic is all
@@ -493,15 +512,6 @@ const createCYOA = (async(req,res) =>{
     }
 })
 
-const getCYOAQuestionCount = (async(req,res) =>{
-    CYOAQuestion.count({}).then((count)=>{
-        res.send({status:"ok", data:count});
-    })
-    .catch((error)=>{
-        res.send({status: "error", data:error});
-    });
-})
-
 // takes a question id (as a param) and the selected answer (from the request body)
 // will return 200 along with T/F if the question is found, otherwise 401
 const checkCYOAAnswer = (async(req, res) => {
@@ -775,6 +785,7 @@ const createDND = (async(req,res) =>{
 
 module.exports = {
     getGameCount,
+    getAllGamesCount,
     getGameByTopic,
     getGameByType,
     getGameById,
@@ -786,7 +797,6 @@ module.exports = {
     updateCYOA,
     createCYOA,
     checkCYOAAnswer,
-    getCYOAQuestionCount,
     getDNDById,
     deleteDNDById,
     updateDND,

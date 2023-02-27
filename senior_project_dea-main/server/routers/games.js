@@ -7,6 +7,7 @@ const upload = multer({storage: storage});
 
 const {
     getGameCount,
+    getAllGamesCount,
     getGameByTopic,
     getGameByType,
     getGameById,
@@ -18,7 +19,6 @@ const {
     updateCYOA,
     createCYOA,
     checkCYOAAnswer,
-    getCYOAQuestionCount,
     getDNDById,
     deleteDNDById,
     updateDND,
@@ -29,6 +29,8 @@ const { validateCYOAQuestion, validateDNDQuestion } = require('../validators/que
 
 //Overarching Game Question Routes
 router.post('/getcount', getGameCount);
+
+router.post('/getAllGamesCount', getAllGamesCount);
 
 router.post('/getByTopic/:topic', getGameByTopic);
 
@@ -52,8 +54,6 @@ router.put('/cyoa/update/:id', upload.any(), updateCYOA);
 router.post('/cyoa/create', upload.any(), validateCYOAQuestion, createCYOA);
 
 router.post('/checkAnswer/:id', checkCYOAAnswer)
-
-router.post('/getCYOACount', getCYOAQuestionCount)
 
 //DND Subquestion Routes
 router.post('/dnd/getById/:id', getDNDById);
