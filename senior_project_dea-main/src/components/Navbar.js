@@ -38,7 +38,7 @@ function MyNavbar() {
 /* Navbar CSS? */
 const navbarTitle = {
   color: "white",
-  fontFamily: "Gluten",
+  fontFamily: "Inter",
   fontSize: "25px"
   
 }
@@ -50,13 +50,13 @@ const dropdown = {
 const dropdownItem = {
   color: "white",
   backgroundColor: "#2613fe",
-  fontFamily: "Gluten"
+  fontFamily: "Inter"
  
 };
 
 const navLink = {
   color: "white",
-  fontFamily: "Gluten",
+  fontFamily: "Inter",
   fontSize: "18px",  
   flexDirection: "column"
   

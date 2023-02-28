@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import LoginBanner from './LoginBanner';
-import './css/LoginAndSignUp.css';
-import gator from '../../images/gator.png';
+import React, { Component } from "react";
+import LoginBanner from "./LoginBanner";
+import "./css/LoginAndSignUp.css";
+import gator from "../../images/gator.png";
 
 export default class Login extends Component {
     constructor(props){
@@ -18,15 +18,15 @@ export default class Login extends Component {
         //console.log(email, password);
         fetch("http://localhost:5000/users/login", {
       method: "POST",
-      crossDomain:true,
-      headers:{
-        "Content-Type":"application/json",
-        Accept:"application/json",
-        "Access-Control-Allow-Origin":"*",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
       },
-      body:JSON.stringify({
+      body: JSON.stringify({
         email,
-        password
+        password,
       }),
     }).then((res)=>res.json())
     .then((data)=>{
@@ -44,46 +44,64 @@ export default class Login extends Component {
     }
   render() {
     return (
-      
-      <div>
-        <LoginBanner/>
-        <div className='bannerSpacer'></div>
-        
-        <img className="gator-image" src={gator} alt="Gator"/>
+      <div
+        style={{
+          backgroundImage: "linear-gradient(#0A2647, #2C74B3)",
+          height: "100vh",
+        }}
+      >
+        <div className="container">
+          <div className="row" style={{justifyContent: "center"}}>
 
-        <form onSubmit={this.handleSubmit}>
-          <h3 className='title-name'>Sign In</h3>
-
-          <div className="mb-3">
-            <label>Email </label>
-            <input
-              type="email"
-              className="form-control"
-              placeholder="Enter email..."
-              onChange={e=>this.setState({email:e.target.value})}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label>Password</label>
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Enter password..."
-              onChange={e=>this.setState({password:e.target.value})}
-            />
-          </div>
           
-          <div className="d-grid">
-            <button type="submit" className="btn btn-primary">
-              Login
-            </button>
+          <div className="card col-10 col-md-6"  style={{marginTop: "100px", backgroundColor:"rgba(255,255,255, 0.80)"}}>
+            <div className="card-body"  style={{marginTop: "30px"}}>
+              <img
+                className="gator-image"
+                src={gator}
+                alt="Gator"
+                height={"100px"}
+              />
+
+              <form onSubmit={this.handleSubmit}>
+                <h3 className="title-name">Sign In</h3>
+
+                <div className="mb-3" style={{ textAlign: "left", minWidth:200 }}>
+                  <label style={{ paddingLeft: 10 }}>Email </label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    placeholder="Enter email..."
+                    onChange={(e) => this.setState({ email: e.target.value })}
+                  />
+                </div>
+
+                <div className="mb-3" style={{ textAlign: "left", minWidth:200 }}>
+                  <label style={{ paddingLeft: 10 }}>Password</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    placeholder="Enter password..."
+                    onChange={(e) =>
+                      this.setState({ password: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="d-grid">
+                  <button type="submit" className="btn btn-primary">
+                    Login
+                  </button>
+                </div>
+                <p className="forgot-password text-right">
+                  Not registered? <a href="/sign-up">Sign up!</a>
+                </p>
+              </form>
+            </div>
+            </div>
           </div>
-          <p className="forgot-password text-right">
-            Not registered? <a href="/sign-up">Sign up!</a>
-          </p>
-        </form>
+        </div>
       </div>
-    )
+    );
   }
 }
