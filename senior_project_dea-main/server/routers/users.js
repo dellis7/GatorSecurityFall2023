@@ -7,9 +7,9 @@ const {
     getUserInfo,
     updateUser,
     getAllUsers,
-    updateLearnScore,
-    updateScore,
-    checkPrivileges
+    checkAnswerAndUpdateScore,
+    checkPrivileges,
+    updateScore
 } = require('../controllers/users.js')
 
 //Overarching User Routes (NOTE: Each / should be preceded by /users when testing with Postman e.g. localhost:5000/users/register)
@@ -24,10 +24,10 @@ router.put('/update/:id', updateUser)
 
 router.post('/allUsers', getAllUsers)
 
-router.put('/updatelearnscore', updateLearnScore);
-
-router.put('/updatescore', updateScore)
+router.put('/updatelearnscore', checkAnswerAndUpdateScore);
 
 router.post('/checkPrivileges', checkPrivileges)
+
+router.post('/updateScore', updateScore)
 
 module.exports = router

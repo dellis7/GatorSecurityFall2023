@@ -147,7 +147,7 @@ const getAllUsers = (async (req, res) => {
     }
 })
 
-const updateLearnScore = (async (req, res) => {
+const checkAnswerAndUpdateScore = (async (req, res) => {
     try{
         //Retrieve the question being answered
         const questionData = await TraditionalQuestion.findById(req.body.qid)
@@ -199,23 +199,31 @@ const updateLearnScore = (async (req, res) => {
     }
 })
 
-// TODO: Deprecate
-const updateScore = (async (req, res) => {
-    const {token,section,index} = req.body;
-    if(section === "learn"){
-        res.sendStatus(301);
-        return;
-    }
+// for CYOA questions, we should score the question based on whether they got the whole thing correct
+// so we only need to pass the parent question ID here to count it (along with the user token)
+const updateScore = (async (req,res) => {
     try{
-        const user = jwtObj.verify(token, Jwt_secret_Obj);
+        const user = jwtObj.verify(req.body.token, Jwt_secret_Obj);
         const uEmail = user.email;
-        let field = section + "score." + index;
-        let updateQuery= {};
-        updateQuery[field] = 1
-        const result = await User.updateOne({email: uEmail}, {$set: updateQuery});
-		res.sendStatus(200);
-    } catch(error) {
-		res.sendStatus(500);
+
+        const dbUser = await User.findOne({email: uEmail});
+
+        var existingRawScores = dbUser["gamescore"];
+
+        var existingScores = [];
+        if(existingRawScores !== undefined) {
+            existingScores = existingRawScores;
+        }
+
+        if(existingScores.find(element => element === req.body.qid) === undefined) {
+            existingScores.push(req.body.qid);
+            await User.updateOne({email: uEmail}, {$set: {"gamescore": existingScores}});
+        }
+
+        res.sendStatus(204);
+    }
+    catch(error){
+        res.sendStatus(500);
     }
 })
 
@@ -250,7 +258,7 @@ module.exports = {
     getUserInfo,
     updateUser,
     getAllUsers,
-    updateLearnScore,
+    checkAnswerAndUpdateScore,
     updateScore,
     checkPrivileges
 }

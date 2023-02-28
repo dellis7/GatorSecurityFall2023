@@ -261,11 +261,10 @@ const getCYOAById = (async(req,res) =>{
             //Find any existing file
             fs.readdirSync(path.join(__dirname, '..', 'uploads', 'cyoa')).forEach(file => {
                 if(file.indexOf(id) !== -1) {
-                    data.stimulus = fs.readFileSync(path.join(__dirname, '..', 'uploads', 'cyoa', file), "binary");
+                    data.stimulus = file;
                     return;
                 }
             })
-
             res.send({status:200, data:data});
         })
     //Catch any errors
@@ -376,6 +375,7 @@ const updateCYOA = (async(req,res) =>{
                 question: req.body.question,
                 options: req.body.options,
                 answer: req.body.answer,
+                explanation: req.body.explanation,
                 //stimulus: req.files[0].buffer, //If you'd like to store file contents in the database, uncomment this line.
                 //NOTE: do not ever allow for the update of the parent question id. Instead, delete the subquestion and remake it under the correct parent.
             });
@@ -403,6 +403,7 @@ const updateCYOA = (async(req,res) =>{
                 type: req.body.type,
                 options: req.body.options,
                 answer: req.body.answer,
+                explanation: req.body.explanation,
                 //NOTE: do not ever allow for the update of the parent question id. Instead, delete the subquestion and remake it under the correct parent.
             });
         }
@@ -469,7 +470,7 @@ const createCYOA = (async(req,res) =>{
             type: req.body.type,
             options: req.body.options,
             answer: req.body.answer,
-            //stimulus: req.files[0].buffer, //If you'd like to store file contents in the database, uncomment this line.
+            explanation: req.body.explanation,
         })
         await question.save();
 
@@ -492,6 +493,33 @@ const createCYOA = (async(req,res) =>{
     }
 })
 
+const getCYOAQuestionCount = (async(req,res) =>{
+    CYOAQuestion.count({}).then((count)=>{
+        res.send({status:"ok", data:count});
+    })
+    .catch((error)=>{
+        res.send({status: "error", data:error});
+    });
+})
+
+// takes a question id (as a param) and the selected answer (from the request body)
+// will return 200 along with T/F if the question is found, otherwise 401
+const checkCYOAAnswer = (async(req, res) => {
+    try{
+        const _id = req.params.id;
+        const questionData = await CYOAQuestion.findById(_id)
+
+        if (req.body.answer === questionData.answer){
+            res.send({status:"ok", data:true});
+        }
+        else{
+            res.send({status:"ok", data:false});
+        }
+    } catch(error) {
+        res.sendStatus(401);
+    }
+})
+
 //DND Subquestion Routes ==================================================
 const getDNDById = (async(req,res) =>{
     try{
@@ -507,7 +535,7 @@ const getDNDById = (async(req,res) =>{
                         //Find any existing file
                         fs.readdirSync(path.join(__dirname, '..', 'uploads', 'dnd')).forEach(file => {
                             if(file.indexOf(id + "_" + imgid) !== -1) {
-                                data.answerMatrix[x][y]["image"] = fs.readFileSync(path.join(__dirname, '..', 'uploads', 'dnd', file), "binary");
+                                data.answerMatrix[x][y]["image"] = file;
                                 return;
                             }
                         })
@@ -757,8 +785,10 @@ module.exports = {
     deleteCYOAById,
     updateCYOA,
     createCYOA,
+    checkCYOAAnswer,
+    getCYOAQuestionCount,
     getDNDById,
     deleteDNDById,
     updateDND,
-    createDND,
+    createDND
 }

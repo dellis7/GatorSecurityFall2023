@@ -23,14 +23,14 @@ export default class Admin extends React.Component {
         }),
         }).then((res)=>res.json())
         .then(data=>{
-            console.log("data: ")
-            console.log(data)
+            //console.log("data: ")
+            //console.log(data)
           this.setState({allUsers: data});
         });
     }
     render(){
-        console.log("all users:")
-        console.log(this.state.allUsers);
+        //console.log("all users:")
+        //console.log(this.state.allUsers);
       if(this.state.allUsers == null){
         return <div></div>
       }

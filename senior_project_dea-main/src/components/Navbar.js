@@ -89,7 +89,7 @@ const navbarStyle = {
               <Nav.Link style={navLink} eventKey={1}> 
                 <div style={linkContainer}>
                   Learn
-                  <img src='./bookIcon.png' alt=''/>
+                  <img src='/bookIcon.png' alt=''/>
                 </div>
               </Nav.Link>
             </LinkContainer>                 
@@ -97,11 +97,11 @@ const navbarStyle = {
               <Nav.Link style={navLink} eventKey={2}>
                 <div style={linkContainer}>
                   Game
-                  <img src='./gameIcon.png' alt=''/>
+                  <img src='/gameIcon.png' alt=''/>
                 </div>
               </Nav.Link>
             </LinkContainer>
-            <NavDropdown style={dropdown} title={<img src='./profileIcon.png' alt=''/>}>
+            <NavDropdown style={dropdown} title={<img src='/profileIcon.png' alt=''/>}>
               <LinkContainer to="/myprofile" style={dropdownItem}>
                 <NavDropdown.Item style={dropdownItem} eventKey={3.1}>
                   My Profile
