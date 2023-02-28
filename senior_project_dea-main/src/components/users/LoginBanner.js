@@ -10,7 +10,7 @@ function LoginBanner() {
 
 const navbarTitle = {
   color: "white",
-  fontFamily: "Gluten",
+  fontFamily: "Inter",
   fontSize: "25px"
   
 }

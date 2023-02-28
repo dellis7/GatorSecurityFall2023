@@ -1,16 +1,16 @@
 .title-name{
-    font-family: 'Gluten';
+    font-family: 'Inter';
 }
 
 .mb-3{
     width: 25%;
     margin-left: auto;
     margin-right: auto;
-    font-family: 'Gluten';
+    font-family: 'Inter';
 }
 
 .d-grid{
-    font-family: 'Gluten';
+    font-family: 'Inter';
     width: 12.5%;
     margin-left: auto;
     margin-right: auto;
@@ -23,11 +23,11 @@
 }
 
 .forgot-password{
-    font-family: 'Gluten';
+    font-family: 'Inter';
 }
 
 .user-info{
-    font-family: 'Gluten';
+    font-family: 'Inter';
 }
 
 /*Code below is for the game page*/
@@ -38,7 +38,7 @@
     margin-left: auto;
     margin-right: auto;
     padding-Top: 50px;
-    font-family: "Gluten";
+    font-family: "Inter";
 }
 
 .bannerSpacer{
