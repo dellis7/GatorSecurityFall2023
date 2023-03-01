@@ -16,6 +16,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import { useLocation } from 'react-router-dom';
 import QuestionCRUD from './components/questions/QuestionCRUD';
 import { useEffect } from 'react';
+import DragNDrop from './components/questions/dragDrop/DragNDrop';
 
 function App() {
   
@@ -72,6 +73,7 @@ function App() {
               <Route path="/userInfo" element={<UserInfo />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/modify_questions" element={<QuestionCRUD/>} />
+              <Route path="/gameDND" element={<DragNDrop/>}/>
             </Routes>
           </div>
         </div>
