@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/esm/Container";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
@@ -122,33 +122,6 @@ function DragNDrop() {
         }
       }
     
-      function SortableItem(props) {
-      
-        const {
-            attributes,
-            listeners,
-            setNodeRef,
-            transform,
-            transition
-        } = useSortable({id: props.id});
-    
-        const style = {
-            transform: CSS.Transform.toString(transform),
-            transition
-        }
-    
-        return (
-            <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-                <div className="card m-3">
-                    <div className="card-body">
-                    {props.id}
-                    </div>
-                </div>
-                
-            </div>
-        )
-      }
-
       function checkAnswer(props) {
         if (questionData.options.every((val, index) => val === dndOptions[index])) {
           alert("Great Work!");
@@ -164,8 +137,33 @@ function DragNDrop() {
                 window.location.href="/game";
             }
       }
-
 }
 
+function SortableItem(props) {
+      
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition
+    } = useSortable({id: props.id});
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition
+    }
+
+    return (
+        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+            <div className="card m-3">
+                <div className="card-body">
+                {props.id}
+                </div>
+            </div>
+            
+        </div>
+    )
+  }
 
 export default DragNDrop;
