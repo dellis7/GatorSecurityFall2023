@@ -60,7 +60,8 @@ const linkContainer = {
   flexDirection: "column",
   justifyContent: "center",
   display: "flex",
-  alignItems: "center"
+  alignItems: "center",
+  color: "white"
 };
 
 const navbarStyle = {

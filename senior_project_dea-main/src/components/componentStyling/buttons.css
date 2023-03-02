@@ -1,0 +1,7 @@
+.btn {
+    background-color: #2C74B3 !important;
+}
+
+.btn.ripple {
+    background-color: transparent !important;
+}

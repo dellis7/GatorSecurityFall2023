@@ -1,4 +1,6 @@
 import React from 'react';
+import '../componentStyling/buttons.css';
+import '../componentStyling/textStyling.css';
 
 function GamePage() {
     const [cyoaGameQuestions, setCYOAGameQuestions] = React.useState('');

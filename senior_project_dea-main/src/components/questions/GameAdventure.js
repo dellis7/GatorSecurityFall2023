@@ -1,5 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
+import '../componentStyling/buttons.css';
 
 function GameAdventurePage() {
 

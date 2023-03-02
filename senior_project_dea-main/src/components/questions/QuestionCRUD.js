@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import QuestionCard from "./QuestionCard";
 import QuestionForm from "./QuestionForm";
+import '../componentStyling/textStyling.css';
 
 function QuestionCRUD() {
   const [questionsData, setQuestionData] = useState([]);
@@ -23,7 +24,6 @@ function QuestionCRUD() {
       .then((res) => res.json())
       .then((data) => {
         handleQuestionsData(data.data);
-        //console.log(data);
       })
   };
 
@@ -38,21 +38,13 @@ function QuestionCRUD() {
     paddingTop: "50px",
   };
 
-  const heading = {
-    fontFamily: "Gluten",
-    color: "#2613fe",
-    fontSize: "40px",
-    paddingBottom: "50px",
-    textDecorationLine: "underline",
-  };
-
   //This is what is rendered to the user
   return (
     <div className="container" style={container}>
-      <h1 style={heading}>Add a New Question</h1>
+      <h1 className='h1-text'>Add a New Question</h1>
       <QuestionForm />
       <div style={{ marginTop: 100 }}>
-        <h4 style={heading}>Existing Questions</h4>
+        <h1 className='h1-text'>Existing Questions</h1>
       </div>
       <div className="container">
         {questionsData.map((entry, index) => (
