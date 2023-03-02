@@ -729,7 +729,7 @@ const createDND = (async(req,res) =>{
             res.send({status: 404, error: "The parent question was not found in the database."});
             return;
         }
-        else if(parentQuestion.type !== 0) {
+        else if(parentQuestion.type !== 1) {
             res.send({status: 400, error: "The parent question is not a DND question."});
             return;
         }
