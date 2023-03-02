@@ -519,7 +519,7 @@ const getDNDById = (async(req,res) =>{
         //Find the game question and send it
         DNDQuestion.findOne({_id: id}).then((data) =>{
             //Find any existing file
-            fs.readdirSync(path.join(__dirname, '..', 'uploads', 'cyoa')).forEach(file => {
+            fs.readdirSync(path.join(__dirname, '..', 'uploads', 'dnd')).forEach(file => {
                 if(file.indexOf(id) !== -1) {
                     data.stimulus = file;
                     return;
@@ -628,7 +628,7 @@ const updateDND = (async(req,res) =>{
         if(req.files.length === 1) {
             //Set result to true or false depending on if the question was 
             //successfully found by its id and updated
-            result = await CYOAQuestion.findByIdAndUpdate(_id, {
+            result = await DNDQuestion.findByIdAndUpdate(_id, {
                 //Dynamically changes values based on the JSON data in the PUT request
                 question: req.body.question,
                 answer: req.body.answer,
