@@ -29,7 +29,7 @@ function QuestionCRUD() {
 
   useEffect(() => {
     retrieveQuestions();
-  }, []);
+  });
 
   //CSS
   const container = {
