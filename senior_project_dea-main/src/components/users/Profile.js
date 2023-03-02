@@ -1,7 +1,8 @@
 import React from 'react';
 import './css/personalProfile.css';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBTypography, MDBProgress, MDBProgressBar, MDBBtn } from 'mdb-react-ui-kit';
-import { LinkContainer } from "react-router-bootstrap"
+import { LinkContainer } from "react-router-bootstrap";
+import '../componentStyling/textStyling.css';
 
 export default class ProfilePage extends React.Component {
     constructor(props){
@@ -83,13 +84,6 @@ export default class ProfilePage extends React.Component {
         fontFamily:"Gluten",
         paddingTop: "50px"
       };
-      const heading = {
-        fontFamily: "Gluten",
-        color: "#2613fe",
-        fontSize: "40px",
-        paddingBottom: "10px",
-        textDecorationLine: "underline"
-      };
       
       //If userInfo doesn't exist, return a blank page
       if(this.state.userInfo == null){
@@ -110,7 +104,7 @@ export default class ProfilePage extends React.Component {
       //What is rendered to the webpage
       return (
         <section style={container}>
-          <h4 style={heading}>My Profile</h4>
+          <h1 className='h1-text'>My Profile</h1>
           <MDBContainer className="py-5 h-100">
             <MDBRow className="justify-content-center align-items-center h-100">
               <MDBCol lg="8" className="mb-4 mb-lg-0">

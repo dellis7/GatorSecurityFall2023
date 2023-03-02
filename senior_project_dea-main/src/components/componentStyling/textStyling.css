@@ -1,0 +1,19 @@
+.h1-text {
+    font-family: Gluten;
+    color: #2C74B3;
+    font-size: 40px;
+    padding-bottom: 10px;
+    text-decoration: underline;
+}
+
+/* .nav-link {
+    color: #2C74B3 !important;
+} */
+
+.tab-text {
+    padding: 30px;
+    color: #2C74B3;
+    box-shadow: 0 3px 10px rgba(0,0,0,.3);
+    font-family: Gluten;
+    margin-bottom: 80px;
+}

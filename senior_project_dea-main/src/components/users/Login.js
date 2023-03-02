@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import LoginBanner from "./LoginBanner";
 import "./css/LoginAndSignUp.css";
 import gator from "../../images/gator.png";
 
