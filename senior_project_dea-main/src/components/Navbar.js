@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { LinkContainer } from "react-router-bootstrap";
 import { useEffect, useState } from 'react';
+import './componentStyling/Navbar.css';
 
 function MyNavbar() {
   const [isAdmin, setIsAdmin] = useState({isAdmin: false});
@@ -40,18 +41,12 @@ const navbarTitle = {
   color: "white",
   fontFamily: "Inter",
   fontSize: "25px"
-  
 }
-
-const dropdown = {
-  backgroundColor: "#2613fe"
-};
 
 const dropdownItem = {
   color: "white",
-  backgroundColor: "#2613fe",
+  backgroundColor: "#2C74B3",
   fontFamily: "Inter"
- 
 };
 
 const navLink = {
@@ -59,7 +54,6 @@ const navLink = {
   fontFamily: "Inter",
   fontSize: "18px",  
   flexDirection: "column"
-  
 };
 
 const linkContainer = {
@@ -70,8 +64,9 @@ const linkContainer = {
 };
 
 const navbarStyle = {
-  backgroundColor: '#2613fe',
-  height: "80px"
+  backgroundImage: "linear-gradient(#0A2647, #2C74B3)",
+  height: "80px",
+  paddingBottom: "20px"
 };
 
   return (
@@ -101,9 +96,9 @@ const navbarStyle = {
                 </div>
               </Nav.Link>
             </LinkContainer>
-            <NavDropdown style={dropdown} title={<img src='/profileIcon.png' alt=''/>}>
+            <NavDropdown title={<img src='/profileIcon.png' alt=''/>}  menuVariant="#2C74B3">
               <LinkContainer to="/myprofile" style={dropdownItem}>
-                <NavDropdown.Item style={dropdownItem} eventKey={3.1}>
+                <NavDropdown.Item style={dropdownItem}>
                   My Profile
                 </NavDropdown.Item>
               </LinkContainer>

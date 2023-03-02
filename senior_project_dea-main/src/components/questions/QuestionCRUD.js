@@ -49,7 +49,7 @@ function QuestionCRUD() {
   //This is what is rendered to the user
   return (
     <div className="container" style={container}>
-      <h4 style={heading}>Add a New Question</h4>
+      <h1 style={heading}>Add a New Question</h1>
       <QuestionForm />
       <div style={{ marginTop: 100 }}>
         <h4 style={heading}>Existing Questions</h4>
