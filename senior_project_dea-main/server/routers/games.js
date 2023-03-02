@@ -7,7 +7,6 @@ const upload = multer({storage: storage});
 
 const {
     getGameCount,
-    getAllGamesCount,
     getGameByTopic,
     getGameByType,
     getGameById,
@@ -29,8 +28,6 @@ const { validateCYOAQuestion, validateDNDQuestion } = require('../validators/que
 
 //Overarching Game Question Routes
 router.post('/getcount', getGameCount);
-
-router.post('/getAllGamesCount', getAllGamesCount);
 
 router.post('/getByTopic/:topic', getGameByTopic);
 

@@ -64,8 +64,9 @@ const DNDQuestionDBSchema = new mongoose.Schema(
     {
         parentQuestionId:mongoose.Schema.Types.ObjectId,
         question:String,
-        anchoredMatrix:Array, //This should be a 2D array that contains the correct ordering of text that should be displayed that cannot be moved by the user. Format: [["x", "a"], ["", "y"]]
-        answerMatrix:Array, //This should be a 2D array that contains the correct ordering of the unique image ids or text. Format: [[{image: id}, {text: "some text"}], [{text: "this is the next row"}, {image: id}]]
+        answer:Array, // this should always be in the correct order
+        stimulus:String,
+        explanation:String, 
     },
     {
         collection: "DNDQuestionInfo"

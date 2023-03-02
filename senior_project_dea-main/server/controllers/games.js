@@ -21,25 +21,6 @@ const getGameCount = (async(req,res) =>{
     });
 })
 
-const getAllGamesCount = (async(req,res) =>{
-    try{
-        const gameCount = GameQuestion.count();
-        const CYOACount = CYOAQuestion.count();
-        const DNDCount = DNDQuestion.count();
-
-        Promise
-        .all([gameCount, CYOACount, DNDCount])
-        .then((values) => {
-            const total = values[0] + values[1] + values[2];
-            console.log(total)
-            return res.send({status:"ok", data:total});
-        })
-    }
-    catch(error) {
-        res.send({status: "error", data:error});
-    };
-})
-
 const getGameByTopic = (async(req,res) =>{
     try{
         //If the topic is all
@@ -537,22 +518,13 @@ const getDNDById = (async(req,res) =>{
 
         //Find the game question and send it
         DNDQuestion.findOne({_id: id}).then((data) =>{
-            //Find images as necessary
-            for(let x = 0; x < data.answerMatrix.length; x++) {
-                for(let y = 0; y < data.answerMatrix[x].length; y++) {
-                    if(data.answerMatrix[x][y]["image"] !== undefined && data.answerMatrix[x][y]["image"] !== null) {
-                        const imgid = data.answerMatrix[x][y]["image"]
-                        //Find any existing file
-                        fs.readdirSync(path.join(__dirname, '..', 'uploads', 'dnd')).forEach(file => {
-                            if(file.indexOf(id + "_" + imgid) !== -1) {
-                                data.answerMatrix[x][y]["image"] = file;
-                                return;
-                            }
-                        })
-                    }
+            //Find any existing file
+            fs.readdirSync(path.join(__dirname, '..', 'uploads', 'cyoa')).forEach(file => {
+                if(file.indexOf(id) !== -1) {
+                    data.stimulus = file;
+                    return;
                 }
-            }
-
+            })
             res.send({status:200, data:data});
         })
     //Catch any errors
@@ -631,14 +603,14 @@ const updateDND = (async(req,res) =>{
     //Check administrative status
     try {
         if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403});
+            res.send({status: 403, message: "Token was null or undefined"});
             return;
         }
         const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
         const adminEmail = adminFromToken.email;
         var admin = await User.findOne({email: adminEmail});
         if(admin.isAdmin !== true) {
-            res.send({status: 403});
+            res.send({status: 403, message: "User is not an admin"});
             return;
         }
     }
@@ -651,14 +623,43 @@ const updateDND = (async(req,res) =>{
         //Set _id to the value given in url under :id
         const _id = req.params.id;
 
-        //Set result to true or false depending on if the question was 
-        //successfully found by its id and updated
-        var result = await DNDQuestion.findByIdAndUpdate(_id, {
-            //Dynamically changes values based on the JSON data in the PUT request
-            question: req.body.question,
-            //NOTE: do not ever allow for the update of the parent question id. Instead, delete the subquestion and remake it under the correct parent.
-            //Due to the difficulty of updating the files and answers, functionality hasn't been implemented. It should be easy to delete and recreate the question with the modified files and answers.
-        });
+        var result = false;
+
+        if(req.files.length === 1) {
+            //Set result to true or false depending on if the question was 
+            //successfully found by its id and updated
+            result = await CYOAQuestion.findByIdAndUpdate(_id, {
+                //Dynamically changes values based on the JSON data in the PUT request
+                question: req.body.question,
+                answer: req.body.answer,
+                explanation: req.body.explanation,
+                //NOTE: do not ever allow for the update of the parent question id. Instead, delete the subquestion and remake it under the correct parent.
+            });
+
+            //Remove any existing file
+            fs.readdirSync(path.join(__dirname, '..', 'uploads', 'dnd')).forEach(file => {
+                if(file.indexOf(_id.toString()) !== -1) {
+                    fs.unlinkSync(path.join(__dirname, '..', 'uploads', 'dnd', file));
+                    return;
+                }
+            })
+
+            //Store file contents in the filesystem
+            const dot = req.files[0].originalname.indexOf('.');
+            const ext = req.files[0].originalname.substring(dot);
+            fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'dnd', _id.toString() + ext), req.files[0].buffer, "binary");
+        }
+        else {
+            //Set result to true or false depending on if the question was 
+            //successfully found by its id and updated
+            result = await DNDQuestion.findByIdAndUpdate(_id, {
+                //Dynamically changes values based on the JSON data in the PUT request
+                question: req.body.question,
+                answer: req.body.answer,
+                explanation: req.body.explanation,
+                //NOTE: do not ever allow for the update of the parent question id. Instead, delete the subquestion and remake it under the correct parent.
+            });
+        }
 
         //If True
         if (result) {
@@ -728,7 +729,7 @@ const createDND = (async(req,res) =>{
             res.send({status: 404, error: "The parent question was not found in the database."});
             return;
         }
-        else if(parentQuestion.type !== 1) {
+        else if(parentQuestion.type !== 0) {
             res.send({status: 400, error: "The parent question is not a DND question."});
             return;
         }
@@ -737,38 +738,16 @@ const createDND = (async(req,res) =>{
             //Dynamically changes values based on the JSON data in the POST request
             parentQuestionId: pid,
             question: req.body.question,
-            anchoredMatrix: req.body.anchoredMatrix,
+            answer: req.body.answer,
+            explanation: req.body.explanation,
         })
         await question.save();
 
         //Store file contents in the filesystem
-        for(let x = 0; x < req.body.answerMatrix.length; x++) {
-            for(let y = 0; y < req.body.answerMatrix[x].length; y++) {
-                if(req.body.answerMatrix[x][y]["image"] !== null && req.body.answerMatrix[x][y]["image"] !== undefined) {
-                    var file = undefined;
-                    for(let i = 0; i < req.files.length; i++) {
-                        if(req.files[i].originalname === req.body.answerMatrix[x][y]["image"]) {
-                            file = req.files[i];
-                            break;
-                        }
-                    }
-                    if(file === undefined) {
-                        await DNDQuestion.findByIdAndDelete(question._id);
-                        res.send({status: 400, error: "A reference to a file in the answer matrix was not found in the sent files"});
-                        return;
-                    }
-
-                    const dot = file.originalname.indexOf('.');
-                    const ext = file.originalname.substring(dot);
-                    fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'dnd', question._id.toString() + "_" + x + "_" + y + ext), file.buffer, "binary");
-
-                    req.body.answerMatrix[x][y]["image"] = x + "_" + y;
-                }
-            }
-        }
+        const dot = req.files[0].originalname.indexOf('.');
+        const ext = req.files[0].originalname.substring(dot);
+        fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'dnd', question._id.toString() + ext), req.files[0].buffer, "binary");
         
-        await DNDQuestion.findByIdAndUpdate(question._id, {answerMatrix: req.body.answerMatrix});
-
         var tempQuestionData = parentQuestion.questionData;
         tempQuestionData.push(question._id);
 
@@ -785,7 +764,6 @@ const createDND = (async(req,res) =>{
 
 module.exports = {
     getGameCount,
-    getAllGamesCount,
     getGameByTopic,
     getGameByType,
     getGameById,
