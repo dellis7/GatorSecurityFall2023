@@ -5,7 +5,7 @@ import QuestionEdit from "./QuestionEdit";
 
 const text = {
   fontFamily: "Gluten",
-  color: "#2613fe",
+  color: "#2C74B3",
 };
 
 const text_blk = {

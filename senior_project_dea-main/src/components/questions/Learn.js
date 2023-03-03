@@ -2,7 +2,9 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
-import TradQuestion from './TraditionalQuestion'
+import TradQuestion from './TraditionalQuestion';
+import '../componentStyling/textStyling.css';
+import '../componentStyling/Navbar.css';
 
 function LearnPage() {
   
@@ -15,18 +17,9 @@ function LearnPage() {
 
   };
 
-  const heading = {
-    fontFamily: "Gluten",
-    color: "#2613fe",
-    fontSize: "40px",
-    paddingBottom: "50px",
-    textDecorationLine: "underline"
-
-  };
-
   const tabs = {
     fontFamily: "Gluten",
-    color: "#2613fe"
+    color: "#261300"
 
   };
 
@@ -100,7 +93,7 @@ function LearnPage() {
 
   return (
     <div id="learndiv" style={container}>
-      <h4 style={heading}>Learn</h4>
+      <h4 className='h1-text'>Learn</h4>
       <Tabs fill justify defaultActiveKey="first" style={tabs}>
       <Tab eventKey="first" title="Input Validation" style={tab}>
           {createQuestions(questionData1)}

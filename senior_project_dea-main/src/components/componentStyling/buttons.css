@@ -1,0 +1,17 @@
+.btn {
+    background-color: #2C74B3 !important;
+}
+
+.btn.btn-primary {
+    background-color: #2C74B3 !important;
+    border: #2C74B3 !important;
+}
+
+.btn.btn-danger {
+    background-color: #2C74B3 !important;
+    border: #2C74B3 !important;
+}
+
+.btn.ripple {
+    background-color: transparent !important;
+}

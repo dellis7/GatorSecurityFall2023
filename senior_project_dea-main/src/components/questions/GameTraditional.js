@@ -4,6 +4,8 @@ import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
 import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
+import '../componentStyling/buttons.css';
+import '../componentStyling/textStyling.css';
 
 const box = {
     boxShadow: "0 3px 10px rgba(0,0,0,.3)",
@@ -69,7 +71,7 @@ function GameTraditionalPage() {
 
     return (
         <div id="gamepagediv">
-            <h1 id="gametitle">Game</h1>
+            <h1 className='h1-text'>Game</h1>
     
             <Tab.Container id="left-tabs-example" defaultActiveKey="first">
             <Row style={box}>

@@ -1,4 +1,6 @@
 import React from 'react';
+import '../componentStyling/buttons.css';
+import '../componentStyling/textStyling.css';
 
 function GamePage() {
     const [cyoaGameQuestions, setCYOAGameQuestions] = React.useState('');
@@ -96,7 +98,7 @@ function GamePage() {
                       <p className="card-text">
                           Select a choose your own adventure game to play below.
                           <br></br>
-                          (Photo by <a href="https://www.pexels.com/@pixabay/">Pixabay</a> on <a href="https://www.pexels.com/photo/blur-bright-business-codes-207580/">Pexels)</a>
+                          (Photo by <a href="https://www.pexels.com/@pixabay/" className='link-text'>Pixabay</a> on <a href="https://www.pexels.com/photo/blur-bright-business-codes-207580/" className='link-text'>Pexels)</a>
                       </p>
                       {cyoaQuestionDisplay}
                       </div>
@@ -114,7 +116,7 @@ function GamePage() {
                       <p className="card-text">
                           Select a drag and drop game to play below.
                           <br></br>
-                          (Photo by <a href="https://www.pexels.com/@pixabay/">Pixabay</a> on <a href="https://www.pexels.com/photo/blur-bright-business-codes-207580/">Pexels)</a>
+                          (Photo by <a href="https://www.pexels.com/@pixabay/" className='link-text'>Pixabay</a> on <a href="https://www.pexels.com/photo/blur-bright-business-codes-207580/" className='link-text'>Pexels)</a>
                       </p>
                       {dndQuestionDisplay}
                       </div>
@@ -132,7 +134,7 @@ function GamePage() {
                       <p className="card-text">
                           This will take you to the traditional games page.
                           <br></br>
-                          (Photo by <a href="https://unsplash.com/@kvalifik?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Kvalifik</a> on <a href="https://unsplash.com/photos/3TiNowmZluA?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash)</a>
+                          (Photo by <a href="https://unsplash.com/@kvalifik?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" className='link-text'>Kvalifik</a> on <a href="https://unsplash.com/photos/3TiNowmZluA?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" className='link-text'>Unsplash)</a>
                       </p>
                       <a href="./gameTraditional" className="btn btn-primary">
                           Click Here

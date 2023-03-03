@@ -98,7 +98,7 @@ export default function QuestionForm({
 
   const text = {
     fontFamily: "Gluten",
-    color: "#2613fe",
+    color: "#2C74B3",
   };
 
   return (
