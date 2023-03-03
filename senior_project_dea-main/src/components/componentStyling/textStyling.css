@@ -1,5 +1,5 @@
 .h1-text {
-    font-family: Gluten;
+    font-family: 'Times New Roman', Times, serif;
     color: #2C74B3 !important;
     font-size: 40px;
     padding-bottom: 10px;
@@ -7,10 +7,10 @@
 }
 
 .tab-text {
+    font-family: 'Times New Roman', Times, serif;
     padding: 30px;
     color: #2C74B3 !important;
     box-shadow: 0 3px 10px rgba(0,0,0,.3);
-    font-family: Gluten;
     margin-bottom: 80px;
 }
 
