@@ -110,6 +110,11 @@ function GameAdventurePage() {
         width: "50%"
     }
 
+    const topBtmPadding = {
+        paddingTop: "40px",
+        paddingBottom: "40px"
+    }
+
     //If CYOAQuestionData hasn't been loaded yet
     if(CYOAQuestionData.length === 0) {
         //Display loading page
@@ -118,7 +123,7 @@ function GameAdventurePage() {
     else {
         //HTML elements that will be rendered to page
         return (
-            <div>
+            <div style={topBtmPadding}>
                 <div style={spaceAfterQ}></div>
                 {/* Dynamically loaded CYOA question image */}
                 <img src={`http://localhost:5000/uploads/cyoa/${CYOAQuestionData.stimulus}`} className='img-fluid' alt='...' />
