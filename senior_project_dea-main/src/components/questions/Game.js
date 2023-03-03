@@ -84,10 +84,16 @@ function GamePage() {
         "alignItems": "strech"
     }
 
+    const gameCard = {
+        flex: "0 0 auto",
+        width: "30%",
+        paddingTop: "40px"
+    }
+
     return (
       <div className="container" style={flexCol}>
           <div className="row" style={flexRow}>
-              <div className="col-lg-6 mb-4" style={flexRow}>
+              <div className="col-lg-6 mb-4" style={gameCard}>
               <section className="d-flex justify-content-center">
                   <div className="card">
                       <img src="./pexels-pixabay-207580.jpg" className="card-img-top" alt="Bright Business Code"/>
