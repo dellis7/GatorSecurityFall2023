@@ -1,6 +1,7 @@
 import React from 'react';
 import '../componentStyling/buttons.css';
 import '../componentStyling/textStyling.css';
+import '../componentStyling/Game.css';
 
 function GamePage() {
     const [cyoaGameQuestions, setCYOAGameQuestions] = React.useState('');
@@ -73,76 +74,53 @@ function GamePage() {
         }
     }
 
-    const flexCol = {
-        display: "flex",
-        "flexDirection": "column"
-    }
-
-    const flexRow = {
-        display: "flex",
-        "flexDirection": "row",
-        "alignItems": "strech"
-    }
-
     return (
-      <div className="container" style={flexCol}>
-          <div className="row" style={flexRow}>
-              <div className="col-lg-6 mb-4" style={flexRow}>
-              <section className="d-flex justify-content-center">
-                  <div className="card">
-                      <img src="./pexels-pixabay-207580.jpg" className="card-img-top" alt="Bright Business Code"/>
-                      <div className="card-body">
-                      <h5 className="card-title">
-                          Choose Your Own Adventure Games
-                      </h5>
-                      <p className="card-text">
-                          Select a choose your own adventure game to play below.
-                          <br></br>
-                          (Photo by <a href="https://www.pexels.com/@pixabay/" className='link-text'>Pixabay</a> on <a href="https://www.pexels.com/photo/blur-bright-business-codes-207580/" className='link-text'>Pexels)</a>
-                      </p>
-                      {cyoaQuestionDisplay}
-                      </div>
-                  </div>
-              </section>
-              </div>
-              <div className="col-lg-6 mb-4" style={flexRow}>
-              <section className="d-flex justify-content-center">
-                  <div className="card">
-                      <img src="./pexels-pixabay-207580.jpg" className="card-img-top" alt="Bright Business Code"/>
-                      <div className="card-body">
-                      <h5 className="card-title">
-                          Drag and Drop Games
-                      </h5>
-                      <p className="card-text">
-                          Select a drag and drop game to play below.
-                          <br></br>
-                          (Photo by <a href="https://www.pexels.com/@pixabay/" className='link-text'>Pixabay</a> on <a href="https://www.pexels.com/photo/blur-bright-business-codes-207580/" className='link-text'>Pexels)</a>
-                      </p>
-                      {dndQuestionDisplay}
-                      </div>
-                  </div>
-              </section>
-              </div>
-              <div className="col-lg-6 mb-4" style={flexRow}> 
-              <section className="d-flex justify-content-center">
-                  <div className="card">
-                      <img src="./kvalifik-3TiNowmZluA-unsplash.jpg" className="card-img-top" alt="Edgy Blue Computer Monitor"/>
-                      <div className="card-body">
-                      <h5 className="card-title">
-                          Traditional Games
-                      </h5>
-                      <p className="card-text">
-                          This will take you to the traditional games page.
-                          <br></br>
-                          (Photo by <a href="https://unsplash.com/@kvalifik?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" className='link-text'>Kvalifik</a> on <a href="https://unsplash.com/photos/3TiNowmZluA?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" className='link-text'>Unsplash)</a>
-                      </p>
-                      <a href="./gameTraditional" className="btn btn-primary">
-                          Click Here
-                      </a>
-                      </div>
-                  </div>
-              </section>
-              </div>
+      <div>
+          <div className='card-container game'>
+            <div className='card game'>
+                <img src="./pexels-pixabay-207580.jpg" className='img-size' alt="Bright Business Code"/>
+                <div className="card-body">
+                    <h5>
+                        Choose Your Own Adventure Games
+                    </h5>
+                    <p className="card-text">
+                        Select a choose your own adventure game to play below.
+                        <br></br>
+                        (Photo by <a href="https://www.pexels.com/@pixabay/" className='link-text'>Pixabay</a> on <a href="https://www.pexels.com/photo/blur-bright-business-codes-207580/" className='link-text'>Pexels)</a>
+                    </p>
+                    {cyoaQuestionDisplay}
+                </div>
+            </div>
+            <div className='card game'>
+                <img src="./pexels-pixabay-207580.jpg" className='img-size' alt="Bright Business Code"/>
+                <div className="card-body">
+                    <h5>
+                        Drag and Drop Games
+                    </h5>
+                    <p className="card-text">
+                        Select a drag and drop game to play below.
+                        <br></br>
+                        (Photo by <a href="https://www.pexels.com/@pixabay/" className='link-text'>Pixabay</a> on <a href="https://www.pexels.com/photo/blur-bright-business-codes-207580/" className='link-text'>Pexels)</a>
+                    </p>
+                    {dndQuestionDisplay}
+                </div>
+            </div>
+            <div className='card game'>
+                <img src="./kvalifik-3TiNowmZluA-unsplash.jpg" className='img-size' alt="Edgy Blue Computer Monitor"/>
+                <div className="card-body">
+                    <h5>
+                        Traditional Games
+                    </h5>
+                    <p className="card-text">
+                        This will take you to the traditional games page.
+                        <br></br>
+                        (Photo by <a href="https://unsplash.com/@kvalifik?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" className='link-text'>Kvalifik</a> on <a href="https://unsplash.com/photos/3TiNowmZluA?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" className='link-text'>Unsplash)</a>
+                    </p>
+                    <a href="./gameTraditional" className="btn btn-primary">
+                        Click Here
+                    </a>
+                </div>
+            </div>
           </div>
       </div>   
     );
