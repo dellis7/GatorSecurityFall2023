@@ -90,9 +90,29 @@ function GameAdventurePage() {
             }
             //Else this is the last question
             else {
-                //Congratulate end-user, and redirect them to game selection page
-                alert("Congratulations! You beat the game! Answer explanation: " + CYOAQuestionData.explanation);
-                window.location.href="/game"
+                //Update the user's score via HTTP request
+                fetch("http://localhost:5000/users/updateScore", {
+                    method: "POST",
+                    crossDomain:true,
+                    headers:{
+                        "Content-Type":"application/json",
+                        Accept:"application/json",
+                        "Access-Control-Allow-Origin":"*",
+                    },
+                    body:JSON.stringify({
+                        token:window.localStorage.getItem("token"),
+                        qid: gameQuestionData._id,
+                    }),
+                }).then((res) => {
+                    if(res.status === 204) {
+                        //Congratulate end-user, and redirect them to game selection page
+                        alert("Congratulations! You beat the game! Answer explanation: " + CYOAQuestionData.explanation);
+                        window.location.href="/game"
+                    }
+                    else {
+                        alert("Something went wrong with the backend!");
+                    }
+                })
             } 
         }
         //Else option does not match, alert end-user incorrect

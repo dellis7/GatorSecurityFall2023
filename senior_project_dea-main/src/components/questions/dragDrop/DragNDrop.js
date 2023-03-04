@@ -124,8 +124,30 @@ function DragNDrop() {
     
       function checkAnswer(props) {
         if (questionData.options.every((val, index) => val === dndOptions[index])) {
-          alert("Great Work!");
-          incrementQuestion();
+            //Update the user's score via HTTP request
+            fetch("http://localhost:5000/users/updateScore", {
+              method: "POST",
+              crossDomain:true,
+              headers:{
+                  "Content-Type":"application/json",
+                  Accept:"application/json",
+                  "Access-Control-Allow-Origin":"*",
+              },
+              body:JSON.stringify({
+                  token:window.localStorage.getItem("token"),
+                  //TODO - Replace 1234567890 with the parent game question id when DragNDrop page is made dynamic
+                  qid: 1234567890 
+              }),
+          }).then((res) => {
+              if(res.status === 204) {
+                  alert("Great Work!");
+                  incrementQuestion();
+              }
+              else {
+                  alert("Something went wrong with the backend!");
+              }
+          })
+
         } else {
           alert("Keep trying!");
         }
