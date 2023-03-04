@@ -76,8 +76,8 @@ function GamePage() {
 
     return (
       <div>
-          <div className='card-container'>
-            <div className='card'>
+          <div className='card-container game'>
+            <div className='card game'>
                 <img src="./pexels-pixabay-207580.jpg" className='img-size' alt="Bright Business Code"/>
                 <div className="card-body">
                     <h5>
@@ -91,7 +91,7 @@ function GamePage() {
                     {cyoaQuestionDisplay}
                 </div>
             </div>
-            <div className='card'>
+            <div className='card game'>
                 <img src="./pexels-pixabay-207580.jpg" className='img-size' alt="Bright Business Code"/>
                 <div className="card-body">
                     <h5>
@@ -105,7 +105,7 @@ function GamePage() {
                     {dndQuestionDisplay}
                 </div>
             </div>
-            <div className='card'>
+            <div className='card game'>
                 <img src="./kvalifik-3TiNowmZluA-unsplash.jpg" className='img-size' alt="Edgy Blue Computer Monitor"/>
                 <div className="card-body">
                     <h5>

@@ -1,11 +1,11 @@
-.card-container {
+.card-container.game {
     display: flex;
     flex-direction: row !important;
     justify-content: center;
     padding: 40px 20px;
 }
 
-.card {
+.card.game {
     margin: 40px;
     width: 550px !important;
 }

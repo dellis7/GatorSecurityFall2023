@@ -33,7 +33,7 @@ function QuestionCRUD() {
 
   //CSS
   const container = {
-    display: "block",
+    
     mx: "auto",
     paddingTop: "50px",
   };

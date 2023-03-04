@@ -54,13 +54,12 @@ export default class WelcomePage extends React.Component {
     var name = this.state.userInfo["fname"];
 
   return (
-    <MDBCarousel showControls showIndicators style={carousel}>
+    <MDBCarousel showControls showIndicators style={carousel} interval={8000}>
       <MDBCarouselItem        
         className='w-100 d-block'
         itemId={1}
-        src='./welcomeBkgdBlue.png'
+        src='./Orange-Background.png'
         alt='...'
-        
       >
         <img src='./welcomeImg.png' style={image} alt="Stick Figure Waving"></img>
         <h5 style={title}>Welcome {name}!</h5>
@@ -69,7 +68,7 @@ export default class WelcomePage extends React.Component {
       <MDBCarouselItem
         className='w-100 d-block'
         itemId={2}
-        src='./welcomeBkgdOrange.png'
+        src='./Orange-Background.png'
         alt='...'
       >
         <img src='./scoreImg.png' style={image} alt="Ascending Steps with Flag on Last Step"></img>
@@ -79,7 +78,7 @@ export default class WelcomePage extends React.Component {
       <MDBCarouselItem        
         className='w-100 d-block'
         itemId={3}
-        src='./welcomeBkgdBlue.png'
+        src='./Orange-Background.png'
         alt='...'
       >
         <img src='./creatorImg.png' style={image} alt="Lightbulb"></img>
@@ -89,7 +88,7 @@ export default class WelcomePage extends React.Component {
       <MDBCarouselItem        
         className='w-100 d-block'
         itemId={3}
-        src='./welcomeBkgdOrange.png'
+        src='./Orange-Background.png'
         alt='...'
       >
         <img src='./creatorImg.png' style={image} alt="Lightbulb"></img>
