@@ -32,7 +32,7 @@ export default function QuestionCard({
           <div className="container">
             <div className="row my-3">
               <div className="col">
-                <p style={text}>Topic: {topic_Card}</p>
+                <p style={text}>Topic: {topicNumberConversion(topic_Card)}</p>
               </div>
               <div className="col">
                 <p style={text}>Display Type: {displayType_Card}</p>
@@ -195,3 +195,34 @@ const DeleteQuestion = (removeID) => {
     alert("Question was successfully deleted.");
   });
 };
+
+function topicNumberConversion(topicNumber){
+  switch (topicNumber) {
+    case 1:
+      return "Input Validation";
+  
+    case 2:
+      return "Encoding & Escaping";
+
+    case 3:
+      return "Cross-Site Scripting";
+
+    case 4:
+        return "SQL Injection";
+
+    case 5:
+      return "Cryptography";
+
+    case 6:
+      return "User Authentication";
+      
+    case 7:
+      return "URL SQL Injection";
+        
+    case 8:
+      return "Login SQL Injection";
+          
+    default:
+      break;
+  }
+}
