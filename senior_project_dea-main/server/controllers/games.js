@@ -106,9 +106,9 @@ const deleteGameById = (async(req,res) =>{
         if(question.type === 0) {
             for(let subquestion of question.questionData) {
                 //Remove any existing file
-                fs.readdirSync(path.join(__dirname, '..', 'uploads')).forEach(file => {
+                fs.readdirSync(path.join(__dirname, '..', 'uploads', 'cyoa')).forEach(file => {
                     if(file.indexOf(subquestion.toString()) !== -1) {
-                        fs.unlinkSync(path.join(__dirname, '..', 'uploads', file));
+                        fs.unlinkSync(path.join(__dirname, '..', 'uploads', 'cyoa', file));
                         return;
                     }
                 })
@@ -117,12 +117,20 @@ const deleteGameById = (async(req,res) =>{
             }
         }
         else if(question.type === 1) {
-            for(let subquestion in question.questionData) {
+            for(let subquestion of question.questionData) {
+                //Remove any existing file
+                fs.readdirSync(path.join(__dirname, '..', 'uploads', 'dnd')).forEach(file => {
+                    if(file.indexOf(subquestion.toString()) !== -1) {
+                        fs.unlinkSync(path.join(__dirname, '..', 'uploads', 'dnd', file));
+                        return;
+                    }
+                })
+
                 await DNDQuestion.findByIdAndDelete(subquestion);
             }
         }
         else {
-            res.send({status:500, error:"Cannot delete a question with a malformed topic."});
+            res.send({status:500, error:"Cannot delete a question with a malformed type."});
             return;
         }
 
@@ -130,17 +138,16 @@ const deleteGameById = (async(req,res) =>{
         //was successfully found and deleted by its id
         const result = await GameQuestion.findByIdAndDelete(_id);
         
-        //TODO: update this when the game score on the profile page is updated
         //Find all users with references to the old questions and delete the old questions
-        /*const usersWithOldQuestions = await User.find({learnscore: _id});
+        const usersWithOldQuestions = await User.find({gamescore: _id});
         for(let i = 0; i < (await usersWithOldQuestions).length; i++) {
             var user = usersWithOldQuestions[i];
-            var index = user.learnscore.indexOf(_id);
+            var index = user.gamescore.indexOf(_id);
             if(index > -1) {
-                user.learnscore.splice(index, 1);
-                await User.findOneAndUpdate({_id: user._id}, {$set: {learnscore:user.learnscore}});
+                user.gamescore.splice(index, 1);
+                await User.findOneAndUpdate({_id: user._id}, {$set: {gamescore:user.gamescore}});
             }
-        }*/
+        }
 
         //If True
         if (result) {
