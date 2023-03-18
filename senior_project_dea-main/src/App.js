@@ -17,6 +17,7 @@ import { useLocation } from 'react-router-dom';
 import QuestionCRUD from './components/questions/QuestionCRUD';
 import { useEffect } from 'react';
 import DragNDrop from './components/questions/dragDrop/DragNDrop';
+import Matching from "./components/questions/Matching/Matching";
 
 function App() {
   
@@ -74,6 +75,7 @@ function App() {
               <Route path="/admin" element={<Admin />} />
               <Route path="/modify_questions" element={<QuestionCRUD/>} />
               <Route path="/gameDND" element={<DragNDrop/>}/>
+              <Route path="/gameMatching" element={<Matching/>}/>
             </Routes>
           </div>
         </div>
