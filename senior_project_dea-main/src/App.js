@@ -66,6 +66,8 @@ function App() {
               <Route path="/game" element={<GamePage />} />
               <Route path="/gameTraditional" element={<GameTraditionalPage />} />
               <Route path="/gameAdventure/:id" element={<GameAdventurePage />} />
+              <Route path="/gameDND/:id" element={<DragNDrop/>} />
+              <Route path="/gameMatching" element={<Matching/>} />
               <Route path="/myprofile" element={<ProfilePage />} />
               <Route exact path="/" element={<Login />} />
               <Route path="/sign-in" element={<Login />} />
@@ -74,8 +76,6 @@ function App() {
               <Route path="/userInfo" element={<UserInfo />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/modify_questions" element={<QuestionCRUD/>} />
-              <Route path="/gameDND" element={<DragNDrop/>}/>
-              <Route path="/gameMatching" element={<Matching/>}/>
             </Routes>
           </div>
         </div>
