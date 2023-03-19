@@ -65,8 +65,8 @@ function GamePage() {
         for(let i = 0; i < dndGameQuestions.data.length; i++) {
             dndQuestionDisplay.push(
                 <div key={i}>
-                    <a href={"./gameDND/"} className="btn btn-primary">
-                          DnD Questions
+                    <a href={`./gameDND/${dndGameQuestions.data[i]._id}`} className="btn btn-primary">
+                        {dndGameQuestions.data[i].name}
                     </a>
                     <div style={spaceAfterQ} />
                 </div>

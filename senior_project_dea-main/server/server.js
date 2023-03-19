@@ -20,7 +20,7 @@ server.listen(5000, ()=>{
 
 server.use(express.static('/uploads'))
 server.use('/uploads/cyoa', express.static('./uploads/cyoa'))
-server.use('uploads/dnd', express.static('./uploads/dnd'))
+server.use('/uploads/dnd', express.static('./uploads/dnd'))
 
 server.use('/users', userRoutes)
 server.use('/questions', questionRoutes)

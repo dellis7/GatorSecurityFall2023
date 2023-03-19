@@ -1,58 +1,155 @@
 import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/esm/Container";
 import { DndContext, closestCenter } from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import arrayShuffle from "array-shuffle";
 import { useSortable } from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
 
-
-//Temporary Data set to work on functionality; will be replaced by backend support
-const questions = [
-    {
-        parentQuestionId: "1234567890",
-        question: "Asymmetric encryption, also known as public-key encryption, is a type of encryption algorithm that uses a pair of keys (public and private) to encrypt and decrypt data. The image provided is a flow chart showcasing the process of asymmetric encryption. As you can see the steps seem to have been mixed up. Rearrange the list so that it follows steps 1-5 in the correct order.",
-        options: [
-            "Plaintext Data",
-            "Public Key",
-            "Ciphered Data",
-            "Private Key",
-            "Decrypted Plaintext Data"
-          ],
-    },
-    {
-        parentQuestionId: "9876543210",
-        quetion: "This is a test",
-        options: [
-            "I",
-            "Am",
-            "An",
-            "Ali",
-            "Gator"
-          ],
-    },
-]
-
-
 function DragNDrop() {
 
-    const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [questionData, setQuestionData] = useState(questions.at(currentQuestion));
-    const [dndOptions, setDndOptions] = useState(arrayShuffle(questionData.options));
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [gameQuestionData, setGameQuestionData] = React.useState('');
+  const [DNDQuestionData, setDNDQuestionData] = React.useState('');
+  const [dndOptions, setDndOptions] = React.useState([]);
+
+  //Loads the data from database once
+  React.useEffect(()=> {
+
+    const loadGame = async () => {
+        
+      //If gameQuestionData not loaded yet, get it from the DB
+      if(gameQuestionData.length === 0) {
+        const ind = window.location.href.lastIndexOf('/');
+        getGameQuestion(window.location.href.substring(ind + 1), setGameQuestionData);
+      }
+
+      //If gameQuestionData has been loaded
+      if(gameQuestionData.length !== 0) {
+        //If CYOAQuestionData has not been loaded, get it from the DB
+        if(DNDQuestionData.length === 0) {
+            getDNDQuestion(gameQuestionData.questionData[currentQuestion], setDNDQuestionData);
+        }
+      }
+
+      //If DNDQuestionData has been loaded
+      if(DNDQuestionData.length !== 0) {
+        //If dndOptions state has not been set
+        if(dndOptions.length === 0) {
+          //Shuffle the array's correct order
+          const shuffle = arrayShuffle(DNDQuestionData.answer);
+
+          for (let i = 0; i < DNDQuestionData.answer.length; i++) {
+            dndOptions.push(shuffle[i])
+          }
+        }
+      }
+    }
+    //Initial function call to load data
+    loadGame();
     
-    useEffect(() => {
-        setQuestionData(questions.at(currentQuestion));
-    }, [currentQuestion])
+  },[gameQuestionData, DNDQuestionData, currentQuestion])
 
-    useEffect(() => {
-        setDndOptions(arrayShuffle(questionData.options));
-    }, [questionData.options])
+  //Function that pulls gameQuestion data from backend
+  const getGameQuestion = (id_, setGameQuestionData_) => {
+    fetch("http://localhost:5000/games/getById/" + id_, {
+      method: "POST",
+      crossDomain:true,
+      headers:{
+          "Content-Type":"application/json",
+          Accept:"application/json",
+          "Access-Control-Allow-Origin":"*",
+      },
+      body:JSON.stringify({}),
+      }).then((res) => res.json())
+      .then((data)=>{
+        setGameQuestionData_(data.data);
+    })
+  }
 
+  //Function that pulls DnD Question data from backend
+  const getDNDQuestion = (questionNumber_, setDNDQuestionData_) => {
+    fetch("http://localhost:5000/games/dnd/getById/" + questionNumber_, {
+      method: "POST",
+      crossDomain:true,
+      headers:{
+          "Content-Type":"application/json",
+          Accept:"application/json",
+          "Access-Control-Allow-Origin":"*",
+      },
+      body:JSON.stringify({}),
+      }).then((res) => res.json())
+      .then((data)=>{
+        setDNDQuestionData_(data.data);
+        //console.log(data.data)
+        //console.log(gameQuestionData)
+    })
+  }
 
+  function handleDragEnd(event) {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setDndOptions((items) => {
+        const activeIndex = items.indexOf(active.id);
+        const overIndex = items.indexOf(over.id);
+        return arrayMove(items, activeIndex, overIndex);
+        // items: [2, 3, 1]   0  -> 2
+        // [1, 2, 3] oldIndex: 0 newIndex: 2  -> [2, 3, 1]
+      });
+    }
+  }
+  
+  function checkAnswer() {
+
+    //Checks answers
+    for (let i = 0; i < DNDQuestionData.answer.length; i++) {
+      if(dndOptions[i] !== DNDQuestionData.answer[i]) {
+        alert("Keep trying!");
+        return;
+      }
+    }
+
+    //If this is the end of the game
+    if (currentQuestion + 1 >= gameQuestionData.questionData.length) {
+      //Update the user's score via HTTP request
+      fetch("http://localhost:5000/users/updateScore", {
+        method: "POST",
+        crossDomain:true,
+        headers:{
+            "Content-Type":"application/json",
+            Accept:"application/json",
+            "Access-Control-Allow-Origin":"*",
+        },
+        body:JSON.stringify({
+            token:window.localStorage.getItem("token"),
+            qid: gameQuestionData._id, 
+        }),
+      }).then((res) => {
+        //If request was a success
+        if(res.status === 204) {
+          //Congratulate the user and return to /game page
+          alert("Congratulations! You beat the game!");
+          window.location.href="/game";
+        }
+        else {
+          alert("Something went wrong with the backend!");
+        }
+    })}
+    //Else there are more questions
+    else {
+      alert("Correct!");
+      setCurrentQuestion(currentQuestion + 1);
+      getDNDQuestion(gameQuestionData.questionData[currentQuestion + 1], setDNDQuestionData);
+    }
+  }
+
+  //If DNDQuestionData hasn't been loaded yet
+  if(dndOptions.length === 0) {
+      //Display loading page
+      return <div>Loading...</div>;
+    }
+    else {
       return (
         <div className="Container">
           <div
@@ -61,12 +158,12 @@ function DragNDrop() {
           >
             <div className="col-12 col-md-5">
                         <img
-                        src={`http://localhost:5000/uploads/cyoa/${questionData.parentQuestionId}.png`}
+                        src={`http://localhost:5000/uploads/dnd/${DNDQuestionData.stimulus}`}
                         alt="Depiction of asymmetric encryption"
                         style={{ width: "100%", maxWidth: "700px" }}
                       />
               <p className=" px-3 px-md-0" style={{ marginTop: 20, textAlign: "left"}}>
-                {questionData.question}
+                {DNDQuestionData.question}
               </p>
             </div>
     
@@ -86,8 +183,8 @@ function DragNDrop() {
                   >
                     <div className="card body">
                       {/* We need components that use the useSortable hook */}
-                      {dndOptions.map((language) => (
-                        <SortableItem key={language} id={language} />
+                      {dndOptions.map((item) => (
+                        <SortableItem key={item} id={item} />
                       ))}
                     </div>
                   </SortableContext>
@@ -107,85 +204,33 @@ function DragNDrop() {
           </div>
         </div>
       );
-
-      function handleDragEnd(event) {
-        const { active, over } = event;
-    
-        if (active.id !== over.id) {
-          setDndOptions((items) => {
-            const activeIndex = items.indexOf(active.id);
-            const overIndex = items.indexOf(over.id);
-            return arrayMove(items, activeIndex, overIndex);
-            // items: [2, 3, 1]   0  -> 2
-            // [1, 2, 3] oldIndex: 0 newIndex: 2  -> [2, 3, 1]
-          });
-        }
-      }
-    
-      function checkAnswer(props) {
-        if (questionData.options.every((val, index) => val === dndOptions[index])) {
-            //Update the user's score via HTTP request
-            fetch("http://localhost:5000/users/updateScore", {
-              method: "POST",
-              crossDomain:true,
-              headers:{
-                  "Content-Type":"application/json",
-                  Accept:"application/json",
-                  "Access-Control-Allow-Origin":"*",
-              },
-              body:JSON.stringify({
-                  token:window.localStorage.getItem("token"),
-                  //TODO - Replace 1234567890 with the parent game question id when DragNDrop page is made dynamic
-                  qid: 1234567890 
-              }),
-          }).then((res) => {
-              if(res.status === 204) {
-                  alert("Great Work!");
-                  incrementQuestion();
-              }
-              else {
-                  alert("Something went wrong with the backend!");
-              }
-          })
-
-        } else {
-          alert("Keep trying!");
-        }
-      }
-
-      function incrementQuestion(){
-            setCurrentQuestion(currentQuestion + 1);
-            if(currentQuestion + 1 >= questions.length){
-                window.location.href="/game";
-            }
-      }
-}
+    }
+  }
 
 function SortableItem(props) {
-      
-    const {
-        attributes,
-        listeners,
-        setNodeRef,
-        transform,
-        transition
-    } = useSortable({id: props.id});
 
-    const style = {
-        transform: CSS.Transform.toString(transform),
-        transition
-    }
+  const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition
+  } = useSortable({id: props.id});
 
-    return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-            <div className="card m-3">
-                <div className="card-body">
-                {props.id}
-                </div>
-            </div>
-            
-        </div>
-    )
+  const style = {
+      transform: CSS.Transform.toString(transform),
+      transition
   }
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+        <div className="card m-3">
+            <div className="card-body">
+            {props.id}
+            </div>
+        </div>
+    </div>
+  )
+}
 
 export default DragNDrop;
