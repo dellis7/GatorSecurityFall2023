@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Container from "react-bootstrap/esm/Container";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
@@ -37,18 +37,14 @@ function DragNDrop() {
         //If dndOptions state has not been set
         if(dndOptions.length === 0) {
           //Shuffle the array's correct order
-          const shuffle = arrayShuffle(DNDQuestionData.answer);
-
-          for (let i = 0; i < DNDQuestionData.answer.length; i++) {
-            dndOptions.push(shuffle[i])
-          }
+          setDndOptions(arrayShuffle(DNDQuestionData.answer));
         }
       }
     }
     //Initial function call to load data
     loadGame();
     
-  },[gameQuestionData, DNDQuestionData, currentQuestion])
+  },[gameQuestionData, DNDQuestionData, currentQuestion, dndOptions])
 
   //Function that pulls gameQuestion data from backend
   const getGameQuestion = (id_, setGameQuestionData_) => {
@@ -129,7 +125,7 @@ function DragNDrop() {
         //If request was a success
         if(res.status === 204) {
           //Congratulate the user and return to /game page
-          alert("Congratulations! You beat the game!");
+          alert("Congratulations! You beat the game!\n\nAnswer explanation: " + DNDQuestionData.explanation);
           window.location.href="/game";
         }
         else {
@@ -138,7 +134,7 @@ function DragNDrop() {
     })}
     //Else there are more questions
     else {
-      alert("Correct!");
+      alert("Correct!\n\nAnswer explanation: " + DNDQuestionData.explanation);
       setCurrentQuestion(currentQuestion + 1);
       getDNDQuestion(gameQuestionData.questionData[currentQuestion + 1], setDNDQuestionData);
     }
