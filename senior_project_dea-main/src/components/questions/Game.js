@@ -107,6 +107,22 @@ function GamePage() {
                 </div>
             </div>
             <div className='card game'>
+                <img src="./artificial-intelligence-gf9b982dc3_1920.jpg" className='img-size' alt="Blue Digital Human Head"/>
+                <div className="card-body">
+                    <h5>
+                        Memory Matching Card Games
+                    </h5>
+                    <p className="card-text">
+                        Select a memory matching card game to play below.
+                        <br></br>
+                        (Photo by <a href="https://pixabay.com/users/geralt-9301/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3706562" className='link-text'>Gerd Altmann</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3706562" className='link-text'>Pixabay</a>)
+                    </p>
+                    <a href="./gameMatching" className="btn btn-primary">
+                        Cybersecurity Terms and Definitions
+                    </a>
+                </div>
+            </div>
+            <div className='card game'>
                 <img src="./kvalifik-3TiNowmZluA-unsplash.jpg" className='img-size' alt="Edgy Blue Computer Monitor"/>
                 <div className="card-body">
                     <h5>
@@ -122,8 +138,8 @@ function GamePage() {
                     </a>
                 </div>
             </div>
-          </div>
-      </div>   
+            </div>
+        </div>
     );
   }
   
