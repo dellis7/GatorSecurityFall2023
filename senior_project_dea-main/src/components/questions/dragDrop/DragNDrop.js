@@ -28,7 +28,7 @@ function DragNDrop() {
       if(gameQuestionData.length !== 0) {
         //If CYOAQuestionData has not been loaded, get it from the DB
         if(DNDQuestionData.length === 0) {
-            getDNDQuestion(gameQuestionData.questionData[currentQuestion], setDNDQuestionData);
+          getDNDQuestion(gameQuestionData.questionData[currentQuestion], setDNDQuestionData);
         }
       }
 
@@ -77,8 +77,10 @@ function DragNDrop() {
       }).then((res) => res.json())
       .then((data)=>{
         setDNDQuestionData_(data.data);
-        //console.log(data.data)
-        //console.log(gameQuestionData)
+        
+        if (dndOptions.length !== 0) {
+          setDndOptions(arrayShuffle(data.data.answer));
+        }
     })
   }
 
@@ -96,7 +98,7 @@ function DragNDrop() {
     }
   }
   
-  function checkAnswer() {
+  async function checkAnswer() {
 
     //Checks answers
     for (let i = 0; i < DNDQuestionData.answer.length; i++) {
@@ -134,8 +136,8 @@ function DragNDrop() {
     })}
     //Else there are more questions
     else {
+      setCurrentQuestion(currentQuestion => currentQuestion + 1);
       alert("Correct!\n\nAnswer explanation: " + DNDQuestionData.explanation);
-      setCurrentQuestion(currentQuestion + 1);
       getDNDQuestion(gameQuestionData.questionData[currentQuestion + 1], setDNDQuestionData);
     }
   }

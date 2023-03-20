@@ -80,7 +80,7 @@ function GamePage() {
             <div className='card game'>
                 <img src="./pexels-pixabay-207580.jpg" className='img-size' alt="Bright Business Code"/>
                 <div className="card-body">
-                    <h5>
+                    <h5 style={{"fontWeight": 'bold'}}>
                         Choose Your Own Adventure Games
                     </h5>
                     <p className="card-text">
@@ -95,7 +95,7 @@ function GamePage() {
                 {/* <img src="./pexels-pixabay-207580.jpg" className='img-size' alt="Bright Business Code"/> */}
                 <img src="./DND.png" className='img-size' alt="Neon Lock"/>
                 <div className="card-body">
-                    <h5>
+                    <h5 style={{"fontWeight": 'bold'}}>
                         Drag and Drop Games
                     </h5>
                     <p className="card-text">
@@ -109,7 +109,7 @@ function GamePage() {
             <div className='card game'>
                 <img src="./artificial-intelligence-gf9b982dc3_1920.jpg" className='img-size' alt="Blue Digital Human Head"/>
                 <div className="card-body">
-                    <h5>
+                    <h5 style={{"fontWeight": 'bold'}}>
                         Memory Matching Card Games
                     </h5>
                     <p className="card-text">
@@ -125,7 +125,7 @@ function GamePage() {
             <div className='card game'>
                 <img src="./kvalifik-3TiNowmZluA-unsplash.jpg" className='img-size' alt="Edgy Blue Computer Monitor"/>
                 <div className="card-body">
-                    <h5>
+                    <h5 style={{"fontWeight": 'bold'}}>
                         Traditional Games
                     </h5>
                     <p className="card-text">
