@@ -95,7 +95,6 @@ export default class ProfilePage extends React.Component {
       var email = this.state.userInfo["email"];
       var gameScore = this.state.userInfo["gamescore"].length;
       var gameMax = this.state.gameQuestionCount + this.state.allGamesCount;
-      console.log(this.state.allGamesCount);
       var gamePercentage = Math.floor(gameScore/gameMax * 100);
       var learnScore = this.state.userInfo["learnscore"].length;
       var learnMax = this.state.learnQuestionCount;
