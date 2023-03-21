@@ -27,6 +27,48 @@ export default class Admin extends React.Component {
             //console.log(data)
           this.setState({allUsers: data});
         });
+        fetch("http://localhost:5000/questions/getCount", 
+        {
+          method: "POST",
+          crossDomain:true,
+          headers:{
+            "Content-Type":"application/json",
+            Accept:"application/json",
+            "Access-Control-Allow-Origin":"*",
+        },
+        body:JSON.stringify({displayType:'learn'}),
+        }).then((res)=>res.json())
+        .then(data=>{
+          this.setState({learnQuestionCount: data.data})
+        });
+        fetch("http://localhost:5000/questions/getCount", 
+        {
+          method: "POST",
+          crossDomain:true,
+          headers:{
+            "Content-Type":"application/json",
+            Accept:"application/json",
+            "Access-Control-Allow-Origin":"*",
+        },
+        body:JSON.stringify({displayType:'game'}),
+        }).then((res)=>res.json())
+        .then(data=>{
+          this.setState({gameQuestionCount: data.data})
+        });
+        fetch("http://localhost:5000/games/getCount", 
+        {
+          method: "POST",
+          crossDomain:true,
+          headers:{
+            "Content-Type":"application/json",
+            Accept:"application/json",
+            "Access-Control-Allow-Origin":"*",
+        },
+        body:JSON.stringify({}),
+        }).then((res)=>res.json())
+        .then(data=>{
+          this.setState({allGamesCount: data.data})
+        });
     }
     render(){
         //console.log("all users:")
@@ -34,39 +76,17 @@ export default class Admin extends React.Component {
       if(this.state.allUsers == null){
         return <div></div>
       }
+      var learnMax = this.state.learnQuestionCount;
+      var gameMax = this.state.allGamesCount + this.state.gameQuestionCount;
       function createLearnView(user){
-        var learnScore = user["learnscore"].reduce((a, b) => a + b, 0);
-        var learnMax = user["learnscore"].length;
+        var learnScore = user["learnscore"].length;
         var totalScore = ["Total Score: "+learnScore+"/"+learnMax+"\n","\n"]
-        var learnView = []
-        for(var i=0; i<user["learnscore"].length; i++){
-            var message = "Incomplete"
-            var textColor = "red"
-            if(user["learnscore"][i] === 1){
-                message = "Complete   "
-                textColor = "limegreen"
-            }
-            var element = <div style={{color: textColor}}>{(i+1)+": "+message+"\n"}</div>
-            learnView.push(element)
-        }
-        return <th style={{whiteSpace:"pre-wrap", wordWrap:"break-word"}}>{totalScore}{learnView}</th>
+        return <th style={{whiteSpace:"pre-wrap", wordWrap:"break-word"}}>{totalScore}</th>
       }
       function createGameView(user){
-        var gameScore = user["gamescore"].reduce((a, b) => a + b, 0);
-        var gameMax = user["gamescore"].length;
+        var gameScore = user["gamescore"].length;
         var totalScore = ["Total Score: "+gameScore+"/"+gameMax+"\n","\n"]
-        var gameView = []
-        for(var i=0; i<user["gamescore"].length; i++){
-            var message = "Incomplete"
-            var textColor = "red"
-            if(user["gamescore"][i] === 1){
-                message = "Complete   "
-                textColor = "limegreen"
-            }
-            var element = <div style={{color: textColor}}>{(i+1)+": "+message+"\n"}</div>
-            gameView.push(element)
-        }
-        return <th style={{whiteSpace:"pre-wrap", wordWrap:"break-word"}}>{totalScore}{gameView}</th>
+        return <th style={{whiteSpace:"pre-wrap", wordWrap:"break-word"}}>{totalScore}</th>
       }
 
       if(this.state.allUsers.status === 403) {
