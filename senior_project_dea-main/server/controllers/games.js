@@ -363,7 +363,7 @@ const updateCYOA = (async(req,res) =>{
         }
     }
     catch(error) {
-        res.send({status: 500, error:error});
+        res.send({status: 500, error:error + ": Error getting user data."});
         return;
     }
 
@@ -373,7 +373,7 @@ const updateCYOA = (async(req,res) =>{
 
         var result = false;
 
-        if(req.files.length === 1) {
+        if(req.files != undefined && req.files.length === 1) {
             //Set result to true or false depending on if the question was 
             //successfully found by its id and updated
             result = await CYOAQuestion.findByIdAndUpdate(_id, {
@@ -429,7 +429,7 @@ const updateCYOA = (async(req,res) =>{
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
-        res.send({status: 500, error: error})
+        res.send({status: 500, error: error + ": Error updating question data."})
         return;
     }
 })
@@ -622,7 +622,7 @@ const updateDND = (async(req,res) =>{
         }
     }
     catch(error) {
-        res.send({status: 500, error:error});
+        res.send({status: 500, error:error + ": Error getting user data."});
         return;
     }
 
@@ -632,7 +632,7 @@ const updateDND = (async(req,res) =>{
 
         var result = false;
 
-        if(req.files.length === 1) {
+        if(req.files != undefined && req.files.length === 1) {
             //Set result to true or false depending on if the question was 
             //successfully found by its id and updated
             result = await DNDQuestion.findByIdAndUpdate(_id, {
@@ -682,7 +682,7 @@ const updateDND = (async(req,res) =>{
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
-        res.send({status: 500, error: error})
+        res.send({status: 500, error: error + ": Error updating question data."})
         return;
     }
 })
