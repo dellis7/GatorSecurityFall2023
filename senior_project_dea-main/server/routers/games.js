@@ -57,7 +57,7 @@ router.post('/dnd/getById/:id', getDNDById);
 
 router.delete('/dnd/delete/:id', deleteDNDById);
 
-router.put('/dnd/update/:id', updateDND);
+router.put('/dnd/update/:id', upload.any(), updateDND);
 
 router.post('/dnd/create', upload.any(), validateDNDQuestion, createDND);
 
