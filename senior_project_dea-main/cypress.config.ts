@@ -8,8 +8,8 @@ export default defineConfig({
     },
   },
 
-  viewportWidth: 1000,
-  viewportHeight: 1000,
+  viewportWidth: 1600,
+  viewportHeight: 1050,
 
   component: {
     devServer: {

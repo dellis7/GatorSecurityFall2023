@@ -92,7 +92,6 @@ function GamePage() {
                 </div>
             </div>
             <div className='card game'>
-                {/* <img src="./pexels-pixabay-207580.jpg" className='img-size' alt="Bright Business Code"/> */}
                 <img src="./DND.png" className='img-size' alt="Neon Lock"/>
                 <div className="card-body">
                     <h5 style={{"fontWeight": 'bold'}}>
@@ -101,7 +100,7 @@ function GamePage() {
                     <p className="card-text">
                         Select a drag and drop game to play below.
                         <br></br>
-                        {/* (Photo by <a href="https://www.pexels.com/@pixabay/" className='link-text'>Pixabay</a> on <a href="https://www.pexels.com/photo/blur-bright-business-codes-207580/" className='link-text'>Pexels)</a> */}
+                        (Photo by Professor Resch (This is a template))
                     </p>
                     {dndQuestionDisplay}
                 </div>
@@ -126,15 +125,15 @@ function GamePage() {
                 <img src="./kvalifik-3TiNowmZluA-unsplash.jpg" className='img-size' alt="Edgy Blue Computer Monitor"/>
                 <div className="card-body">
                     <h5 style={{"fontWeight": 'bold'}}>
-                        Traditional Games
+                        Fill in the Blank Games
                     </h5>
                     <p className="card-text">
-                        This will take you to the traditional games page.
+                        This will take you to the fill in the blank games page.
                         <br></br>
                         (Photo by <a href="https://unsplash.com/@kvalifik?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" className='link-text'>Kvalifik</a> on <a href="https://unsplash.com/photos/3TiNowmZluA?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" className='link-text'>Unsplash)</a>
                     </p>
                     <a href="./gameTraditional" className="btn btn-primary">
-                        Traditional Games
+                        Fill in the Blank Games
                     </a>
                 </div>
             </div>

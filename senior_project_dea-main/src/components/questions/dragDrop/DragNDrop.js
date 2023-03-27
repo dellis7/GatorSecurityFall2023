@@ -126,8 +126,13 @@ function DragNDrop() {
       }).then((res) => {
         //If request was a success
         if(res.status === 204) {
-          //Congratulate the user and return to /game page
-          alert("Congratulations! You beat the game!\n\nAnswer explanation: " + DNDQuestionData.explanation);
+          if (DNDQuestionData.explanation === "") {
+            alert("Congratulations! You beat the game!");
+          }
+          else {
+            //Congratulate the user and return to /game page
+            alert("Congratulations! You beat the game!\n\nAnswer explanation: " + DNDQuestionData.explanation);
+          }
           window.location.href="/game";
         }
         else {
@@ -137,7 +142,13 @@ function DragNDrop() {
     //Else there are more questions
     else {
       setCurrentQuestion(currentQuestion => currentQuestion + 1);
-      alert("Correct!\n\nAnswer explanation: " + DNDQuestionData.explanation);
+      if (DNDQuestionData.explanation === "") {
+        alert("Correct!");
+      }
+      else {
+        //Give correct alert to end-user, and update page to next question
+        alert("Correct!\n\nAnswer explanation: " + DNDQuestionData.explanation);
+      }
       getDNDQuestion(gameQuestionData.questionData[currentQuestion + 1], setDNDQuestionData);
     }
   }
