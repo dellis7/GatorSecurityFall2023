@@ -21,10 +21,12 @@ const {
     getDNDById,
     deleteDNDById,
     updateDND,
-    createDND
+    createDND,
+    getMatchingById,
+    createMatching
 } = require('../controllers/games.js')
 
-const { validateCYOAQuestion, validateDNDQuestion } = require('../validators/questionValidator')
+const { validateCYOAQuestion, validateDNDQuestion, validateMatchingQuestion } = require('../validators/questionValidator')
 
 //Overarching Game Question Routes
 router.post('/getcount', getGameCount);
@@ -60,5 +62,10 @@ router.delete('/dnd/delete/:id', deleteDNDById);
 router.put('/dnd/update/:id', upload.any(), updateDND);
 
 router.post('/dnd/create', upload.any(), validateDNDQuestion, createDND);
+
+//Matching Subquestion Routes
+router.post('/matching/getById/:id', getMatchingById);
+
+router.post('/matching/create', validateMatchingQuestion, createMatching);
 
 module.exports = router

@@ -6,6 +6,7 @@ const path = require("path")
 const GameQuestion = mongoose.model("GameQuestionInfo")
 const CYOAQuestion = mongoose.model("CYOAQuestionInfo")
 const DNDQuestion = mongoose.model("DNDQuestionInfo")
+const MatchingQuestion = mongoose.model("MatchingQuestionInfo")
 const User = mongoose.model("UserInfo")
 const jwtObj = require("jsonwebtoken");
 const Jwt_secret_Obj = "sfhgfhgefugefyfeyf63r36737288gssfgusducb@#$&fvdhfdgfuf76";
@@ -129,7 +130,7 @@ const deleteGameById = (async(req,res) =>{
                 await DNDQuestion.findByIdAndDelete(subquestion);
             }
         }
-        else {
+        else if(question.type !== 2) {
             res.send({status:500, error:"Cannot delete a question with a malformed type."});
             return;
         }
@@ -769,6 +770,76 @@ const createDND = (async(req,res) =>{
     }
 })
 
+//Matching Subquestion Routes ==================================================
+const getMatchingById = (async(req,res) =>{
+    try {
+        var id = mongoose.Types.ObjectId(req.params.id);
+        //Find the game question and send it
+        MatchingQuestion.findOne({_id: id}).then((data) =>{
+            res.send({status:200, data:data});
+        })
+    //Catch any errors
+    } catch(error) {
+        //Send Status Code 500 (Internal Server Error)
+        res.sendStatus(500);
+    }
+})
+
+const createMatching = (async(req,res) =>{
+    //Check administrative status
+    try {
+        if(req.body.token === null || req.body.token === undefined) {
+            res.send({status: 403});
+            return;
+        }
+        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminEmail = adminFromToken.email;
+        var admin = await User.findOne({email: adminEmail});
+        if(admin.isAdmin !== true) {
+            res.send({status: 403});
+            return;
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error});
+        return;
+    }
+    try{
+        const pid = mongoose.Types.ObjectId(req.body.parentQuestionId);
+
+        //Verify that the parent question exists in GameQuestion
+        const parentQuestion = await GameQuestion.findOne({_id: pid});
+
+        if(parentQuestion === null || parentQuestion === undefined) {
+            res.send({status: 404, error: "The parent question was not found in the database."});
+            return;
+        }
+        else if(parentQuestion.type !== 2) {
+            res.send({status: 400, error: "The parent question is not a Matching question."});
+            return;
+        }
+
+        const question = new MatchingQuestion({
+            //Dynamically changes values based on the JSON data in the POST request
+            parentQuestionId: pid,
+            content: req.body.content
+        })
+        await question.save();
+        
+        var tempQuestionData = parentQuestion.questionData;
+        tempQuestionData.push(question._id);
+
+        await GameQuestion.findByIdAndUpdate(pid, {questionData: tempQuestionData});
+        
+        res.sendStatus(201);
+    //Catch any errors
+    } catch(error) {
+        //Send Status Code 500 (Internal Server Error)
+        res.send({status: 500, error: error})
+        return;
+    }
+})
+
 module.exports = {
     getGameCount,
     getGameByTopic,
@@ -785,5 +856,7 @@ module.exports = {
     getDNDById,
     deleteDNDById,
     updateDND,
-    createDND
+    createDND,
+    getMatchingById,
+    createMatching
 }

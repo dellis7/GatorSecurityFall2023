@@ -73,8 +73,19 @@ const DNDQuestionDBSchema = new mongoose.Schema(
     }
 )
 
+const MatchingQuestionDBSchema = new mongoose.Schema(
+    {
+        parentQuestionId:mongoose.Schema.Types.ObjectId,
+        content:Map
+    },
+    {
+        collection: "MatchingQuestionInfo"       
+    }
+)
+
 mongoose.model("UserInfo", userDBSchema);
 mongoose.model("TraditionalQuestionInfo", traditionalQuestionDBSchema);
 mongoose.model("GameQuestionInfo", gameQuestionDBSchema);
 mongoose.model("CYOAQuestionInfo", CYOAQuestionDBSchema);
 mongoose.model("DNDQuestionInfo", DNDQuestionDBSchema);
+mongoose.model("MatchingQuestionInfo", MatchingQuestionDBSchema);
