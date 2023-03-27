@@ -59,38 +59,18 @@ exports.validateCYOAQuestion = [
 exports.validateDNDQuestion = [
     body('parentQuestionId').notEmpty().withMessage("A parent question is required"),
     body('question').notEmpty().withMessage("A question is required"),
-    body('anchoredMatrix').custom((value, {req}) => {
-        if(value === null || value.length === 0) return value
-        if(value.length !== req.body.answerMatrix.length) throw new Error("The anchored matrix must have the same number of rows as the answer matrix") 
-        for(let x = 0; x < value.length; x++) {
-            if(value[x].length !== req.body.answerMatrix[x].length) throw new Error("The anchored matrix must have the same number of columns as the answer matrix")
-            for(let y = 0; y < value[x].length; y++) {
-                if(typeof value[x][y] !== "string") {
-                    throw new Error("All entries in the anchored matrix must be strings") 
-                }
-                if((req.body.answerMatrix[x][y]["text"] === undefined || req.body.answerMatrix[x][y]["text"] !== value[x][y]) && value[x][y] !== "") {
-                    throw new Error("All non-null entries in the anchored matrix must match the answer matrix")
-                }
-            }
-        }
-        return value
-    }).optional({ checkFalsy: true }),
+    body('answer').notEmpty().withMessage("An answer array is required"),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty())
           return res.status(422).json({errors: errors.array()});
         next();
-    },
-    body('answerMatrix').custom((value, {req}) => {
-        for(let x = 0; x < value.length; x++) {
-            for(let y = 0; y < value[x].length; y++) {
-                if((value[x][y]["text"] === null || value[x][y]["text"] === undefined) && (value[x][y]["image"] === null || value[x][y]["image"] === undefined)) {
-                    throw new Error("All entries in the answer matrix must be marked as text or image")
-                }
-            }
-        }
-        return value
-    }).optional({ checkFalsy: true }),
+    }
+];
+
+exports.validateMatchingQuestion = [
+    body('parentQuestionId').notEmpty().withMessage("A parent question is required"),
+    body('content').notEmpty().withMessage("A content map is required"),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty())
