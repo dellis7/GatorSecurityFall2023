@@ -23,7 +23,9 @@ const {
     updateDND,
     createDND,
     getMatchingById,
-    createMatching
+    createMatching,
+    updateMatching,
+    deleteMatching
 } = require('../controllers/games.js')
 
 const { validateCYOAQuestion, validateDNDQuestion, validateMatchingQuestion } = require('../validators/questionValidator')
@@ -67,5 +69,9 @@ router.post('/dnd/create', upload.any(), validateDNDQuestion, createDND);
 router.post('/matching/getById/:id', getMatchingById);
 
 router.post('/matching/create', validateMatchingQuestion, createMatching);
+
+router.put('/matching/update/:id', updateMatching);
+
+router.delete('/matching/delete/:id', deleteMatching);
 
 module.exports = router

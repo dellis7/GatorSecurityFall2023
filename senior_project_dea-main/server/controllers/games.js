@@ -840,6 +840,100 @@ const createMatching = (async(req,res) =>{
     }
 })
 
+const updateMatching = (async(req, res) =>{
+    //Check administrative status
+    try {
+        if(req.body.token === null || req.body.token === undefined) {
+            res.send({status: 403, message: "Token was null or undefined"});
+            return;
+        }
+        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminEmail = adminFromToken.email;
+        var admin = await User.findOne({email: adminEmail});
+        if(admin.isAdmin !== true) {
+            res.send({status: 403, message: "User is not an admin"});
+            return;
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error + ": Error getting user data."});
+        return;
+    }
+
+    try{
+        //Set _id to the value given in url under :id
+        const _id = req.params.id;
+
+        //Set result to true or false depending on if the question was 
+        //successfully found by its id and updated
+        var result = await MatchingQuestion.findByIdAndUpdate(_id, {
+            //Dynamically changes values based on the JSON data in the PUT request
+            //Don't allow updating of the parentId
+            content: req.body.content
+        });
+
+        //If True
+        if (result) {
+            //Send Status Code 202 (Accepted)
+            res.sendStatus(202);
+            return;
+        //Else False
+        } else {
+            //Send Status Code 404 (Not Found)
+            res.sendStatus(404);
+            return;
+        }
+    //Catch any errors
+    } catch(error) {
+        //Send Status Code 500 (Internal Server Error)
+        res.send({status: 500, error: error + ": Error updating matching question data."})
+        return;
+    }
+})
+
+const deleteMatching = (async(req, res) =>{
+    //Check administrative status
+    try {
+        if(req.body.token === null || req.body.token === undefined) {
+            res.send({status: 403, message: "Token was null or undefined"});
+            return;
+        }
+        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminEmail = adminFromToken.email;
+        var admin = await User.findOne({email: adminEmail});
+        if(admin.isAdmin !== true) {
+            res.send({status: 403, message: "User is not an admin"});
+            return;
+        }
+    }
+    catch(error) {
+        res.send({status: 500, error:error + ": Error getting user data."});
+        return;
+    }
+
+    try{
+        //Set _id to the value given in url under :id
+        const _id = req.params.id;
+        //Set result to true or false depending on if the question 
+        //was successfully found and deleted by its id
+        var result = await MatchingQuestion.findByIdAndDelete(_id);
+
+        //If True
+        if (result) {
+            //Send Status Code 202 (Accepted)
+            res.sendStatus(202);
+        //Else False
+        } else {
+            //Send Status Code 404 (Not Found)
+            res.sendStatus(404);
+        }
+    //Catch any errors
+    } catch(error) {
+        //Send Status Code 500 (Internal Server Error)
+        res.sendStatus(500);
+    }
+})
+
 module.exports = {
     getGameCount,
     getGameByTopic,
@@ -858,5 +952,7 @@ module.exports = {
     updateDND,
     createDND,
     getMatchingById,
-    createMatching
+    createMatching,
+    updateMatching,
+    deleteMatching
 }
