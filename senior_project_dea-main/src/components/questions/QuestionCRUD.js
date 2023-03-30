@@ -4,12 +4,16 @@ import QuestionForm from "./QuestionForm";
 import '../componentStyling/textStyling.css';
 
 function QuestionCRUD() {
+
+  //this state holds the data of questions pulled from the database
   const [questionsData, setQuestionData] = useState([]);
 
+  //this function sets the question data
   const handleQuestionsData = (data) => {
     setQuestionData(data);
   };
 
+  //this function retrieves question data from the database
   const retrieveQuestions = () => {
     fetch("http://localhost:5000/questions/get/all", {
       method: "POST",
@@ -27,13 +31,13 @@ function QuestionCRUD() {
       })
   };
 
+  //question data is retrieved automatically on initial load of page
   useEffect(() => {
     retrieveQuestions();
   });
 
   //CSS
   const container = {
-    
     mx: "auto",
     paddingTop: "50px",
   };

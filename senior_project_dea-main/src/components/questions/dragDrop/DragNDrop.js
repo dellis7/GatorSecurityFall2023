@@ -8,6 +8,7 @@ import {CSS} from "@dnd-kit/utilities";
 
 function DragNDrop() {
 
+
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [gameQuestionData, setGameQuestionData] = React.useState('');
   const [DNDQuestionData, setDNDQuestionData] = React.useState('');
@@ -84,6 +85,7 @@ function DragNDrop() {
     })
   }
 
+  //function that handles the logic for a dragged object when it is dropped
   function handleDragEnd(event) {
     const { active, over } = event;
 
@@ -97,7 +99,8 @@ function DragNDrop() {
       });
     }
   }
-  
+
+
   async function checkAnswer() {
 
     //Checks answers
@@ -216,8 +219,8 @@ function DragNDrop() {
     }
   }
 
+//this component returns the objects within the drag and drop list
 function SortableItem(props) {
-
   const {
       attributes,
       listeners,

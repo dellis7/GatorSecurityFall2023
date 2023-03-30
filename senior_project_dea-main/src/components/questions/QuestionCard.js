@@ -22,7 +22,9 @@ export default function QuestionCard({
   id_Card,
   displayType_Card,
 }) {
+  //state of whether to show user the question delete window
   const [deleteModalShow, setDeleteModalShow] = useState(false);
+  //state of whether to show user the question edit window
   const [editModalShow, setEditModalShow] = useState(false);
 
   return (
@@ -102,6 +104,7 @@ export default function QuestionCard({
   );
 }
 
+//this component handles the deletion of a question by calling the DeleteQuestion() function
 function DeleteModal(props) {
   return (
     <Modal
@@ -144,6 +147,7 @@ function DeleteModal(props) {
   );
 }
 
+//this component handles the editing of a question
 function EditModal(props) {
   return (
     <Modal
@@ -156,6 +160,7 @@ function EditModal(props) {
         <Modal.Title id="contained-modal-title-vcenter">Edit</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        {/*data from the question are passed a props to the QuestionEdit component in the QuestionEdit.js file*/}
         <QuestionEdit
           editQuestion={props.question_editmodal}
           editTopic={props.topic_editmodal}
@@ -179,6 +184,7 @@ function EditModal(props) {
   );
 }
 
+//this function makes a call to the database to delete a question based off of its ID
 const DeleteQuestion = (removeID) => {
   fetch(`http://localhost:5000/questions/delete/${removeID}`, {
     method: "DELETE",
@@ -196,6 +202,7 @@ const DeleteQuestion = (removeID) => {
   });
 };
 
+//this function converts a questions topic number stored in the database to its text based equivalent
 function topicNumberConversion(topicNumber){
   switch (topicNumber) {
     case 1:

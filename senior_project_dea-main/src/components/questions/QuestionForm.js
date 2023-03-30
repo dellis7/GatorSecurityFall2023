@@ -9,6 +9,7 @@ export default function QuestionForm({
   id_form,
   displayType_form,
 }) {
+  //these states store the data fields for the question being added
   const [newQuestion, setNewQuestion] = useState("");
   const [newTopic, setNewTopic] = useState("");
   const [newType, setNewType] = useState("");
