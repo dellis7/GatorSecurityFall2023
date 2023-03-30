@@ -1,11 +1,17 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import gator from "../../../images/gator.png"
 import './MatchingCard.css'
 
 
+/*
+This component is used for the Matching Card game.
+The MatchingCard component handles the creation, styling and flipping logic for each individual card for the matching game.
+Styling for individual cards can be found in the MatchingCard.css file in the /src/components/questions/Matching directory.
+ */
+
 export default function MatchingCard( {card, handleChoice, flipped, disabled} ) {
 
-
+    //This function allows the for a card to pass and "onClick()" to the "handleChoice()" functions in the Matching.js file
     function handleClick(){
         if(!disabled){
             handleChoice(card);
@@ -13,31 +19,13 @@ export default function MatchingCard( {card, handleChoice, flipped, disabled} ) 
     }
 
     return (
-        /*
-        <div className="col">
-            {!flipped &&(
-                <div className="card m-4"style={{width:200, height:200, justifyContent:"center", backgroundImage: "linear-gradient(#0A2647, #2C74B3)"}}>
-                    <img className="card-img" src={gator} alt="gator logo" onClick={handleClick}/>
-                </div>
-            )}
-            {flipped && (
-                <div className="card m-4" style={{width:200, height:200, backgroundColor: "#EEEEEE"}}>
-                    <div className="card-body d-flex" style={{justifyContent:"center", alignItems:"center"}}>
-                        <p style={{maxWidth: 180}}>
-                            {card.text}
-                        </p>
-                    </div>
 
-                </div>
-            )}
-        </div>
-         */
         <div className="card matchCard" style={{minWidth:200, minHeight:200, marginBottom: 50}}>
+            {/*This code allows the styling of the card to changes based off of its "flipped" status*/}
             <div className={flipped ? "flipped" : ""}>
                 <div className="back" onClick={handleClick} style={{width:200, height:200, display:"flex", alignItems:"center"}}>
                     <img src={gator} alt="gator logo" style={{width:"100%"}}/>
                 </div>
-
                 <div className="front" style={{minWidth:200, minHeight:200, display: "flex", justifyContent:"center", alignItems:"center"}}>
                     <p style={{maxWidth: 180, }}>
                         {card.text}

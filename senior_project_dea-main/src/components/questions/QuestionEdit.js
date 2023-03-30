@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export default function QuestionEdit(props) {
+  //these states store the data for the edited question and handles changes made to the data
   const [editQuestion, setEditQuestion] = useState(props.editQuestion);
   const [editTopic, setEditTopic] = useState(props.editTopic);
   const [editType, setEditType] = useState(props.editType);
@@ -8,18 +9,22 @@ export default function QuestionEdit(props) {
   const [editAnswer, setEditAnswer] = useState(props.editAnswer);
   const [editDisplayType, setEditDisplayType] = useState(props.editDisplayType);
 
+  //this function changes the question field
   const handleQuestionChange = (value) => {
     setEditQuestion(value);
   };
 
+  //this function changes the topic field
   const handleTopicChange = (value) => {
     setEditTopic(value);
   };
 
+  //this function changes the display type field
   const handleDisplayTypeChange = (value) => {
     setEditDisplayType(value);
   }
 
+  //this function makes changes to the type field
   const handleTypeChange = (value) => {
     if (value === "1") {
       let array = [""];
@@ -35,25 +40,30 @@ export default function QuestionEdit(props) {
     setEditType(value);
   };
 
+  //this function makes changes to the option(s) field(s)
   const handleOptionsChange = (index, value) => {
     let tempOptions = [...editOptions];
     tempOptions[index] = value;
     setEditOptions(tempOptions);
   };
 
+  //this function makes a change to the answer field
   const handleAnswerChange = (value) => {
     setEditAnswer(value);
   };
 
+  //this function adds aditional options to the question
   const handleAddOption = () => {
     setEditOptions((options) => [...options, ""]);
   };
 
+  //this function removes options a user does not want/need
   const handleRemoveOption = (value) => {
     let filter = editOptions.filter((option, index) => index !== value);
     setEditOptions(filter);
   };
 
+  //this function makes a call to the database to update the selected question with its changed data
   const handleUpdate = () => {
     fetch(`http://localhost:5000/questions/update/${props.editID}`, {
       method: "PUT",

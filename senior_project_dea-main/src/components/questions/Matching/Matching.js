@@ -5,6 +5,7 @@ import arrayShuffle from "array-shuffle";
 
 function Matching () {
 
+    //These are hard-coded vocab words to test the functionality of the matching game. Further functionality will allow words to be pulled from the database
     const [vocab, setVocab] = useState([
         ["Anti-Virus", "Protects users from viruses, spyware, trojans, and worms"],
         ["Brute Force Attack", "Systematically trying a high volume of possible combinations of characters until the correct one is found"],
@@ -14,25 +15,36 @@ function Matching () {
         ["Keylogger", "A kind of spyware software that records every keystroke made on a computer’s keyboard"]
     ]);
 
+    //cards hold the current cards being used in the game
     const [cards, setCards] = useState([]);
+    //choiceOne will hole the card object for the players first choice
     const [choiceOne, setChoiceOne] = useState(null);
+    //choiceTwo will hole the card object for the players second choice
     const [choiceTwo, setChoiceTwo] = useState(null);
+    //diabled will allow for the selection of cards to be disabled when the players selections are being compared
     const [disabled, setDisabled] = useState(false);
+    //numberCorrect will track how many times the user correctly answers cards
     const [numCorrect, setNumCorrect] = useState(0);
 
+    //set the choices equal to the card object the user chooses depending on which choice it is
     const handleChoice = (card) => {
         choiceOne ? setChoiceTwo(card) : setChoiceOne(card);
     }
 
+    //starts a new game; used with "new game" button
     const newGame = () => {
         resetChoices();
         generateCards();
     }
 
+    //this function generates a randomized subset of cards based on the input vocab set
     const generateCards = () => {
+        //removed previous cards
         setCards([]);
         const tempCards = [];
+        //generates randomized subset
         const cardSubset = arrayShuffle(vocab).slice(0,4);
+        //splits definitions from keywords
         cardSubset.map((each, index) => {
             const temp1 = {
                 val: index,
@@ -47,27 +59,31 @@ function Matching () {
             tempCards.push(temp1);
             tempCards.push(temp2);
         })
+        //randomizes the cards
         const temp = arrayShuffle(tempCards);
         setCards(temp);
-        console.log(cards);
     }
 
+    //resets choice states after two cards have been chosen and evaluated
     const resetChoices = () => {
         setChoiceOne(null);
         setChoiceTwo(null);
         setDisabled(false);
     }
 
+    //generates cards when the vocab array is changed (unused now, but will be used when connected to database)
     useEffect(() => {
         generateCards();
     },[vocab]);
 
+    //congratulates player after completing game (currently set at 4 correct cards)
     useEffect(() => {
         if(numCorrect === 4){
             alert("Great Work!");
         }
     }, [numCorrect]);
 
+    //evaluates the players choices once two cards have been chosen
     useEffect(() => {
         if(choiceOne && choiceTwo){
             setDisabled(true);
@@ -87,6 +103,7 @@ function Matching () {
             }
             else{
                 console.log("Do not match");
+                //when the player is incorrect, the game will wait 1.5 seconds before flipping cards back over
                 setTimeout(() => resetChoices(), 1500);
             }
         }
