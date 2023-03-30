@@ -1,4 +1,5 @@
 import React from 'react';
+import GetConfig from '../../Config';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../componentStyling/buttons.css';
 
@@ -35,13 +36,13 @@ function GameAdventurePage() {
     //Function that pulls gameQuestion data from backend
     const getGameQuestion = (id_, setGameQuestionData_) => {
 
-        fetch("http://localhost:5000/games/getById/" + id_, {
+        fetch(GetConfig().SERVER_ADDRESS + "/games/getById/" + id_, {
           method: "POST",
           crossDomain:true,
           headers:{
               "Content-Type":"application/json",
               Accept:"application/json",
-              "Access-Control-Allow-Origin":"*",
+              "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
           },
           body:JSON.stringify({}),
           }).then((res) => res.json())
@@ -56,13 +57,13 @@ function GameAdventurePage() {
     //Function that pulls CYOAQuestion data from backend
     const getCYOAQuestion = (questionNumber_, setCYOAQuestionData_) => {
 
-        fetch("http://localhost:5000/games/cyoa/getById/" + questionNumber_, {
+        fetch(GetConfig().SERVER_ADDRESS + "/games/cyoa/getById/" + questionNumber_, {
           method: "POST",
           crossDomain:true,
           headers:{
               "Content-Type":"application/json",
               Accept:"application/json",
-              "Access-Control-Allow-Origin":"*",
+              "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
           },
           body:JSON.stringify({}),
           }).then((res) => res.json())
@@ -96,13 +97,13 @@ function GameAdventurePage() {
             //Else this is the last question
             else {
                 //Update the user's score via HTTP request
-                fetch("http://localhost:5000/users/updateScore", {
+                fetch(GetConfig().SERVER_ADDRESS + "/users/updateScore", {
                     method: "POST",
                     crossDomain:true,
                     headers:{
                         "Content-Type":"application/json",
                         Accept:"application/json",
-                        "Access-Control-Allow-Origin":"*",
+                        "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
                     },
                     body:JSON.stringify({
                         token:window.localStorage.getItem("token"),

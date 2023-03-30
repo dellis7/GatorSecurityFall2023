@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { Routes, Route } from "react-router-dom"
 import { useEffect } from 'react';
 
+import GetConfig from './Config';
 import MyNavbar from './components/Navbar';
 import MyWelcomePage from './components/Welcome';
 import LearnPage from './components/questions/Learn';
@@ -26,14 +27,14 @@ function App() {
 
   useEffect(() => {
     async function getAdminStatus() {
-      fetch("http://localhost:5000/users/checkPrivileges", 
+      fetch(GetConfig().SERVER_ADDRESS + "/users/checkPrivileges", 
         {
           method: "POST",
           crossDomain:true,
           headers:{
             "Content-Type":"application/json",
             Accept:"application/json",
-            "Access-Control-Allow-Origin":"*",
+            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
         },
         body:JSON.stringify({
           token:window.localStorage.getItem("token"),

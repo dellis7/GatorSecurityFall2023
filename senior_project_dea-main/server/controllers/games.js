@@ -399,7 +399,14 @@ const updateCYOA = (async(req,res) =>{
             //Store file contents in the filesystem
             const dot = req.files[0].originalname.indexOf('.');
             const ext = req.files[0].originalname.substring(dot);
-            fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'cyoa', _id.toString() + ext), req.files[0].buffer, "binary");
+            //Check for path injection attacks
+            var p = path.join(__dirname, '..', 'uploads', 'cyoa', _id.toString() + ext);
+            p = fs.realpath(p)
+            if(!p.startsWith(__dirname)) {
+                res.sendStatus(400);
+                return;
+            }
+            fs.writeFileSync(p, req.files[0].buffer, "binary");
         }
         else {
             //Set result to true or false depending on if the question was 

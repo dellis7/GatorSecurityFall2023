@@ -1,4 +1,5 @@
 import React from 'react';
+import GetConfig from '../Config';
 import {MDBCarousel, MDBCarouselItem} from 'mdb-react-ui-kit';
 
 export default class WelcomePage extends React.Component {
@@ -9,14 +10,14 @@ export default class WelcomePage extends React.Component {
     };
   }
   componentDidMount(){
-    fetch("http://localhost:5000/users/userInfo", 
+    fetch(GetConfig().SERVER_ADDRESS + "/users/userInfo", 
       {
         method: "POST",
         crossDomain:true,
         headers:{
           "Content-Type":"application/json",
           Accept:"application/json",
-          "Access-Control-Allow-Origin":"*",
+          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
       },
       body:JSON.stringify({
         token:window.localStorage.getItem("token"),

@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import GetConfig from '../../Config';
+
 export default function QuestionEdit(props) {
   //these states store the data for the edited question and handles changes made to the data
   const [editQuestion, setEditQuestion] = useState(props.editQuestion);
@@ -65,13 +67,13 @@ export default function QuestionEdit(props) {
 
   //this function makes a call to the database to update the selected question with its changed data
   const handleUpdate = () => {
-    fetch(`http://localhost:5000/questions/update/${props.editID}`, {
+    fetch(`${GetConfig().SERVER_ADDRESS}/questions/update/${props.editID}`, {
       method: "PUT",
       crossDomain: true,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3000/",
+        "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
       },
       body: JSON.stringify({
         question: editQuestion,

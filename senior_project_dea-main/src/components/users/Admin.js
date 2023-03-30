@@ -1,5 +1,6 @@
 import React from 'react';
 import Table from 'react-bootstrap/Table';
+import GetConfig from '../../Config';
 
 export default class Admin extends React.Component {
     constructor(props){
@@ -9,14 +10,14 @@ export default class Admin extends React.Component {
       };
     }
     componentDidMount(){
-      fetch("http://localhost:5000/users/allUsers", 
+      fetch(GetConfig().SERVER_ADDRESS + "/users/allUsers", 
         {
           method: "POST",
           crossDomain:true,
           headers:{
             "Content-Type":"application/json",
             Accept:"application/json",
-            "Access-Control-Allow-Origin":"*",
+            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
         },
         body:JSON.stringify({
           token:window.localStorage.getItem("token"),
@@ -27,42 +28,42 @@ export default class Admin extends React.Component {
             //console.log(data)
           this.setState({allUsers: data});
         });
-        fetch("http://localhost:5000/questions/getCount", 
+        fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", 
         {
           method: "POST",
           crossDomain:true,
           headers:{
             "Content-Type":"application/json",
             Accept:"application/json",
-            "Access-Control-Allow-Origin":"*",
+            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
         },
         body:JSON.stringify({displayType:'learn'}),
         }).then((res)=>res.json())
         .then(data=>{
           this.setState({learnQuestionCount: data.data})
         });
-        fetch("http://localhost:5000/questions/getCount", 
+        fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", 
         {
           method: "POST",
           crossDomain:true,
           headers:{
             "Content-Type":"application/json",
             Accept:"application/json",
-            "Access-Control-Allow-Origin":"*",
+            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
         },
         body:JSON.stringify({displayType:'game'}),
         }).then((res)=>res.json())
         .then(data=>{
           this.setState({gameQuestionCount: data.data})
         });
-        fetch("http://localhost:5000/games/getCount", 
+        fetch(GetConfig().SERVER_ADDRESS + "/games/getCount", 
         {
           method: "POST",
           crossDomain:true,
           headers:{
             "Content-Type":"application/json",
             Accept:"application/json",
-            "Access-Control-Allow-Origin":"*",
+            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
         },
         body:JSON.stringify({}),
         }).then((res)=>res.json())

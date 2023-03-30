@@ -1,5 +1,6 @@
 import React from 'react';
 import TradQuestion from './TraditionalQuestion'
+import GetConfig from '../../Config';
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
 import Row from 'react-bootstrap/Row';
@@ -20,13 +21,13 @@ function GameTraditionalPage() {
     const [questionData5, setQuestionData5] = React.useState('');
   
     const getQuestions = (topic_, setQuestionData_) => {
-      fetch("http://localhost:5000/questions/get/" + topic_, {
+      fetch(GetConfig().SERVER_ADDRESS + "/questions/get/" + topic_, {
         method: "POST",
         crossDomain:true,
         headers:{
             "Content-Type":"application/json",
             Accept:"application/json",
-            "Access-Control-Allow-Origin":"*",
+            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
         },
         body:JSON.stringify({
           displayType: 'game'

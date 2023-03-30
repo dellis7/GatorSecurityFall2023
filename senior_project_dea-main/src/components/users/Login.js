@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./css/LoginAndSignUp.css";
 import gator from "../../images/gator.png";
+import GetConfig from '../../Config';
 
 export default class Login extends Component {
     constructor(props){
@@ -15,13 +16,13 @@ export default class Login extends Component {
         e.preventDefault();
         const{email, password} = this.state;
         //console.log(email, password);
-        fetch("http://localhost:5000/users/login", {
+        fetch(GetConfig().SERVER_ADDRESS + "/users/login", {
       method: "POST",
       crossDomain: true,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
       },
       body: JSON.stringify({
         email,

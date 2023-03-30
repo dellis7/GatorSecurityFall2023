@@ -3,7 +3,12 @@ const multer = require('multer')
 
 const router = express.Router()
 const storage = multer.memoryStorage()
-const upload = multer({storage: storage});
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 8000000
+    }
+});
 
 const {
     getGameCount,

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './css/LoginAndSignUp.css';
 import LoginBanner from './LoginBanner';
 import gator from '../../images/gator.png';
+import GetConfig from '../../Config';
 
 export default class SignUp extends Component {
   constructor(props){
@@ -18,13 +19,13 @@ export default class SignUp extends Component {
     e.preventDefault();
     const{fname, lname, email, password} = this.state;
     //console.log(fname, lname, email, password);
-    fetch("http://localhost:5000/users/register", {
+    fetch(GetConfig().SERVER_ADDRESS + "/users/register", {
       method: "POST",
       crossDomain:true,
       headers:{
         "Content-Type":"application/json",
         Accept:"application/json",
-        "Access-Control-Allow-Origin":"*",
+        "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
       },
       body:JSON.stringify({
         fname,

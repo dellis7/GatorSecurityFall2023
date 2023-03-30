@@ -3,6 +3,7 @@ import './css/personalProfile.css';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBTypography, MDBProgress, MDBProgressBar, MDBBtn } from 'mdb-react-ui-kit';
 import { LinkContainer } from "react-router-bootstrap";
 import '../componentStyling/textStyling.css';
+import GetConfig from '../../Config';
 
 export default class ProfilePage extends React.Component {
     constructor(props){
@@ -14,14 +15,14 @@ export default class ProfilePage extends React.Component {
     
     componentDidMount(){
       //See server.js for server.post(/userInfo)
-      fetch("http://localhost:5000/users/userInfo", 
+      fetch(GetConfig().SERVER_ADDRESS + "/users/userInfo", 
         {
           method: "POST",
           crossDomain:true,
           headers:{
             "Content-Type":"application/json",
             Accept:"application/json",
-            "Access-Control-Allow-Origin":"*",
+            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
         },
         body:JSON.stringify({
           token:window.localStorage.getItem("token"),
@@ -30,42 +31,42 @@ export default class ProfilePage extends React.Component {
         .then(data=>{
           this.setState({userInfo: data.data.dbUserData});
         });
-        fetch("http://localhost:5000/questions/getCount", 
+        fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", 
         {
           method: "POST",
           crossDomain:true,
           headers:{
             "Content-Type":"application/json",
             Accept:"application/json",
-            "Access-Control-Allow-Origin":"*",
+            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
         },
         body:JSON.stringify({displayType:'learn'}),
         }).then((res)=>res.json())
         .then(data=>{
           this.setState({learnQuestionCount: data.data})
         });
-        fetch("http://localhost:5000/questions/getCount", 
+        fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", 
         {
           method: "POST",
           crossDomain:true,
           headers:{
             "Content-Type":"application/json",
             Accept:"application/json",
-            "Access-Control-Allow-Origin":"*",
+            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
         },
         body:JSON.stringify({displayType:'game'}),
         }).then((res)=>res.json())
         .then(data=>{
           this.setState({gameQuestionCount: data.data})
         });
-        fetch("http://localhost:5000/games/getCount", 
+        fetch(GetConfig().SERVER_ADDRESS + "/games/getCount", 
         {
           method: "POST",
           crossDomain:true,
           headers:{
             "Content-Type":"application/json",
             Accept:"application/json",
-            "Access-Control-Allow-Origin":"*",
+            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
         },
         body:JSON.stringify({}),
         }).then((res)=>res.json())

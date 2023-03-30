@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import QuestionCard from "./QuestionCard";
 import QuestionForm from "./QuestionForm";
+import GetConfig from '../../Config';
 import '../componentStyling/textStyling.css';
 
 function QuestionCRUD() {
@@ -15,13 +16,13 @@ function QuestionCRUD() {
 
   //this function retrieves question data from the database
   const retrieveQuestions = () => {
-    fetch("http://localhost:5000/questions/get/all", {
+    fetch(GetConfig().SERVER_ADDRESS + "/questions/get/all", {
       method: "POST",
       crossDomain: true,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3000/",
+        "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
       },
       body: JSON.stringify({token: window.localStorage.getItem("token")}),
     })
