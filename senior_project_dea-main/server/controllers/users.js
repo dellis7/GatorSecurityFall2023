@@ -8,11 +8,7 @@ const jwtObj = require("jsonwebtoken");
 const Jwt_secret_Obj = "sfhgfhgefugefyfeyf63r36737288gssfgusducb@#$&fvdhfdgfuf76";
 
 const register = (async (req, res) => {
-    const fname = req.body.fname.toString();
-    const lname = req.body.lname.toString();
-    const email = req.body.email.toString();
-    const password = req.body.password.toString();
-
+    const {fname, lname, email, password, score} = req.body;
 
     const encryptedPass = await bcrypt.hash(password, 10);
 

@@ -8,7 +8,7 @@ const Jwt_secret_Obj = "sfhgfhgefugefyfeyf63r36737288gssfgusducb@#$&fvdhfdgfuf76
 const questionTopicMap = {other: 0, input_validation: 1, encoding_escaping: 2, xss: 3, sql_injection: 4, crypto: 5, auth: 6};
 
 const getCount = (async(req,res) =>{
-    TraditionalQuestion.count({displayType:req.body.displayType.toString()}).then((count)=>{
+    TraditionalQuestion.count({displayType:req.body.displayType}).then((count)=>{
         res.send({status:"ok", data:count});
     })
     .catch((error)=>{
@@ -47,7 +47,7 @@ const getByTopic = (async(req,res)=>{
         //Else if the topic is a numerical id
 		} else if(!isNaN(parseInt(req.params.topic))) {
             //Find specific question information in database and send it
-			TraditionalQuestion.find({topic: req.params.topic.toString(), displayType: req.body.displayType.toString()}).then((data)=>{
+			TraditionalQuestion.find({topic: req.params.topic, displayType: req.body.displayType}).then((data)=>{
                 //Ensure answers aren't sent to the frontend unless you are an admin
                 if(!isAdmin) {
                     for(let i = 0; i < data.length; i++) {
@@ -59,7 +59,7 @@ const getByTopic = (async(req,res)=>{
         //Else the topic is a string identifier
 		} else {
             //Find specific question information in database and send it
-			TraditionalQuestion.find({topic: questionTopicMap[req.params.topic.toString()], displayType: req.body.displayType.toString()}).then((data)=>{
+			TraditionalQuestion.find({topic: questionTopicMap[req.params.topic], displayType: req.body.displayType}).then((data)=>{
                 //Ensure answers aren't sent to the frontend unless you are an admin
                 if(!isAdmin) {
                     for(let i = 0; i < data.length; i++) {
