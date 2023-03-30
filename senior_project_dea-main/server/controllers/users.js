@@ -37,7 +37,8 @@ const register = (async (req, res) => {
 })
 
 const login = (async (req, res) => {
-    const {email, password} = req.body;
+    const email = req.body.email.toString();
+    const password = req.body.password.toString();
     const user=await User.findOne({email});
 
     //If user information was not found, return error
