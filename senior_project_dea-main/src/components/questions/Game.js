@@ -1,4 +1,5 @@
 import React from 'react';
+import GetConfig from '../../Config';
 import '../componentStyling/buttons.css';
 import '../componentStyling/textStyling.css';
 import '../componentStyling/Game.css';
@@ -25,13 +26,13 @@ function GamePage() {
         },[cyoaGameQuestions, dndGameQuestions])
 
     const getGameQuestionsByType = (type_, setGameQuestionData_) => {
-        fetch("http://localhost:5000/games/getByType/" + type_, {
+        fetch(GetConfig().SERVER_ADDRESS + "/games/getByType/" + type_, {
           method: "POST",
           crossDomain:true,
           headers:{
               "Content-Type":"application/json",
               Accept:"application/json",
-              "Access-Control-Allow-Origin":"*",
+              "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
           },
           body:JSON.stringify({}),
           }).then((res) => res.json())
@@ -86,13 +87,13 @@ function GamePage() {
                     <p className="card-text">
                         Select a choose your own adventure game to play below.
                         <br></br>
-                        (Photo by <a href="https://www.pexels.com/@pixabay/" className='link-text'>Pixabay</a> on <a href="https://www.pexels.com/photo/blur-bright-business-codes-207580/" className='link-text'>Pexels)</a>
+                        (Photo by <a href="https://www.pexels.com/@pixabay/">Pixabay</a> on <a href="https://www.pexels.com/photo/blur-bright-business-codes-207580/" className='link-text'>Pexels)</a>
                     </p>
                     {cyoaQuestionDisplay}
                 </div>
             </div>
             <div className='card game'>
-                <img src="./DND.png" className='img-size' alt="Neon Lock"/>
+                <img src="./security-4868165_1920.jpg" className='img-size' alt="Neon Lock"/>
                 <div className="card-body">
                     <h5 style={{"fontWeight": 'bold'}}>
                         Drag and Drop Games
@@ -100,7 +101,8 @@ function GamePage() {
                     <p className="card-text">
                         Select a drag and drop game to play below.
                         <br></br>
-                        (Photo by Professor Resch (This is a template))
+                        {/*(Photo by Professor Resch (This is a template))*/}
+                        (Photo by <a href="https://pixabay.com/users/thedigitalartist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=4868165" className='link-text'>Pete Linforth</a> from <a href="https://pixabay.com//?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=4868165" className='link-test'>Pixabay</a>)
                     </p>
                     {dndQuestionDisplay}
                 </div>
@@ -115,6 +117,7 @@ function GamePage() {
                         Select a memory matching card game to play below.
                         <br></br>
                         (Photo by <a href="https://pixabay.com/users/geralt-9301/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3706562" className='link-text'>Gerd Altmann</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3706562" className='link-text'>Pixabay</a>)
+                        
                     </p>
                     <a href="./gameMatching" className="btn btn-primary">
                         Cybersecurity Terms and Definitions

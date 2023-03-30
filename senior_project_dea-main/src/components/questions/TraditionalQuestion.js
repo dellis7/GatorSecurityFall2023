@@ -3,6 +3,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
+import GetConfig from '../../Config';
+
 function TradQuestion({ qdata, num }) {
 
     const spaceAfterQ = {
@@ -60,13 +62,13 @@ function TradQuestion({ qdata, num }) {
         if(qdata.type === 1) {
             theAnswer = document.getElementById("answer-box-" + qdata._id).value;
         }
-        fetch("http://localhost:5000/users/updatelearnscore", {
+        fetch(GetConfig().SERVER_ADDRESS + "/users/updatelearnscore", {
             method: "PUT",
             crossDomain:true,
             headers:{
                 "Content-Type":"application/json",
                 Accept:"application/json",
-                "Access-Control-Allow-Origin":"*",
+                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
             },
             body:JSON.stringify({
                 token:window.localStorage.getItem("token"),

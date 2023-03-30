@@ -2,6 +2,7 @@ const cors = require("cors")
 const express = require("express")
 
 const server = express()
+server.disable("x-powered-by")
 server.use(cors());
 server.use(express.json())
 server.use(express.urlencoded({extended:true}))

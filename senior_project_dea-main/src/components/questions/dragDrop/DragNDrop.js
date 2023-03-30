@@ -6,6 +6,8 @@ import arrayShuffle from "array-shuffle";
 import { useSortable } from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
 
+import GetConfig from '../../../Config';
+
 function DragNDrop() {
 
 
@@ -49,13 +51,13 @@ function DragNDrop() {
 
   //Function that pulls gameQuestion data from backend
   const getGameQuestion = (id_, setGameQuestionData_) => {
-    fetch("http://localhost:5000/games/getById/" + id_, {
+    fetch(GetConfig().SERVER_ADDRESS + "/games/getById/" + id_, {
       method: "POST",
       crossDomain:true,
       headers:{
           "Content-Type":"application/json",
           Accept:"application/json",
-          "Access-Control-Allow-Origin":"*",
+          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
       },
       body:JSON.stringify({}),
       }).then((res) => res.json())
@@ -66,13 +68,13 @@ function DragNDrop() {
 
   //Function that pulls DnD Question data from backend
   const getDNDQuestion = (questionNumber_, setDNDQuestionData_) => {
-    fetch("http://localhost:5000/games/dnd/getById/" + questionNumber_, {
+    fetch(GetConfig().SERVER_ADDRESS + "/games/dnd/getById/" + questionNumber_, {
       method: "POST",
       crossDomain:true,
       headers:{
           "Content-Type":"application/json",
           Accept:"application/json",
-          "Access-Control-Allow-Origin":"*",
+          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
       },
       body:JSON.stringify({}),
       }).then((res) => res.json())
@@ -114,13 +116,13 @@ function DragNDrop() {
     //If this is the end of the game
     if (currentQuestion + 1 >= gameQuestionData.questionData.length) {
       //Update the user's score via HTTP request
-      fetch("http://localhost:5000/users/updateScore", {
+      fetch(GetConfig().SERVER_ADDRESS + "/users/updateScore", {
         method: "POST",
         crossDomain:true,
         headers:{
             "Content-Type":"application/json",
             Accept:"application/json",
-            "Access-Control-Allow-Origin":"*",
+            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
         },
         body:JSON.stringify({
             token:window.localStorage.getItem("token"),

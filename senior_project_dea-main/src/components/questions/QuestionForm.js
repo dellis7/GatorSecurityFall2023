@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import GetConfig from '../../Config';
+
 export default function QuestionForm({
   question_form,
   topic_form,
@@ -64,13 +66,13 @@ export default function QuestionForm({
   };
 
   const handleSubmit = (e) => {
-    fetch("http://localhost:5000/questions/create", {
+    fetch(GetConfig().SERVER_ADDRESS + "/questions/create", {
       method: "POST",
       crossDomain: true,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3000/",
+        "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
       },
       body: JSON.stringify({
         question: newQuestion,

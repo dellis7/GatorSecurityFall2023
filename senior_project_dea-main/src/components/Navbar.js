@@ -6,19 +6,21 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useEffect, useState } from 'react';
 import './componentStyling/Navbar.css';
 
+import GetConfig from '../Config';
+
 function MyNavbar() {
   const [isAdmin, setIsAdmin] = useState({isAdmin: false});
 
   useEffect(() => {
     async function adminStatus() {
-      fetch("http://localhost:5000/users/checkPrivileges", 
+      fetch(GetConfig().SERVER_ADDRESS + "/users/checkPrivileges", 
         {
           method: "POST",
           crossDomain:true,
           headers:{
             "Content-Type":"application/json",
             Accept:"application/json",
-            "Access-Control-Allow-Origin":"*",
+            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
         },
         body:JSON.stringify({
           token:window.localStorage.getItem("token"),

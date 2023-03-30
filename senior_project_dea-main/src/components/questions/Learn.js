@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import TradQuestion from './TraditionalQuestion';
+import GetConfig from '../../Config';
 import '../componentStyling/textStyling.css';
 import '../componentStyling/Navbar.css';
 
@@ -40,13 +41,13 @@ function LearnPage() {
   const [questionData6, setQuestionData6] = React.useState('');
 
   const getQuestions = (topic_, setQuestionData_) => {
-    fetch("http://localhost:5000/questions/get/" + topic_, {
+    fetch(GetConfig().SERVER_ADDRESS + "/questions/get/" + topic_, {
       method: "POST",
       crossDomain:true,
       headers:{
           "Content-Type":"application/json",
           Accept:"application/json",
-          "Access-Control-Allow-Origin":"*",
+          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
       },
       body:JSON.stringify({
         displayType: 'learn'

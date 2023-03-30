@@ -2,6 +2,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { useState } from "react";
 import QuestionEdit from "./QuestionEdit";
+import GetConfig from '../../Config';
 
 const text = {
   fontFamily: "Gluten",
@@ -186,13 +187,13 @@ function EditModal(props) {
 
 //this function makes a call to the database to delete a question based off of its ID
 const DeleteQuestion = (removeID) => {
-  fetch(`http://localhost:5000/questions/delete/${removeID}`, {
+  fetch(`${GetConfig().SERVER_ADDRESS}/questions/delete/${removeID}`, {
     method: "DELETE",
     crossDomain: true,
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      "Access-Control-Allow-Origin": "http://localhost:3000/",
+      "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
     },
     body: JSON.stringify({
       token: window.localStorage.getItem("token"),

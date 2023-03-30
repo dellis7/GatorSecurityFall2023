@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import './css/LoginAndSignUp.css';
+import GetConfig from '../../Config';
 
 export default class UserInfo extends Component{
 
@@ -17,13 +18,13 @@ export default class UserInfo extends Component{
     //componentDidMount sends a HTTP POST request to backend
     componentDidMount(){
         //See server.js for server.post(/userInfo)
-        fetch("http://localhost:5000/users/userInfo", {
+        fetch(GetConfig().SERVER_ADDRESS + "/users/userInfo", {
         method: "POST",
         crossDomain:true,
         headers:{
             "Content-Type":"application/json",
             Accept:"application/json",
-            "Access-Control-Allow-Origin":"*",
+            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
         },
         //TODO - Change my comment to be more accurate or precise.
         //Turns the token received from the backend into a string???
@@ -58,13 +59,13 @@ export default class UserInfo extends Component{
             //console.log(_id, fname, lname, email, password);
 
             //Make a PUT HTTP request to backend (See server.js for server.put(/user/update/:id))
-            fetch(`http://localhost:5000/users/update/${_id}`, {
+            fetch(`${GetConfig().SERVER_ADDRESS}/users/update/${_id}`, {
             method: "PUT",
             crossDomain: true,
             headers:{
                 "Content-Type":"application/json",
                 Accept:"application/json",
-                "Access-Control-Allow-Origin":"*",
+                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
             },
             //TODO - Change my comment to be more accurate or precise.
             //Turns the token received from the backend into a string???
