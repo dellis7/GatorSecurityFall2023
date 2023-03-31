@@ -69,7 +69,7 @@ function App() {
               <Route path="/gameTraditional" element={<GameTraditionalPage />} />
               <Route path="/gameAdventure/:id" element={<GameAdventurePage />} />
               <Route path="/gameDND/:id" element={<DragNDrop/>} />
-              <Route path="/gameMatching" element={<Matching/>} />
+              <Route path="/gameMatching/:id" element={<Matching/>} />
               <Route path="/myprofile" element={<ProfilePage />} />
               <Route exact path="/" element={<Login />} />
               <Route path="/sign-in" element={<Login />} />
