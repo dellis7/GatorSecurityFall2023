@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useCallback} from "react";
 import MatchingCard from "./MatchingCard";
 import arrayShuffle from "array-shuffle";
 import GetConfig from '../../../Config';
@@ -106,12 +106,12 @@ function Matching () {
     }
 
     //this function generates a randomized subset of cardss based on the input vocab set
-    const generateCards = () => {
+    const generateCards = useCallback(() => {
         //removed previous cards
         setCards([]);
         const tempCards = [];
         //generates randomized subset
-        const cardSubset = arrayShuffle(vocab).slice(0,4);
+        const cardSubset = arrayShuffle(vocab).slice(0,vocab[0].length / 2);
         //splits definitions from keywords
         cardSubset.map((each, index) => {
             const temp1 = {
@@ -126,11 +126,12 @@ function Matching () {
             }
             tempCards.push(temp1);
             tempCards.push(temp2);
+            return tempCards;
         })
         //randomizes the cards
         const temp = arrayShuffle(tempCards);
         setCards(temp);
-    }
+    },[vocab])
 
     //resets choice states after two cards have been chosen and evaluated
     const resetChoices = () => {
@@ -144,7 +145,7 @@ function Matching () {
         if(vocab === '' || vocab.length !== 0) {
             generateCards();
         }
-    },[vocab]);
+    },[generateCards, vocab]);
 
     //congratulates player after completing game
     useEffect(() => {
@@ -174,7 +175,7 @@ function Matching () {
             }
             })}
         }
-    }, [numCorrect, vocab.length]);
+    }, [gameQuestionData._id, numCorrect, vocab, vocab.length]);
 
     //evaluates the players choices once two cards have been chosen
     useEffect(() => {
