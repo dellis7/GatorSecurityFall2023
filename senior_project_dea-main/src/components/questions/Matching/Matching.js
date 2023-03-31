@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import MatchingCard from "./MatchingCard";
 import arrayShuffle from "array-shuffle";
-
+import GetConfig from '../../../Config';
 
 function Matching () {
     const [gameQuestionData, setGameQuestionData] = React.useState('');
@@ -42,13 +42,13 @@ function Matching () {
 
     //Function that pulls gameQuestion data from backend
     const getGameQuestion = (id_, setGameQuestionData_) => {
-        fetch("http://localhost:5000/games/getById/" + id_, {
+        fetch(GetConfig().SERVER_ADDRESS + "/games/getById/" + id_, {
             method: "POST",
             crossDomain:true,
             headers:{
                 "Content-Type":"application/json",
                 Accept:"application/json",
-                "Access-Control-Allow-Origin":"*",
+                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
             },
             body:JSON.stringify({}),
             }).then((res) => res.json())
@@ -59,13 +59,13 @@ function Matching () {
 
     //Function that pulls Matching Question data from backend
     const getMatchingQuestion = (questionNumber_, setMatchingQuestionData_) => {
-        fetch("http://localhost:5000/games/matching/getById/" + questionNumber_, {
+        fetch(GetConfig().SERVER_ADDRESS + "/games/matching/getById/" + questionNumber_, {
             method: "POST",
             crossDomain:true,
             headers:{
                 "Content-Type":"application/json",
                 Accept:"application/json",
-                "Access-Control-Allow-Origin":"*",
+                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
             },
             body:JSON.stringify({}),
             }).then((res) => res.json())
@@ -81,18 +81,6 @@ function Matching () {
         }
         setter(array);
     }
-
-    //These are hard-coded vocab words to test the functionality of the matching game. Further functionality will allow words to be pulled from the database
-    // const [vocab, setVocab] = useState([
-    //     ["Anti-Virus", "Protects users from viruses, spyware, trojans, and worms"],
-    //     ["Brute Force Attack", "Systematically trying a high volume of possible combinations of characters until the correct one is found"],
-    //     ["Encryption", "Converting plain data into secret code with the help of an algorithm"],
-    //     ["DDoS", "A flooding attack on a remote target(s), in an attempt to overload network resources and disrupt service"],
-    //     ["Firewall", "A virtual perimeter around a network of workstations preventing viruses, worms, and hackers from penetrating"],
-    //     ["Keylogger", "A kind of spyware software that records every keystroke made on a computer’s keyboard"]
-    // ]);
-
-    
 
     //cards hold the current cards being used in the game
     const [cards, setCards] = useState([]);
@@ -160,15 +148,40 @@ function Matching () {
 
     //congratulates player after completing game
     useEffect(() => {
-        if(numCorrect > 0 && numCorrect === vocab.length){
-            alert("Great Work!");
+        if(vocab === '' || vocab.length !== 0) {
+            //if number of correct matches equals total number of pairs (keywords and definitions)
+            if(numCorrect === vocab[0].length / 2) {
+                //Update the user's score via HTTP request
+            fetch(GetConfig().SERVER_ADDRESS + "/users/updateScore", {
+              method: "POST",
+              crossDomain:true,
+              headers:{
+                "Content-Type":"application/json",
+                Accept:"application/json",
+                "Access-Control-Allow-Origin": GetConfig().SERVER_ADDRESS,
+            },
+            body:JSON.stringify({
+                token:window.localStorage.getItem("token"),
+                qid: gameQuestionData._id, 
+            }),
+            }).then((res) => {
+            //If request was a success
+            if(res.status === 204) {
+                alert("Congratulations! You beat the game!");
+            }
+            else {
+                alert("Something went wrong with the backend!");
+            }
+            })}
         }
     }, [numCorrect, vocab.length]);
 
     //evaluates the players choices once two cards have been chosen
     useEffect(() => {
         if(choiceOne && choiceTwo){
+
             setDisabled(true);
+            
             if(choiceOne.val === choiceTwo.val){
                 resetChoices();
                 const temp = cards.map(card => {
@@ -189,31 +202,32 @@ function Matching () {
         }
     }, [cards, choiceOne, choiceTwo, numCorrect]);
 
-    if(vocab === '' || vocab.length === 0) {
+    if(vocab.length === 0) {
         //Display loading page
         return <div>Loading...</div>;
-      }
+    }
     else {
-    return(
-        <div className="container">
-            <div className="row" style={{marginTop:50, justifyContent:"center"}}>
-                <h1 style={{color: "#113F67"}}>Memory Matching</h1>
-                <button className="btn btn-primary" style={{maxWidth: 150, marginTop: 25}} onClick={newGame}>New Game</button>
-            </div>
-            <div className="row" style={{marginTop: 50}}>
-            {cards.map((card, index) => (
-                <div key={index} className="col-3" style={{display: "flex", justifyContent:"center"}}>
-                <MatchingCard
-                    card={card}
-                    handleChoice={handleChoice}
-                    flipped={card === choiceOne || card === choiceTwo || card.matched}
-                    disabled={disabled}
-                />
+        return(
+            <div className="container">
+                <div className="row" style={{marginTop:50, justifyContent:"center"}}>
+                    <h1 style={{color: "#113F67"}}>Memory Matching</h1>
+                    <button className="btn btn-primary" style={{maxWidth: 150, marginTop: 25}} onClick={newGame}>New Game</button>
                 </div>
-            ))}
+                <div className="row" style={{marginTop: 50}}>
+                {cards.map((card, index) => (
+                    <div key={index} className="col-3" style={{display: "flex", justifyContent:"center"}}>
+                    <MatchingCard
+                        card={card}
+                        handleChoice={handleChoice}
+                        flipped={card === choiceOne || card === choiceTwo || card.matched}
+                        disabled={disabled}
+                    />
+                    </div>
+                ))}
+                </div>
             </div>
-        </div>
-    );
+        );
     }
 }
+
 export default Matching;

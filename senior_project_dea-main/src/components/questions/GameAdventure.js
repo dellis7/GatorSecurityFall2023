@@ -157,7 +157,7 @@ function GameAdventurePage() {
             <div style={topBtmPadding}>
                 <div style={spaceAfterQ}></div>
                 {/* Dynamically loaded CYOA question image */}
-                <img src={`http://localhost:5000/uploads/cyoa/${CYOAQuestionData.stimulus}`} className='img-fluid' alt='...' />
+                <img src={GetConfig().SERVER_ADDRESS + `/uploads/cyoa/${CYOAQuestionData.stimulus}`} className='img-fluid' alt='...' />
                 <div style={spaceAfterQ}></div>
                 <div style={textCenter}>{CYOAQuestionData.questionNumber}. {CYOAQuestionData.question}</div>
                 <div style={spaceAfterQ}></div>

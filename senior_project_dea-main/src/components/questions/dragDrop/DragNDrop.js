@@ -5,11 +5,9 @@ import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-ki
 import arrayShuffle from "array-shuffle";
 import { useSortable } from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
-
 import GetConfig from '../../../Config';
 
 function DragNDrop() {
-
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [gameQuestionData, setGameQuestionData] = React.useState('');
@@ -172,8 +170,8 @@ function DragNDrop() {
           >
             <div className="col-12 col-md-5">
                         <img
-                        src={`http://localhost:5000/uploads/dnd/${DNDQuestionData.stimulus}`}
-                        alt="Depiction of asymmetric encryption"
+                        src={GetConfig().SERVER_ADDRESS + `/uploads/dnd/${DNDQuestionData.stimulus}`}
+                        alt="..."
                         style={{ width: "100%", maxWidth: "700px" }}
                       />
               <p className=" px-3 px-md-0" style={{ marginTop: 20, textAlign: "left"}}>
@@ -212,7 +210,7 @@ function DragNDrop() {
                   checkAnswer();
                 }}
               >
-                Check
+              Check
               </button>
             </div>
           </div>

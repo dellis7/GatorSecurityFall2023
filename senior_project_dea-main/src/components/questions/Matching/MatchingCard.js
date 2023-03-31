@@ -2,12 +2,11 @@ import React from "react";
 import gator from "../../../images/gator.png"
 import './MatchingCard.css'
 
-
 /*
 This component is used for the Matching Card game.
 The MatchingCard component handles the creation, styling and flipping logic for each individual card for the matching game.
 Styling for individual cards can be found in the MatchingCard.css file in the /src/components/questions/Matching directory.
- */
+*/
 
 export default function MatchingCard( {card, handleChoice, flipped, disabled} ) {
 
@@ -19,7 +18,6 @@ export default function MatchingCard( {card, handleChoice, flipped, disabled} ) 
     }
 
     return (
-
         <div className="card matchCard" style={{minWidth:200, minHeight:200, marginBottom: 50}}>
             {/*This code allows the styling of the card to changes based off of its "flipped" status*/}
             <div className={flipped ? "flipped" : ""}>
@@ -31,7 +29,6 @@ export default function MatchingCard( {card, handleChoice, flipped, disabled} ) 
                         {card.text}
                     </p>
                 </div>
-
             </div>
         </div>
     );
