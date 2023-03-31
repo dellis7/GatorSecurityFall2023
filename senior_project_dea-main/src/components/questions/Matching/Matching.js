@@ -8,10 +8,12 @@ function Matching () {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [gameQuestionData, setGameQuestionData] = React.useState('');
     const [MatchingQuestionData, setMatchingQuestionData] = React.useState('');
-    const [matchingOptions, setMatchingOptions] = React.useState([]);
+
+    const [vocab, setVocab] = useState([]);
 
     // Loads data from database once
     React.useEffect(() => {
+
         const loadGame = async () => {
             //If gameQuestionData not loaded yet, get it from the DB
             if(gameQuestionData.length === 0) {
@@ -23,23 +25,25 @@ function Matching () {
             if(gameQuestionData.length !== 0) {
                 //If CYOAQuestionData has not been loaded, get it from the DB
                 if(MatchingQuestionData.length === 0) {
-                    getMatchingQuestion(gameQuestionData.questionData[currentQuestion + 1], setMatchingQuestionData);
+                    console.log(gameQuestionData.questionData);
+                    getMatchingQuestion(gameQuestionData.questionData[0], setMatchingQuestionData);
                 }
             }
 
             //If MatchingQuestionData has been loaded
             if(MatchingQuestionData.length !== 0) {
                 //If matchingOptions state has not been set
-                if(matchingOptions.length === 0) {
+                if(vocab.length === 0) {
                     //Shuffle the array's correct order
-                    setMatchingOptions(arrayShuffle(MatchingQuestionData.anwser));
+                    console.log(MatchingQuestionData);
+                    setVocab(MatchingQuestionData.content);
                 }
             }
         }
 
         //Initial funstion call to load game
         loadGame();
-    },[gameQuestionData, MatchingQuestionData, currentQuestion, matchingOptions])
+    },[gameQuestionData, MatchingQuestionData, currentQuestion, vocab])
 
     //Function that pulls gameQuestion data from backend
     const getGameQuestion = (id_, setGameQuestionData_) => {
@@ -71,23 +75,22 @@ function Matching () {
             body:JSON.stringify({}),
             }).then((res) => res.json())
             .then((data)=>{
+                console.log(data);
                 setMatchingQuestionData_(data.data);
-
-                if(matchingOptions.length !== 0) {
-                    setMatchingOptions(arrayShuffle(data.data.answer));
-                }
         })
     }
 
     //These are hard-coded vocab words to test the functionality of the matching game. Further functionality will allow words to be pulled from the database
-    const [vocab, setVocab] = useState([
-        ["Anti-Virus", "Protects users from viruses, spyware, trojans, and worms"],
-        ["Brute Force Attack", "Systematically trying a high volume of possible combinations of characters until the correct one is found"],
-        ["Encryption", "Converting plain data into secret code with the help of an algorithm"],
-        ["DDoS", "A flooding attack on a remote target(s), in an attempt to overload network resources and disrupt service"],
-        ["Firewall", "A virtual perimeter around a network of workstations preventing viruses, worms, and hackers from penetrating"],
-        ["Keylogger", "A kind of spyware software that records every keystroke made on a computer’s keyboard"]
-    ]);
+    // const [vocab, setVocab] = useState([
+    //     ["Anti-Virus", "Protects users from viruses, spyware, trojans, and worms"],
+    //     ["Brute Force Attack", "Systematically trying a high volume of possible combinations of characters until the correct one is found"],
+    //     ["Encryption", "Converting plain data into secret code with the help of an algorithm"],
+    //     ["DDoS", "A flooding attack on a remote target(s), in an attempt to overload network resources and disrupt service"],
+    //     ["Firewall", "A virtual perimeter around a network of workstations preventing viruses, worms, and hackers from penetrating"],
+    //     ["Keylogger", "A kind of spyware software that records every keystroke made on a computer’s keyboard"]
+    // ]);
+
+    
 
     //cards hold the current cards being used in the game
     const [cards, setCards] = useState([]);
@@ -147,7 +150,9 @@ function Matching () {
 
     //generates cards when the vocab array is changed (unused now, but will be used when connected to database)
     useEffect(() => {
-        generateCards();
+        if(vocab === '' || vocab.length !== 0) {
+            generateCards();
+        }
     },[vocab]);
 
     //congratulates player after completing game (currently set at 4 correct cards)
@@ -184,6 +189,11 @@ function Matching () {
         console.log(cards);
     }, [choiceOne, choiceTwo]);
 
+    if(vocab === '' || vocab.length === 0) {
+        //Display loading page
+        return <div>Loading...</div>;
+      }
+    else {
     return(
         <div className="container">
             <div className="row" style={{marginTop:50, justifyContent:"center"}}>
@@ -204,5 +214,6 @@ function Matching () {
             </div>
         </div>
     );
+    }
 }
 export default Matching;
