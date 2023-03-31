@@ -6,6 +6,7 @@ import '../componentStyling/Game.css';
 function GamePage() {
     const [cyoaGameQuestions, setCYOAGameQuestions] = React.useState('');
     const [dndGameQuestions, setDNDGameQuestions] = React.useState('');
+    const [matchingGameQuestions, setMatchingGameQuestions] = React.useState('');
 
         //Loads the data from database once
         React.useEffect(()=> {
@@ -18,11 +19,14 @@ function GamePage() {
                 if(dndGameQuestions.length === 0) {
                     getGameQuestionsByType("1", setDNDGameQuestions);
                 }
+                if(matchingGameQuestions.length === 0) {
+                    getGameQuestionsByType("2", setMatchingGameQuestions);
+                }
             }
     
             //Initial function call to load data
             loadGames()
-        },[cyoaGameQuestions, dndGameQuestions])
+        },[cyoaGameQuestions, dndGameQuestions, matchingGameQuestions])
 
     const getGameQuestionsByType = (type_, setGameQuestionData_) => {
         fetch("http://localhost:5000/games/getByType/" + type_, {
@@ -74,6 +78,21 @@ function GamePage() {
         }
     }
 
+    var matchingQuestionDisplay = [];
+
+    if(matchingGameQuestions.length !== 0) {
+        for(let i = 0; i < matchingGameQuestions.data.length; i++) {
+            matchingQuestionDisplay.push(
+                <div key={i}>
+                    <a href={`./gameMatching/${matchingGameQuestions.data[i]._id}`} className="btn btn-primary">
+                        {matchingGameQuestions.data[i].name}
+                    </a>
+                    <div style={spaceAfterQ} />
+                </div>
+            )
+        }
+    }
+
     return (
       <div>
           <div className='card-container game'>
@@ -116,9 +135,10 @@ function GamePage() {
                         <br></br>
                         (Photo by <a href="https://pixabay.com/users/geralt-9301/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3706562" className='link-text'>Gerd Altmann</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3706562" className='link-text'>Pixabay</a>)
                     </p>
-                    <a href="./gameMatching" className="btn btn-primary">
+                    {matchingQuestionDisplay}
+                    {/* <a href="./gameMatching" className="btn btn-primary">
                         Cybersecurity Terms and Definitions
-                    </a>
+                    </a> */}
                 </div>
             </div>
             <div className='card game'>
