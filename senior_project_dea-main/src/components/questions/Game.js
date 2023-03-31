@@ -49,7 +49,7 @@ function GamePage() {
         paddingTop: "10px"
     }
 
-    var cyoaQuestionDisplay = [];
+    let cyoaQuestionDisplay = [];
 
     if(cyoaGameQuestions.length !== 0) {
         for(let i = 0; i < cyoaGameQuestions.data.length; i++) {
@@ -64,7 +64,7 @@ function GamePage() {
         }
     }
 
-    var dndQuestionDisplay = [];
+    let dndQuestionDisplay = [];
 
     if(dndGameQuestions.length !== 0) {
         for(let i = 0; i < dndGameQuestions.data.length; i++) {
@@ -79,7 +79,7 @@ function GamePage() {
         }
     }
 
-    var matchingQuestionDisplay = [];
+    let matchingQuestionDisplay = [];
 
     if(matchingGameQuestions.length !== 0) {
         for(let i = 0; i < matchingGameQuestions.data.length; i++) {

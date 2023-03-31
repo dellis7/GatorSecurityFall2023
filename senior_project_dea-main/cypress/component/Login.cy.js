@@ -1,6 +1,5 @@
 import React from 'react'
 import Login from '../../src/components/users/Login'
-import WelcomePage from '../../src/components/Welcome'
 
 describe('<Login/> Page Component', () => {
   it('renders', () => {
