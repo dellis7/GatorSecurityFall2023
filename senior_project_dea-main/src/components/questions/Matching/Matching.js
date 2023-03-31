@@ -111,7 +111,6 @@ function Matching () {
         setCards([]);
         const tempCards = [];
         //generates randomized subset
-        console.log("vocab.length: ", vocab.length);
         const cardSubset = arrayShuffle(vocab).slice(0,vocab.length);
         //splits definitions from keywords
         cardSubset.map((each, index) => {
@@ -176,7 +175,7 @@ function Matching () {
             }
             })}
         }
-    }, [numCorrect, vocab.length]);
+    }, [gameQuestionData._id, numCorrect, vocab, vocab.length]);
 
     //evaluates the players choices once two cards have been chosen
     useEffect(() => {
