@@ -4,8 +4,6 @@ import arrayShuffle from "array-shuffle";
 
 
 function Matching () {
-
-    const [currentQuestion] = useState(0);
     const [gameQuestionData, setGameQuestionData] = React.useState('');
     const [MatchingQuestionData, setMatchingQuestionData] = React.useState('');
     const [vocab, setVocab] = useState([]);
@@ -40,7 +38,7 @@ function Matching () {
 
         //Initial funstion call to load game
         loadGame();
-    },[gameQuestionData, MatchingQuestionData, currentQuestion, vocab])
+    },[gameQuestionData, MatchingQuestionData, vocab])
 
     //Function that pulls gameQuestion data from backend
     const getGameQuestion = (id_, setGameQuestionData_) => {
