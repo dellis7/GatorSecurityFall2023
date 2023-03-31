@@ -111,7 +111,7 @@ function Matching () {
         setCards([]);
         const tempCards = [];
         //generates randomized subset
-        const cardSubset = arrayShuffle(vocab).slice(0,vocab.length);
+        const cardSubset = arrayShuffle(vocab).slice(0,vocab[0].length / 2);
         //splits definitions from keywords
         cardSubset.map((each, index) => {
             const temp1 = {
