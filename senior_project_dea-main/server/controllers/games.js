@@ -130,7 +130,12 @@ const deleteGameById = (async(req,res) =>{
                 await DNDQuestion.findByIdAndDelete(subquestion);
             }
         }
-        else if(question.type !== 2) {
+        else if(question.type === 2) {
+            for(let subquestion of question.questionData) {
+                await MatchingQuestion.findByIdAndDelete(subquestion);
+            }
+        }
+        else {
             res.send({status:500, error:"Cannot delete a question with a malformed type."});
             return;
         }
