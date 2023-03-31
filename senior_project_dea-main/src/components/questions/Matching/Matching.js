@@ -5,10 +5,9 @@ import arrayShuffle from "array-shuffle";
 
 function Matching () {
 
-    const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [currentQuestion] = useState(0);
     const [gameQuestionData, setGameQuestionData] = React.useState('');
     const [MatchingQuestionData, setMatchingQuestionData] = React.useState('');
-
     const [vocab, setVocab] = useState([]);
 
     // Loads data from database once
@@ -23,9 +22,8 @@ function Matching () {
             
             //If gameQuestionData has been loaded
             if(gameQuestionData.length !== 0) {
-                //If CYOAQuestionData has not been loaded, get it from the DB
+                //If MatchingQuestionData has not been loaded, get it from the DB
                 if(MatchingQuestionData.length === 0) {
-                    console.log(gameQuestionData.questionData);
                     getMatchingQuestion(gameQuestionData.questionData[0], setMatchingQuestionData);
                 }
             }
@@ -35,7 +33,6 @@ function Matching () {
                 //If matchingOptions state has not been set
                 if(vocab.length === 0) {
                     //Shuffle the array's correct order
-                    console.log(MatchingQuestionData);
                     prepareMap(MatchingQuestionData.content, setVocab);
                 }
             }
@@ -75,7 +72,6 @@ function Matching () {
             body:JSON.stringify({}),
             }).then((res) => res.json())
             .then((data)=>{
-                console.log(data);
                 setMatchingQuestionData_(data.data);
         })
     }
@@ -120,6 +116,7 @@ function Matching () {
     const newGame = () => {
         resetChoices();
         generateCards();
+        setNumCorrect(0);
     }
 
     //this function generates a randomized subset of cardss based on the input vocab set
@@ -163,19 +160,18 @@ function Matching () {
         }
     },[vocab]);
 
-    //congratulates player after completing game (currently set at 4 correct cards)
+    //congratulates player after completing game
     useEffect(() => {
-        if(numCorrect === 4){
+        if(numCorrect > 0 && numCorrect === vocab.length){
             alert("Great Work!");
         }
-    }, [numCorrect]);
+    }, [numCorrect, vocab.length]);
 
     //evaluates the players choices once two cards have been chosen
     useEffect(() => {
         if(choiceOne && choiceTwo){
             setDisabled(true);
             if(choiceOne.val === choiceTwo.val){
-                console.log("Match!");
                 resetChoices();
                 const temp = cards.map(card => {
                     if(card.val === choiceOne.val){
@@ -189,13 +185,11 @@ function Matching () {
                 setNumCorrect(numCorrect + 1);
             }
             else{
-                console.log("Do not match");
                 //when the player is incorrect, the game will wait 1.5 seconds before flipping cards back over
                 setTimeout(() => resetChoices(), 1500);
             }
         }
-        console.log(cards);
-    }, [choiceOne, choiceTwo]);
+    }, [cards, choiceOne, choiceTwo, numCorrect]);
 
     if(vocab === '' || vocab.length === 0) {
         //Display loading page
