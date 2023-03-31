@@ -36,7 +36,7 @@ function Matching () {
                 if(vocab.length === 0) {
                     //Shuffle the array's correct order
                     console.log(MatchingQuestionData);
-                    setVocab(MatchingQuestionData.content);
+                    prepareMap(MatchingQuestionData.content, setVocab);
                 }
             }
         }
@@ -78,6 +78,14 @@ function Matching () {
                 console.log(data);
                 setMatchingQuestionData_(data.data);
         })
+    }
+
+    const prepareMap = (map, setter) => {
+        var array = [];
+        for(var key of Object.keys(map)) {
+            array.push([key, map[key]]);
+        }
+        setter(array);
     }
 
     //These are hard-coded vocab words to test the functionality of the matching game. Further functionality will allow words to be pulled from the database
