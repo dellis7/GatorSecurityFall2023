@@ -21,7 +21,7 @@ const getByTopic = (async(req,res)=>{
     var isAdmin = false;
 
     try {
-        if(checkAdmin(req.body.token))
+        if(await checkAdmin(req.body.token))
         {
             isAdmin = true;
         }
