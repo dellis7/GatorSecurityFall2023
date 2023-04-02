@@ -92,14 +92,14 @@ export default class ProfilePage extends React.Component {
       }
 
       //Set values for return section
-      var fullName = this.state.userInfo["fname"] + " " + this.state.userInfo["lname"];
-      var email = this.state.userInfo["email"];
-      var gameScore = this.state.userInfo["gamescore"].length;
-      var gameMax = this.state.gameQuestionCount + this.state.allGamesCount;
-      var gamePercentage = Math.floor(gameScore/gameMax * 100);
-      var learnScore = this.state.userInfo["learnscore"].length;
-      var learnMax = this.state.learnQuestionCount;
-      var learnPercentage = Math.floor(learnScore/learnMax * 100);
+      let fullName = this.state.userInfo["fname"] + " " + this.state.userInfo["lname"];
+      let email = this.state.userInfo["email"];
+      let gameScore = this.state.userInfo["gamescore"].length;
+      let gameMax = this.state.gameQuestionCount + this.state.allGamesCount;
+      let gamePercentage = Math.floor(gameScore/gameMax * 100);
+      let learnScore = this.state.userInfo["learnscore"].length;
+      let learnMax = this.state.learnQuestionCount;
+      let learnPercentage = Math.floor(learnScore/learnMax * 100);
 
       //What is rendered to the webpage
       return (

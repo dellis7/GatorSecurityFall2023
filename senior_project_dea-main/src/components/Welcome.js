@@ -52,7 +52,8 @@ export default class WelcomePage extends React.Component {
     if(this.state.userInfo == null) {
       return <div></div>
     }
-    var name = this.state.userInfo["fname"];
+    
+    let name = this.state.userInfo["fname"];
 
   return (
     <MDBCarousel showControls showIndicators style={carousel} interval={8000}>

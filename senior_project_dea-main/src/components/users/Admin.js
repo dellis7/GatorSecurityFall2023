@@ -24,8 +24,6 @@ export default class Admin extends React.Component {
         }),
         }).then((res)=>res.json())
         .then(data=>{
-            //console.log("data: ")
-            //console.log(data)
           this.setState({allUsers: data});
         });
         fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", 
@@ -72,21 +70,22 @@ export default class Admin extends React.Component {
         });
     }
     render(){
-        //console.log("all users:")
-        //console.log(this.state.allUsers);
       if(this.state.allUsers == null){
         return <div></div>
       }
-      var learnMax = this.state.learnQuestionCount;
-      var gameMax = this.state.allGamesCount + this.state.gameQuestionCount;
+
+      let learnMax = this.state.learnQuestionCount;
+      let gameMax = this.state.allGamesCount + this.state.gameQuestionCount;
+
       function createLearnView(user){
-        var learnScore = user["learnscore"].length;
-        var totalScore = ["Total Score: "+learnScore+"/"+learnMax+"\n","\n"]
+        let learnScore = user["learnscore"].length;
+        let totalScore = ["Total Score: " + learnScore + "/" + learnMax + "\n", "\n"]
         return <th style={{whiteSpace:"pre-wrap", wordWrap:"break-word"}}>{totalScore}</th>
       }
+
       function createGameView(user){
-        var gameScore = user["gamescore"].length;
-        var totalScore = ["Total Score: "+gameScore+"/"+gameMax+"\n","\n"]
+        let gameScore = user["gamescore"].length;
+        let totalScore = ["Total Score: " + gameScore + "/" + gameMax + "\n", "\n"]
         return <th style={{whiteSpace:"pre-wrap", wordWrap:"break-word"}}>{totalScore}</th>
       }
 

@@ -47,10 +47,7 @@ function GameAdventurePage() {
           body:JSON.stringify({}),
           }).then((res) => res.json())
           .then((data)=>{
-            //console.log(data)
-            //console.log(data.data[0].questionData);
             setGameQuestionData_(data.data);
-            //console.log(data.data[0]);
         })
     }
 

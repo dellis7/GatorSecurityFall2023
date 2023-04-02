@@ -17,7 +17,7 @@ function TradQuestion({ qdata, num }) {
     }
 
     const createAnswerOptions = (type) => {
-        var answerOptions = [];
+        let answerOptions = [];
 
         for(let i = 0; i < qdata.options.length; i++) {
             answerOptions.push((
@@ -43,7 +43,7 @@ function TradQuestion({ qdata, num }) {
         let table = document.createElement("TABLE");
 
         for(let i = 0; i < usernamesArr.length; i++){
-            var row = table.insertRow(i);
+            let row = table.insertRow(i);
             row.style.border = "1px solid black";
             row.insertCell(0).innerHTML = usernamesArr[i];
         }
@@ -58,7 +58,7 @@ function TradQuestion({ qdata, num }) {
     }
 
     const checkAnswer = () => {
-        var theAnswer = answer;
+        let theAnswer = answer;
         if(qdata.type === 1) {
             theAnswer = document.getElementById("answer-box-" + qdata._id).value;
         }

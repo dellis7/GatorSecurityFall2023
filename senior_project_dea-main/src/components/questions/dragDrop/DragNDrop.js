@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import Container from "react-bootstrap/esm/Container";
-import { DndContext, closestCenter } from "@dnd-kit/core";
-import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import arrayShuffle from "array-shuffle";
-import { useSortable } from "@dnd-kit/sortable";
-import {CSS} from "@dnd-kit/utilities";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import { useSortable, arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import GetConfig from '../../../Config';
 
 function DragNDrop() {

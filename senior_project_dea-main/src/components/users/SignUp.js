@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import './css/LoginAndSignUp.css';
 import LoginBanner from './LoginBanner';
 import gator from '../../images/gator.png';
 import GetConfig from '../../Config';
+import './css/LoginAndSignUp.css';
 
 export default class SignUp extends Component {
   constructor(props){
@@ -18,7 +18,6 @@ export default class SignUp extends Component {
   handleSubmit(e){
     e.preventDefault();
     const{fname, lname, email, password} = this.state;
-    //console.log(fname, lname, email, password);
     fetch(GetConfig().SERVER_ADDRESS + "/users/register", {
       method: "POST",
       crossDomain:true,
@@ -35,14 +34,10 @@ export default class SignUp extends Component {
       }),
     }).then((res)=>res.json())
     .then((data)=>{
-      //console.log(data,"userRegister");
       if(data.status==="ok"){
         alert("Registration was successful");
         window.location.href="./sign-in"
       }
-      //else {
-        //alert("A GatorSecurity account already exists with this email address.");
-      //}
     })
   }
   render() {

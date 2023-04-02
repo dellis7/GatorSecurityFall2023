@@ -75,10 +75,12 @@ function Matching () {
     }
 
     const prepareMap = (map, setter) => {
-        var array = [];
-        for(var key of Object.keys(map)) {
+        let array = [];
+
+        for(let key of Object.keys(map)) {
             array.push([key, map[key]]);
         }
+        
         setter(array);
     }
 

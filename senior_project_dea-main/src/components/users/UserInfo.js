@@ -1,12 +1,11 @@
 import React, {Component} from "react";
-import './css/LoginAndSignUp.css';
 import GetConfig from '../../Config';
+import './css/LoginAndSignUp.css';
 
 export default class UserInfo extends Component{
 
     constructor(props){
         super(props);
-        //TODO - Change my comment to be more accurate or precise.
         //Defines the current state, in this case the information of the current user
         this.state = {
             userInfo: ""
@@ -26,8 +25,7 @@ export default class UserInfo extends Component{
             Accept:"application/json",
             "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
         },
-        //TODO - Change my comment to be more accurate or precise.
-        //Turns the token received from the backend into a string???
+        //Turns the token received from the backend into a JSON string
         body:JSON.stringify({
             token:window.localStorage.getItem("token"),
         }),
@@ -47,16 +45,11 @@ export default class UserInfo extends Component{
         
         const confirm = window.confirm("Are you sure you want to make these changes? You will be logged out upon saving.")
 
-        if (confirm)
-        {
+        if (confirm) {
             //Defines the current user _id
             const _id = this.state.userInfo._id;
 
-            //TODO - State what's going on here.
             const{fname, lname, email, password} = this.state;
-            
-            //Console data check to make sure nothing is wonky in the data
-            //console.log(_id, fname, lname, email, password);
 
             //Make a PUT HTTP request to backend (See server.js for server.put(/user/update/:id))
             fetch(`${GetConfig().SERVER_ADDRESS}/users/update/${_id}`, {
@@ -67,8 +60,6 @@ export default class UserInfo extends Component{
                 Accept:"application/json",
                 "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
             },
-            //TODO - Change my comment to be more accurate or precise.
-            //Turns the token received from the backend into a string???
             body:JSON.stringify({
                 fname,
                 lname,
@@ -79,10 +70,6 @@ export default class UserInfo extends Component{
             }).then((res)=>{
                 //If a good response
                 if (res.ok) {
-                    //Send a popup stating successful edit, then reload page
-                    //alert("Update successful! Reloading page.")
-                    //window.location.reload()
-
                     //Send a popup stating successful edit, then redirect page to user profile (/myprofile)
                     alert("Update successful! You will now be logged out.")
                     window.localStorage.removeItem("token");

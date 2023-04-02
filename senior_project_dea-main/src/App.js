@@ -1,7 +1,6 @@
 import './css/App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
-import { useLocation } from 'react-router-dom';
-import { Routes, Route } from "react-router-dom"
+import { useLocation, Routes, Route } from "react-router-dom";
 import { useEffect } from 'react';
 
 import GetConfig from './Config';
