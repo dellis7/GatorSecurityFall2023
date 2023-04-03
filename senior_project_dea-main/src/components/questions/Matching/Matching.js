@@ -107,13 +107,13 @@ function Matching () {
         setNumCorrect(0);
     }
 
-    //this function generates a randomized subset of cardss based on the input vocab set
+    //this function generates a randomized subset of cards based on the input vocab set
     const generateCards = useCallback(() => {
         //removed previous cards
         setCards([]);
         const tempCards = [];
         //generates randomized subset
-        const cardSubset = arrayShuffle(vocab).slice(0,vocab[0].length / 2);
+        const cardSubset = arrayShuffle(vocab).slice(0, 4);
         //splits definitions from keywords
         cardSubset.map((each, index) => {
             const temp1 = {
@@ -152,8 +152,8 @@ function Matching () {
     //congratulates player after completing game
     useEffect(() => {
         if(vocab === '' || vocab.length !== 0) {
-            //if number of correct matches equals total number of pairs (keywords and definitions)
-            if(numCorrect === vocab[0].length / 2) {
+            //if number of correct matches equals total number of pairs (keywords and definitions) displayed
+            if(numCorrect === 4) {
                 //Update the user's score via HTTP request
             fetch(GetConfig().SERVER_ADDRESS + "/users/updateScore", {
               method: "POST",
