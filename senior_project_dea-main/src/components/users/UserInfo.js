@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import GetConfig from '../../Config';
+import GetConfig from '../../Config.js';
 import './css/LoginAndSignUp.css';
 
 export default class UserInfo extends Component{

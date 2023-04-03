@@ -2,7 +2,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { useState } from "react";
 import QuestionEdit from "./QuestionEdit";
-import GetConfig from '../../Config';
+import GetConfig from '../../Config.js';
 
 const text = {
   fontFamily: "Gluten",

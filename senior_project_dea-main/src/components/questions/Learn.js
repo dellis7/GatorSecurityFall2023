@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import TradQuestion from './TraditionalQuestion';
-import GetConfig from '../../Config';
+import GetConfig from '../../Config.js';
 import '../componentStyling/textStyling.css';
 import '../componentStyling/Navbar.css';
 

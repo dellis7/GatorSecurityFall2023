@@ -6,7 +6,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useEffect, useState } from 'react';
 import './componentStyling/Navbar.css';
 
-import GetConfig from '../Config';
+import GetConfig from '../Config.js';
 
 function MyNavbar() {
   const [isAdmin, setIsAdmin] = useState({isAdmin: false});

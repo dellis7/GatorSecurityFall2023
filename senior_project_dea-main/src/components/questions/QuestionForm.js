@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import GetConfig from '../../Config';
+import GetConfig from '../../Config.js';
 
 export default function QuestionForm({
   question_form,

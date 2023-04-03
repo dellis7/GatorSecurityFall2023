@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import GetConfig from '../../Config';
+import GetConfig from '../../Config.js';
 
 export default function QuestionEdit(props) {
   //these states store the data for the edited question and handles changes made to the data

@@ -1,5 +1,5 @@
 import React from 'react';
-import GetConfig from '../Config';
+import GetConfig from '../Config.js';
 import {MDBCarousel, MDBCarouselItem} from 'mdb-react-ui-kit';
 
 export default class WelcomePage extends React.Component {

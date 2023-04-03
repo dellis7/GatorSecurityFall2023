@@ -1,5 +1,5 @@
 import React from 'react';
-import GetConfig from '../../Config';
+import GetConfig from '../../Config.js';
 import '../componentStyling/buttons.css';
 import '../componentStyling/textStyling.css';
 import '../componentStyling/Game.css';

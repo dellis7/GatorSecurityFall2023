@@ -1,5 +1,5 @@
 import React from 'react';
-import GetConfig from '../../Config';
+import GetConfig from '../../Config.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../componentStyling/buttons.css';
 

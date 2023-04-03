@@ -1,6 +1,6 @@
 import React from 'react';
 import Table from 'react-bootstrap/Table';
-import GetConfig from '../../Config';
+import GetConfig from '../../Config.js';
 
 export default class Admin extends React.Component {
     constructor(props){

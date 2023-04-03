@@ -1,6 +1,6 @@
 import React from 'react';
 import TradQuestion from './TraditionalQuestion'
-import GetConfig from '../../Config';
+import GetConfig from '../../Config.js';
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
 import Row from 'react-bootstrap/Row';
