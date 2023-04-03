@@ -3,7 +3,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import { useLocation, Routes, Route } from "react-router-dom";
 import { useEffect } from 'react';
 
-import GetConfig from './Config';
+import GetConfig from './Config.js';
 import MyNavbar from './components/Navbar';
 import MyWelcomePage from './components/Welcome';
 import LearnPage from './components/questions/Learn';

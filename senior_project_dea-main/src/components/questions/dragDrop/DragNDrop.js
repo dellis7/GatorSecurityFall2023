@@ -4,7 +4,7 @@ import arrayShuffle from "array-shuffle";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import { useSortable, arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import GetConfig from '../../../Config';
+import GetConfig from '../../../Config.js';
 
 function DragNDrop() {
 

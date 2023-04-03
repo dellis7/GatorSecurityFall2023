@@ -3,7 +3,7 @@ import './css/personalProfile.css';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBTypography, MDBProgress, MDBProgressBar, MDBBtn } from 'mdb-react-ui-kit';
 import { LinkContainer } from "react-router-bootstrap";
 import '../componentStyling/textStyling.css';
-import GetConfig from '../../Config';
+import GetConfig from '../../Config.js';
 
 export default class ProfilePage extends React.Component {
     constructor(props){

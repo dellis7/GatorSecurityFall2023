@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./css/LoginAndSignUp.css";
 import gator from "../../images/gator.png";
-import GetConfig from '../../Config';
+import GetConfig from '../../Config.js';
 
 export default class Login extends Component {
     constructor(props){

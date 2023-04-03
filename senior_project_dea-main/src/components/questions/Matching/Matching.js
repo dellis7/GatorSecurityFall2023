@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useCallback} from "react";
 import MatchingCard from "./MatchingCard";
 import arrayShuffle from "array-shuffle";
-import GetConfig from '../../../Config';
+import GetConfig from '../../../Config.js';
 
 function Matching () {
     const [gameQuestionData, setGameQuestionData] = React.useState('');

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import QuestionCard from "./QuestionCard";
 import QuestionForm from "./QuestionForm";
-import GetConfig from '../../Config';
+import GetConfig from '../../Config.js';
 import '../componentStyling/textStyling.css';
 
 function QuestionCRUD() {
