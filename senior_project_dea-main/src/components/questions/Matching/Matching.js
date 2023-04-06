@@ -7,6 +7,11 @@ function Matching () {
     const [gameQuestionData, setGameQuestionData] = React.useState('');
     const [MatchingQuestionData, setMatchingQuestionData] = React.useState('');
     const [vocab, setVocab] = useState([]);
+    const [won, setWon] = useState(false);
+
+    //Colors to show which cards matched at the end of the game
+    //Red, Green, Blue, Yellow, Orange, Purple
+    const matchedColors = ["255,0,0, 0.1", "0,255,0,0.1", "0,0,255,0.1", "255,255,0,0.1", "255,155,0,0.1", "125,0,255,0.1"];
 
     // Loads data from database once
     React.useEffect(() => {
@@ -36,7 +41,7 @@ function Matching () {
             }
         }
 
-        //Initial funstion call to load game
+        //Initial function call to load game
         loadGame();
     },[gameQuestionData, MatchingQuestionData, vocab])
 
@@ -105,6 +110,7 @@ function Matching () {
         resetChoices();
         generateCards();
         setNumCorrect(0);
+        setWon(false);
     }
 
     //this function generates a randomized subset of cards based on the input vocab set
@@ -119,12 +125,14 @@ function Matching () {
             const temp1 = {
                 val: index,
                 text: each.at(0),
-                matched: false
+                matched: false,
+                color: matchedColors.at(index)
             }
             const temp2 = {
                 val: index,
                 text: each.at(1),
-                matched: false
+                matched: false,
+                color: matchedColors.at(index)
             }
             tempCards.push(temp1);
             tempCards.push(temp2);
@@ -170,6 +178,7 @@ function Matching () {
             }).then((res) => {
             //If request was a success
             if(res.status === 204) {
+                setWon(true);
                 alert("Congratulations! You beat the game!");
             }
             else {
@@ -224,6 +233,7 @@ function Matching () {
                         handleChoice={handleChoice}
                         flipped={card === choiceOne || card === choiceTwo || card.matched}
                         disabled={disabled}
+                        won={won}
                     />
                     </div>
                 ))}
