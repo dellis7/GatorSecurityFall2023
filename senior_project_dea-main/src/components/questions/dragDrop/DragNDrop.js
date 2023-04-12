@@ -165,20 +165,20 @@ function DragNDrop() {
         <div className="Container">
           <div
             className="row col-lg-auto"
-            style={{ justifyContent: "center", marginTop: 50 }}
+            style={{ justifyContent: "center", marginTop: 35 }}
           >
-            <div className="col-12 col-md-5">
+            <div className="col-12 col-md-5" style={{width: "35%", marginTop: "auto", marginBottom: "auto"}}>
                         <img
                         src={GetConfig().SERVER_ADDRESS + `/uploads/dnd/${DNDQuestionData.stimulus}`}
                         alt="..."
-                        style={{ width: "100%", maxWidth: "700px" }}
+                        style={{ height: "auto", width: "100%", borderColor: "#2C74B3", borderStyle: "solid", borderWidth: "1px" }}
                       />
-              <p className=" px-3 px-md-0" style={{ marginTop: 20, textAlign: "left"}}>
-                {DNDQuestionData.question}
-              </p>
             </div>
     
             <div className="col-12 col-md-5">
+              <p className=" px-3 px-md-0" style={{ marginTop: 20, textAlign: "center"}}>
+                {DNDQuestionData.question}
+              </p>
               <DndContext
                 collisionDetection={closestCenter}
                 onDragEnd={handleDragEnd}

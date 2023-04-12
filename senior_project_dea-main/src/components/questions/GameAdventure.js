@@ -130,7 +130,7 @@ function GameAdventurePage() {
     }
 
     const spaceAfterQ = {
-        paddingTop: "10px"
+        paddingTop: "15px"
     }
 
     const textCenter = {
@@ -141,6 +141,24 @@ function GameAdventurePage() {
     const topBtmPadding = {
         paddingTop: "40px",
         paddingBottom: "40px"
+    }
+
+    const imageContainerSize = {
+        height: "60%",
+        margin: "auto"
+    }
+
+    const imageStyling = {
+        width: "auto",
+        height: "100%",
+        borderColor: "#2C74B3",
+        borderStyle: "solid",
+        borderWidth: "1px"
+    }
+    
+    const buttonWidth = {
+        width: "40%",
+        margin: "auto"
     }
 
     //If CYOAQuestionData hasn't been loaded yet
@@ -154,18 +172,23 @@ function GameAdventurePage() {
             <div style={topBtmPadding}>
                 <div style={spaceAfterQ}></div>
                 {/* Dynamically loaded CYOA question image */}
-                <img src={GetConfig().SERVER_ADDRESS + `/uploads/cyoa/${CYOAQuestionData.stimulus}`} className='img-fluid' alt='...' />
+                <div style={imageContainerSize}>
+                    <img src={GetConfig().SERVER_ADDRESS + `/uploads/cyoa/${CYOAQuestionData.stimulus}`} className='img-fluid' alt='...' style={imageStyling} />
+                </div>
                 <div style={spaceAfterQ}></div>
                 <div style={textCenter}>{CYOAQuestionData.questionNumber}. {CYOAQuestionData.question}</div>
                 <div style={spaceAfterQ}></div>
                 {/* btn-block - List of buttons to represent options */}
-                <div className="btn-block img-fluid shadow-4 d-grid gap-2 col-6 mx-auto justify-content-center">
+                <div className="btn-block img-fluid shadow-4 d-grid gap-2 col-6 mx-auto justify-content-center" style={buttonWidth}>
                 {/* A loop that dynamically populates buttons with the current CYOAQuestionData options */}
-                {CYOAQuestionData.options.map((option, index) => (
-                    <div key={index}>
-                        <button onClick={() => {submit(index)}} type="button" className="btn btn-primary btn-lg btn-block">{option}</button>
-                    </div>
-                ))}
+                <div style={{borderColor: "#2C74B3", borderStyle: "solid", borderSize: "10px", padding:"20px", borderRadius: "25px"}}>
+                    {CYOAQuestionData.options.map((option, index) => (
+                        <div key={index}>
+                            <button onClick={() => {submit(index)}} type="button" className="btn btn-primary btn-lg btn-block" >{option}</button>
+                            <div style={spaceAfterQ}></div>
+                        </div>
+                    ))}
+                </div>
                 </div>
             </div>
         );
