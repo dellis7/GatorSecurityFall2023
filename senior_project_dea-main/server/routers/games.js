@@ -2,6 +2,8 @@ const express = require('express')
 const multer = require('multer')
 
 const router = express.Router()
+
+//Prepare multer for file uploads
 const storage = multer.memoryStorage()
 const upload = multer({
     storage: storage,
@@ -10,6 +12,7 @@ const upload = multer({
     }
 });
 
+//Import game controller functions
 const {
     getGameCount,
     getGameByTopic,
@@ -33,7 +36,11 @@ const {
     deleteMatching
 } = require('../controllers/games.js')
 
+//Import validators
 const { validateCYOAQuestion, validateDNDQuestion, validateMatchingQuestion } = require('../validators/questionValidator')
+
+//Connect game controller functions to endpoints
+//Overarching Game Question Routes (NOTE: Each / should be preceded by /questions when testing with Postman e.g. localhost:5000/questions/getcount)
 
 //Overarching Game Question Routes
 router.post('/getcount', getGameCount);

@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
+//Import learn question controller functions
 const {
     getCount,
     getByTopic,
@@ -11,6 +12,7 @@ const {
 
 const { validateQuestion } = require('../validators/questionValidator')
 
+//Connect learn question controller functions to endpoints
 //Overarching Traditional Question Routes (NOTE: Each / should be preceded by /questions when testing with Postman e.g. localhost:5000/questions/getcount)
 
 router.post('/getcount', getCount)
