@@ -21,7 +21,7 @@ function TradQuestion({ qdata, num }) {
 
         for(let i = 0; i < qdata.options.length; i++) {
             answerOptions.push((
-            <>
+            <div key={i}>
                 <Form.Check id={qdata._id + "_" + toString(i)}
                     inline
                     label={qdata.options[i]}
@@ -30,7 +30,7 @@ function TradQuestion({ qdata, num }) {
                     type={type}
                     onChange={onChange}
                 />
-            </>   
+            </div>   
             ));
         }
         return answerOptions;
@@ -100,7 +100,7 @@ function TradQuestion({ qdata, num }) {
                 <div>
                     <Form>
                     {['radio'].map((type) => (
-                        <div className="mb-4">
+                        <div className="mb-4" key={type}>
                         <Form.Group>
                             {createAnswerOptions(type)}
                         </Form.Group>                  
