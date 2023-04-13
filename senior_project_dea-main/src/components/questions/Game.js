@@ -94,8 +94,8 @@ function GamePage() {
         }
     }
 
-    var CYOAInstructions = function() {
-        var alertString = "";
+    let CYOAInstructions = function() {
+        let alertString = "";
         alertString += "In these choose your own adventure games, you'll be presented with one question at a time accompanied by an image.\n\n";
         alertString += "After answering each question correctly, you'll be given an answer explanation before moving onto the next question.\n\n";
         alertString += "Be sure to try your best to answer each question correctly; however, you will not be penalized for incorrect answers.\n\n";
@@ -106,8 +106,8 @@ function GamePage() {
         alert(alertString);
     }
 
-    var DNDInstructions = function() {
-        var alertString = "";
+    let DNDInstructions = function() {
+        let alertString = "";
         alertString += "In these drag and drop games, you'll be given an image, a question, and multiple elements to drag into order.\n\n";
         alertString += "Hold left click and drag to move elements into the correct positions.\n\n";
         alertString += "These drag and drop games may have multiple drag and drop questions in succession; once you correctly answer one, you will be taken to the next one.\n\n";
@@ -119,8 +119,8 @@ function GamePage() {
         alert(alertString);
     }
 
-    var MatchingInstructions = function() {
-        var alertString = "";
+    let MatchingInstructions = function() {
+        let alertString = "";
         alertString += "In these memory matching games, you'll be given a bunch of flipped over cards with words or definitions on their front.\n\n";
         alertString += "Start by clicking on a card to flip it over and then click another card to try to match whatever word/definition the card has on it with another definition/word.\n\n";
         alertString += "If the two cards you click don't match, they will flip back over. If they do match, they will stay facing up.\n\n";
@@ -133,8 +133,8 @@ function GamePage() {
         alert(alertString);
     }
 
-    var TraditionalInstructions = function() {
-        var alertString = "";
+    let TraditionalInstructions = function() {
+        let alertString = "";
         alertString += "In these fill in the blank games, you'll be presented with a scenario and then asked to type a short answer.\n\n";
         alertString += "There are multiple games total accessible from the blue button beneath the instructions button.\n\n";
         alertString += "Completing each game will yield one individual game point, meaning you can earn multiple game points. Replaying a game will not yield additional game points.\n\n";
