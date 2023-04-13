@@ -1,35 +1,37 @@
+//Imports
 require("../schemas")
+const privileges = require("../util/privileges")
 
 const mongoose = require("mongoose")
+
+//DB Models
 const TraditionalQuestion = mongoose.model("TraditionalQuestionInfo")
 const User = mongoose.model("UserInfo")
-const jwtObj = require("jsonwebtoken");
-const Jwt_secret_Obj = "sfhgfhgefugefyfeyf63r36737288gssfgusducb@#$&fvdhfdgfuf76";
+
+//ENV preparation
+const dotenv = require("dotenv")
+dotenv.config('./.env')
+
+//Topic map
 const questionTopicMap = {other: 0, input_validation: 1, encoding_escaping: 2, xss: 3, sql_injection: 4, crypto: 5, auth: 6};
 
+//Get count of all traditional learn questions in the database endpoint controller
 const getCount = (async(req,res) =>{
+    //Count learn questions and return the count in the response
     TraditionalQuestion.count({displayType:req.body.displayType.toString()}).then((count)=>{
-        res.send({status:"ok", data:count});
+        res.send({status:200, data:count});
+        return;
     })
     .catch((error)=>{
-        res.send({status: "error", data:error});
+        res.send({status:500, data:error});
+        return;
     });
 })
 
+//Get traditional learn questions by topic endpoint controller
 const getByTopic = (async(req,res)=>{
     //Check administrative status
-    var isAdmin = false;
-
-    try {
-        if(await checkAdmin(req.body.token))
-        {
-            isAdmin = true;
-        }
-    }
-    catch(error) {
-        res.send({status: 500, error:error});
-        return;
-    }
+    var isAdmin = privileges.isAdmin(req);
     
     try{
         //If url is /questions/get/all (more literally if :topic is equal to all)
@@ -37,55 +39,60 @@ const getByTopic = (async(req,res)=>{
             //Retrieve all question data in database and send it
 			TraditionalQuestion.find({}).then((data)=>{
                 //Ensure answers aren't sent to the frontend unless you are an admin
-                if(!isAdmin) {
+                if(isAdmin !== 1) {
                     for(let i = 0; i < data.length; i++) {
                         data[i].answer = "The answer is available only as an administrator.";
                     }
                 }
 				res.send({status:200, data:data});
+                return;
 			});
         //Else if the topic is a numerical id
 		} else if(!isNaN(parseInt(req.params.topic))) {
             //Find specific question information in database and send it
 			TraditionalQuestion.find({topic: req.params.topic.toString(), displayType: req.body.displayType.toString()}).then((data)=>{
                 //Ensure answers aren't sent to the frontend unless you are an admin
-                if(!isAdmin) {
+                if(isAdmin !== 1) {
                     for(let i = 0; i < data.length; i++) {
                         data[i].answer = "The answer is available only as an administrator.";
                     }
                 }
 				res.send({status:200, data:data});
+                return;
 			});
         //Else the topic is a string identifier
 		} else {
             //Find specific question information in database and send it
 			TraditionalQuestion.find({topic: questionTopicMap[req.params.topic.toString()], displayType: req.body.displayType.toString()}).then((data)=>{
                 //Ensure answers aren't sent to the frontend unless you are an admin
-                if(!isAdmin) {
+                if(isAdmin !== 1) {
                     for(let i = 0; i < data.length; i++) {
                         data[i].answer = "The answer is available only as an administrator.";
                     }
                 }
 				res.send({status:200, data:data});
+                return;
 			});
 		}
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
         res.sendStatus(500);
+        return;
     }
 })
 
+//Delete traditional question by id endpoint controller
 const deleteById = (async(req,res) => {
-    //Check administrative status
-    try {
-        if(!checkAdmin(req.body.token)) {
-            res.send({status: 403});
-            return;
-        }
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+
+    if(admin === 2) {
+        res.sendStatus(500);
+        return;
     }
-    catch(error) {
-        res.send({status: 500, error:error});
+    else if (admin !== 1) {
+        res.sendStatus(403);
         return;
     }
 
@@ -112,38 +119,40 @@ const deleteById = (async(req,res) => {
         if (result) {
             //Send Status Code 202 (Accepted)
             res.sendStatus(202);
+            return;
         //Else False
         } else {
             //Send Status Code 404 (Not Found)
             res.sendStatus(404);
+            return;
         }
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
         res.sendStatus(500);
+        return;
     }
 })
 
+//Update traditional question endpoint controller
 const update = (async(req,res) => {
-    //Check administrative status
-    try {
-        if(!checkAdmin(req.body.token)) {
-            res.send({status: 403});
-            return;
-        }
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+
+    if(admin === 2) {
+        res.sendStatus(500);
+        return;
     }
-    catch(error) {
-        res.send({status: 500, error:error});
+    else if (admin !== 1) {
+        res.sendStatus(403);
         return;
     }
 
     try{
         //Set _id to the value given in url under :id
         const _id = req.params.id;
-        //Set result to true or false depending on if the question was 
-        //successfully found by its id and updated
+        //Update the user information
         const result = await TraditionalQuestion.findByIdAndUpdate(_id, {
-            //Dynamically changes values based on the JSON data in the PUT request
             question: req.body.question,
             type: req.body.type,
             topic: req.body.topic,
@@ -151,11 +160,11 @@ const update = (async(req,res) => {
             answer: req.body.answer,
             displayType: req.body.displayType,
         });
-        //If True
+        //If the operation was sucessful
         if (result) {
             //Send Status Code 202 (Accepted)
             res.sendStatus(202);
-        //Else False
+        //If the operation was not successful
         } else {
             //Send Status Code 404 (Not Found)
             res.sendStatus(404);
@@ -167,21 +176,23 @@ const update = (async(req,res) => {
     }
 })
 
+//Create traditional question endpoint controller
 const create = (async(req,res)=>{
-    //Check administrative status
-    try {
-        if(!checkAdmin(req.body.token)) {
-            res.send({status: 403});
-            return;
-        }
-    }
-    catch(error) {
-        res.send({status: 500, error:error});
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+
+    if(admin === 2) {
+        res.sendStatus(500);
         return;
     }
+    else if (admin !== 1) {
+        res.sendStatus(403);
+        return;
+    }
+
+    //Create the learn question from data sent in the request
     try{
         const question = new TraditionalQuestion({
-            //Dynamically changes values based on the JSON data in the POST request
             question: req.body.question,
             type: req.body.type,
             topic: req.body.topic,
@@ -190,27 +201,18 @@ const create = (async(req,res)=>{
             displayType: req.body.displayType,
         })
         await question.save();
+       
         res.sendStatus(201);
+        return;
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
         res.sendStatus(500);
+        return;
     }
 })
 
-const checkAdmin = (async(token) => {
-    if(token === null || token === undefined) {
-        return false;
-    }
-    const adminFromToken = jwtObj.verify(token, Jwt_secret_Obj);
-    const adminEmail = adminFromToken.email;
-    var admin = await User.findOne({email: adminEmail});
-    if(admin.isAdmin !== true) {
-        return false;
-    }
-    return true;
-})
-
+//Exports
 module.exports = {
     getCount,
     getByTopic,
