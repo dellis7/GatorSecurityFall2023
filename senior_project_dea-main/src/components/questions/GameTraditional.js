@@ -72,7 +72,7 @@ function GameTraditionalPage() {
 
     return (
         <div id="gamepagediv">
-            <h1 className='h1-text'>Game</h1>
+            <h1 className='h1-text'>Fill in the Blank Games</h1>
     
             <Tab.Container id="left-tabs-example" defaultActiveKey="first">
             <Row style={box}>

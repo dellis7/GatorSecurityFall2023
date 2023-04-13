@@ -1,5 +1,7 @@
+//Used express-validatoras an express.js middleware for verifying requests contain correct information meeting formatting requirements
 const { body, check, validationResult } = require('express-validator')
 
+//Validate Learn question requests
 exports.validateQuestion = [
     body('question').notEmpty().withMessage("Question cannot be empty"),
     body('type').notEmpty().withMessage("Type cannot be empty"),
@@ -22,6 +24,7 @@ exports.validateQuestion = [
     },
 ];
 
+//Validate CYOA question requests
 exports.validateCYOAQuestion = [
     body('parentQuestionId').notEmpty().withMessage("A parent question is required"),
     body('questionNumber').notEmpty().withMessage("A question number is required"),
@@ -56,6 +59,7 @@ exports.validateCYOAQuestion = [
     },
 ];
 
+//Validate DND question requests
 exports.validateDNDQuestion = [
     body('parentQuestionId').notEmpty().withMessage("A parent question is required"),
     body('question').notEmpty().withMessage("A question is required"),
@@ -68,6 +72,7 @@ exports.validateDNDQuestion = [
     }
 ];
 
+//Validate matching question requests
 exports.validateMatchingQuestion = [
     body('parentQuestionId').notEmpty().withMessage("A parent question is required"),
     body('content').notEmpty().withMessage("A content map is required"),

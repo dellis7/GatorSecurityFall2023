@@ -1,27 +1,43 @@
+//Imports
 require("../schemas")
+const privileges = require("../util/privileges")
 
 const mongoose = require("mongoose")
 const fs = require("fs")
 const path = require("path")
+
+//DB Models
 const GameQuestion = mongoose.model("GameQuestionInfo")
 const CYOAQuestion = mongoose.model("CYOAQuestionInfo")
 const DNDQuestion = mongoose.model("DNDQuestionInfo")
 const MatchingQuestion = mongoose.model("MatchingQuestionInfo")
 const User = mongoose.model("UserInfo")
+
+//ENV preparation
+const dotenv = require("dotenv")
+dotenv.config('./.env')
+
+//JWT information
 const jwtObj = require("jsonwebtoken");
-const Jwt_secret_Obj = "sfhgfhgefugefyfeyf63r36737288gssfgusducb@#$&fvdhfdgfuf76";
+const Jwt_secret_Obj = process.env.JWT_SECRET;
+
+//Topic map
 const questionTopicMap = {other: 0, input_validation: 1, encoding_escaping: 2, xss: 3, sql_injection: 4, crypto: 5, auth: 6};
 
 //Overarching Game Question Routes ==================================================
+//Get count of all the games in the database endpoint controller
 const getGameCount = (async(req,res) =>{
     GameQuestion.count().then((count)=>{
         res.send({status:"ok", data:count});
+        return;
     })
     .catch((error)=>{
         res.send({status: "error", data:error});
+        return;
     });
 })
 
+//Get games by topic endpoint controller
 const getGameByTopic = (async(req,res) =>{
     try{
         //If the topic is all
@@ -29,84 +45,92 @@ const getGameByTopic = (async(req,res) =>{
             //Retrieve all question data in database and send it
 			GameQuestion.find({}).then((data)=>{
 				res.send({status:200, data:data});
+                return;
 			});
         //Else if the topic is a numerical id
 		} else if(!isNaN(parseInt(req.params.topic))) {
             //Find specific question information in database and send it
 			GameQuestion.find({topic: req.params.topic}).then((data)=>{
 				res.send({status:200, data:data});
+                return;
 			});
         //Else the topic is a string identifier
 		} else {
             //Find specific question information in database and send it
 			GameQuestion.find({topic: questionTopicMap[req.params.topic]}).then((data)=>{
 				res.send({status:200, data:data});
+                return;
 			});
 		}
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
         res.sendStatus(500);
+        return;
     }
 })
 
+//Get games by type endpoint controller
 const getGameByType = (async(req,res) =>{
     try{
-        //Find the game question and send it
+        //Find the game questions and send them
         GameQuestion.find({type: req.params.type}).then((data) =>{
             res.send({status:200, data:data});
+            return;
         })
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
         res.sendStatus(500);
+        return;
     }
 })
 
+//Get games by id endpoint controller
 const getGameById = (async(req,res) =>{
     try{
+        //Cast provided ID to ObjectId
         var id = mongoose.Types.ObjectId(req.params.id);
 
         //Find the game question and send it
         GameQuestion.findOne({_id: id}).then((data) =>{
             res.send({status:200, data:data});
+            return;
         })
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
         res.sendStatus(500);
+        return;
     }
 })
 
+//Delete game by id endpoint controller (admin privileges required)
 const deleteGameById = (async(req,res) =>{
-    //Check administrative status
-    try {
-        if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403});
-            return;
-        }
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
-        var admin = await User.findOne({email: adminEmail});
-        if(admin.isAdmin !== true) {
-            res.send({status: 403});
-            return;
-        }
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+
+    if(admin === 2) {
+        res.sendStatus(500);
+        return;
     }
-    catch(error) {
-        res.send({status: 500, error:error});
+    else if (admin !== 1) {
+        res.sendStatus(403);
         return;
     }
 
-    //Try these options
     try{
-        //Set _id to the value given in url under :id
         const _id = req.params.id;
 
+        //Find the existing GameQuestion
         const question = await GameQuestion.findById(_id);
+
+        //For CYOA-type GameQuestions
         if(question.type === 0) {
+            //Delete any CYOA subquestions linked to this GameQuestion
             for(let subquestion of question.questionData) {
-                //Remove any existing file
+
+                //Remove any stimulus files associated with the CYOA question
                 fs.readdirSync(path.join(__dirname, '..', 'uploads', 'cyoa')).forEach(file => {
                     if(file.indexOf(subquestion.toString()) !== -1) {
                         fs.unlinkSync(path.join(__dirname, '..', 'uploads', 'cyoa', file));
@@ -114,12 +138,16 @@ const deleteGameById = (async(req,res) =>{
                     }
                 })
 
+                //Delete the CYOA subquestion
                 await CYOAQuestion.findByIdAndDelete(subquestion);
             }
         }
+        //For DND-type GameQuestions
         else if(question.type === 1) {
+            //Delete any DND subquestions linked to this GameQuestion
             for(let subquestion of question.questionData) {
-                //Remove any existing file
+
+                //Remove any stimulus files associated with the DND question
                 fs.readdirSync(path.join(__dirname, '..', 'uploads', 'dnd')).forEach(file => {
                     if(file.indexOf(subquestion.toString()) !== -1) {
                         fs.unlinkSync(path.join(__dirname, '..', 'uploads', 'dnd', file));
@@ -127,21 +155,24 @@ const deleteGameById = (async(req,res) =>{
                     }
                 })
 
+                //Delete the DND subquestion
                 await DNDQuestion.findByIdAndDelete(subquestion);
             }
         }
+        //For Matching-type GameQuestions
         else if(question.type === 2) {
+            //Delete any Matching subquestions linked to this GameQuestion
             for(let subquestion of question.questionData) {
                 await MatchingQuestion.findByIdAndDelete(subquestion);
             }
         }
+        //For GameQuestions of non-existent types
         else {
             res.send({status:500, error:"Cannot delete a question with a malformed type."});
             return;
         }
 
-        //Set result to true or false depending on if the question 
-        //was successfully found and deleted by its id
+        //Delete GameQuestion by ID
         const result = await GameQuestion.findByIdAndDelete(_id);
         
         //Find all users with references to the old questions and delete the old questions
@@ -155,48 +186,43 @@ const deleteGameById = (async(req,res) =>{
             }
         }
 
-        //If True
+        //If the operation was completed sucessfully
         if (result) {
             //Send Status Code 202 (Accepted)
             res.sendStatus(202);
-        //Else False
+            return;
+        //If the operation was not completed successfully
         } else {
             //Send Status Code 404 (Not Found)
             res.sendStatus(404);
+            return;
         }
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
         res.send({status: 500, error:error});
+        return;
     }
 })
 
+//Update game by id endpoint controller
 const updateGame = (async(req,res) =>{
-    //Check administrative status
-    try {
-        if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403});
-            return;
-        }
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
-        var admin = await User.findOne({email: adminEmail});
-        if(admin.isAdmin !== true) {
-            res.send({status: 403});
-            return;
-        }
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+
+    if(admin === 2) {
+        res.sendStatus(500);
+        return;
     }
-    catch(error) {
-        res.send({status: 500, error:error});
+    else if (admin !== 1) {
+        res.sendStatus(403);
         return;
     }
 
     try{
-        //Set _id to the value given in url under :id
         const _id = req.params.id;
 
-        //Set result to true or false depending on if the question was 
-        //successfully found by its id and updated
+        //Update the GameQuestion
         const result = await GameQuestion.findByIdAndUpdate(_id, {
             //Dynamically changes values based on the JSON data in the PUT request
             topic: req.body.topic,
@@ -205,12 +231,12 @@ const updateGame = (async(req,res) =>{
             //NOTE: do not ever allow for the direct update of questionData. Instead, let the CYOA, DND, etc. routes handle it.
         });
 
-        //If True
+        //If the operation was successful
         if (result) {
             //Send Status Code 202 (Accepted)
             res.sendStatus(202);
             return;
-        //Else False
+        //If the operation was not successful
         } else {
             //Send Status Code 404 (Not Found)
             res.sendStatus(404);
@@ -224,30 +250,24 @@ const updateGame = (async(req,res) =>{
     }
 })
 
-//Requires a token, questionIds (for a CYOA question), type, and topic
-const createGame = (async(req,res) =>{
-    //Check administrative status
-    try {
-        if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403});
-            return;
-        }
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
-        var admin = await User.findOne({email: adminEmail});
-        if(admin.isAdmin !== true) {
-            res.send({status: 403});
-            return;
-        }
-    }
-    catch(error) {
-        res.send({status: 500, error:error});
+//Create GameQuestion endpoint controller
+const createGame = (async(req,res) =>{    
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+
+    if(admin === 2) {
+        res.sendStatus(500);
         return;
     }
+    else if (admin !== 1) {
+        res.sendStatus(403);
+        return;
+    }
+
+    //This endpoint requires a token, questionIds (for a CYOA question), type, and topic
     try{
         const question = new GameQuestion({
-            //Dynamically changes values based on the JSON data in the POST request
-            //CHOOSE YOUR OWN ADVENTURE QUESTION DATA FORMAT: questionData contains a list of IDs to CYOA questions
+            //questionData contains a list of IDs to CYOA, DND, or Matching Questions
             questionData: [],
             type: req.body.type,
             name: req.body.name,
@@ -255,7 +275,7 @@ const createGame = (async(req,res) =>{
         })
         await question.save();
         res.sendStatus(201);
-
+        return;
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
@@ -265,8 +285,10 @@ const createGame = (async(req,res) =>{
 })
 
 //CYOA Subquestion Routes ==================================================
+//Get CYOA question by ID endpoint controller
 const getCYOAById = (async(req,res) =>{
     try{
+        //Cast provided ID to ObjectId
         var id = mongoose.Types.ObjectId(req.params.id);
 
         //Find the game question and send it
@@ -279,39 +301,34 @@ const getCYOAById = (async(req,res) =>{
                 }
             })
             res.send({status:200, data:data});
+            return;
         })
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
         res.sendStatus(500);
+        return;
     }
 })
 
+//Delete CYOA question by ID endpoint controller
 const deleteCYOAById = (async(req,res) =>{
-    //Check administrative status
-    try {
-        if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403});
-            return;
-        }
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
-        var admin = await User.findOne({email: adminEmail});
-        if(admin.isAdmin !== true) {
-            res.send({status: 403});
-            return;
-        }
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+
+    if(admin === 2) {
+        res.sendStatus(500);
+        return;
     }
-    catch(error) {
-        res.send({status: 500, error:error});
+    else if (admin !== 1) {
+        res.sendStatus(403);
         return;
     }
 
-    //Try these options
-    try{
-        //Set _id to the value given in url under :id
+    try {
         const _id = req.params.id;
 
+        //Identify the CYOAQuestion and the GameQuestion it is linked to
         const subquestion = await CYOAQuestion.findById(_id);
         const parentQuestion = await GameQuestion.findById(subquestion.parentQuestionId);
         var tempQuestionData = parentQuestion.questionData;
@@ -322,13 +339,13 @@ const deleteCYOAById = (async(req,res) =>{
             tempQuestionData.splice(indexToRemove, 1);
         }
 
+        //Update the parent GameQuestion
         await GameQuestion.findByIdAndUpdate(subquestion.parentQuestionId, {questionData: tempQuestionData});
 
-        //Set result to true or false depending on if the question 
-        //was successfully found and deleted by its id
+        //Delete the CYOAQuestion
         const result = await CYOAQuestion.findByIdAndDelete(_id);
 
-        //Remove any existing file
+        //Remove any existing stimulus files associated with the CYOAQuestion
         fs.readdirSync(path.join(__dirname, '..', 'uploads', 'cyoa')).forEach(file => {
             if(file.indexOf(_id.toString()) !== -1) {
                 fs.unlinkSync(path.join(__dirname, '..', 'uploads', 'cyoa', file));
@@ -336,64 +353,59 @@ const deleteCYOAById = (async(req,res) =>{
             }
         })
 
-        //If True
+        //If the operation was successful
         if (result) {
             //Send Status Code 202 (Accepted)
             res.sendStatus(202);
-        //Else False
+            return;
+        //If the operation was not sucessful
         } else {
             //Send Status Code 404 (Not Found)
             res.sendStatus(404);
+            return;
         }
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
         res.sendStatus(500);
+        return;
     }
 })
 
-//NOTE: This request MUST be made as a multipart/form-data with zero or one files that is less than 16 MB.
+//Update CYOAQuestion endpoint controller
 const updateCYOA = (async(req,res) =>{
-    //Check administrative status
-    try {
-        if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403});
-            return;
-        }
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
-        var admin = await User.findOne({email: adminEmail});
-        if(admin.isAdmin !== true) {
-            res.send({status: 403});
-            return;
-        }
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+
+    if(admin === 2) {
+        res.sendStatus(500);
+        return;
     }
-    catch(error) {
-        res.send({status: 500, error:error + ": Error getting user data."});
+    else if (admin !== 1) {
+        res.sendStatus(403);
         return;
     }
 
-    try{
-        //Set _id to the value given in url under :id
+    try {
         const _id = req.params.id;
 
         var result = false;
 
-        if(req.files != undefined && req.files.length === 1) {
-            //Set result to true or false depending on if the question was 
-            //successfully found by its id and updated
+        //NOTE: This request MUST be made as a multipart/form-data with zero or one files
+
+        //If a file is attached, add it to the file system
+        if(req.files !== undefined && req.files.length === 1) {
+            //Update the CYOA question
             result = await CYOAQuestion.findByIdAndUpdate(_id, {
-                //Dynamically changes values based on the JSON data in the PUT request
                 questionNumber: req.body.questionNumber,
                 question: req.body.question,
                 options: req.body.options,
                 answer: req.body.answer,
                 explanation: req.body.explanation,
-                //stimulus: req.files[0].buffer, //If you'd like to store file contents in the database, uncomment this line.
                 //NOTE: do not ever allow for the update of the parent question id. Instead, delete the subquestion and remake it under the correct parent.
             });
 
-            //Remove any existing file
+            //Remove any existing stimulus file associated with the CYOA question
             fs.readdirSync(path.join(__dirname, '..', 'uploads', 'cyoa')).forEach(file => {
                 if(file.indexOf(_id.toString()) !== -1) {
                     fs.unlinkSync(path.join(__dirname, '..', 'uploads', 'cyoa', file));
@@ -401,9 +413,10 @@ const updateCYOA = (async(req,res) =>{
                 }
             })
 
-            //Store file contents in the filesystem
+            //Store stimulus file contents in the filesystem
             const dot = req.files[0].originalname.indexOf('.');
             const ext = req.files[0].originalname.substring(dot);
+
             //Check for path injection attacks
             var p = path.join(__dirname, '..', 'uploads', 'cyoa', _id.toString() + ext);
             p = fs.realpath(p)
@@ -411,13 +424,14 @@ const updateCYOA = (async(req,res) =>{
                 res.sendStatus(400);
                 return;
             }
+
+            //Write the stimulus file
             fs.writeFileSync(p, req.files[0].buffer, "binary");
         }
+        //Else if there are no files attached, just update the included fields
         else {
-            //Set result to true or false depending on if the question was 
-            //successfully found by its id and updated
+            //Update the CYOAQuestion
             result = await CYOAQuestion.findByIdAndUpdate(_id, {
-                //Dynamically changes values based on the JSON data in the PUT request
                 questionNumber: req.body.questionNumber,
                 question: req.body.question,
                 type: req.body.type,
@@ -428,12 +442,12 @@ const updateCYOA = (async(req,res) =>{
             });
         }
 
-        //If True
+        //If the operation was successful
         if (result) {
             //Send Status Code 202 (Accepted)
             res.sendStatus(202);
             return;
-        //Else False
+        //If the operation was not successful
         } else {
             //Send Status Code 404 (Not Found)
             res.sendStatus(404);
@@ -447,27 +461,42 @@ const updateCYOA = (async(req,res) =>{
     }
 })
 
-//NOTE: This request MUST be made as a multipart/form-data with one file that is less than 16 MB.
+//Create CYOAQuestion endpoint controller
 const createCYOA = (async(req,res) =>{
-    //Check administrative status
     try {
-        if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403});
-            return;
-        }
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
-        var admin = await User.findOne({email: adminEmail});
-        if(admin.isAdmin !== true) {
-            res.send({status: 403});
-            return;
+        //Perform file checks that can't be done in express validator
+        for(let i = 0; i < req.files.length; i++) {
+            const dotIndex = req.files[i].originalname.indexOf(".")
+            
+            if(dotIndex === -1) {
+                res.send({status: 400, error: "All provided image files must have an extension."});
+            }
+
+            const subs = req.files[0].originalname.substring(dotIndex + 1).toLowerCase()
+            if(subs !== "png" && subs !== "jpg" && subs !== "jpeg" && subs !== "apng" && subs !== "avif" && subs !== "gif" && subs !== "svg" && subs !== "webp") {
+                res.send({status: 400, error: "All provided files must be images"});
+            }
         }
     }
     catch(error) {
         res.send({status: 500, error:error});
         return;
     }
-    try{
+
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+
+    if(admin === 2) {
+        res.sendStatus(500);
+        return;
+    }
+    else if (admin !== 1) {
+        res.sendStatus(403);
+        return;
+    }
+
+    //NOTE: This request MUST be made as a multipart/form-data with one file
+    try {
         const pid = mongoose.Types.ObjectId(req.body.parentQuestionId);
 
         //Verify that the parent question exists in GameQuestion
@@ -482,8 +511,8 @@ const createCYOA = (async(req,res) =>{
             return;
         }
 
+        //Create a new CYOAQuestion
         const question = new CYOAQuestion({
-            //Dynamically changes values based on the JSON data in the POST request
             parentQuestionId: pid,
             questionNumber: req.body.questionNumber,
             question: req.body.question,
@@ -494,17 +523,19 @@ const createCYOA = (async(req,res) =>{
         })
         await question.save();
 
-        //Store file contents in the filesystem
+        //Store stimulus file contents in the filesystem
         const dot = req.files[0].originalname.indexOf('.');
         const ext = req.files[0].originalname.substring(dot);
         fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'cyoa', question._id.toString() + ext), req.files[0].buffer, "binary");
         
+        //Update parent question with the ID of the new CYOAQuestion
         var tempQuestionData = parentQuestion.questionData;
         tempQuestionData.push(question._id);
 
         await GameQuestion.findByIdAndUpdate(pid, {questionData: tempQuestionData});
         
         res.sendStatus(201);
+        return;
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
@@ -513,32 +544,38 @@ const createCYOA = (async(req,res) =>{
     }
 })
 
-// takes a question id (as a param) and the selected answer (from the request body)
-// will return 200 along with T/F if the question is found, otherwise 401
+//Check CYOA question answer without updating score endpoint controller
+//Takes a question id (as a param) and the selected answer (from the request body)
+//Will return 200 along with T/F if the question is found, otherwise 401
 const checkCYOAAnswer = (async(req, res) => {
-    try{
+    try {
         const _id = req.params.id;
         const questionData = await CYOAQuestion.findById(_id)
 
         if (req.body.answer === questionData.answer){
             res.send({status:"ok", data:true});
+            return;
         }
         else{
             res.send({status:"ok", data:false});
+            return;
         }
     } catch(error) {
         res.sendStatus(401);
+        return;
     }
 })
 
 //DND Subquestion Routes ==================================================
+//Get DNDQuestion by id endpoint controller
 const getDNDById = (async(req,res) =>{
-    try{
+    try {
+        //Cast provided ID to ObjectId
         var id = mongoose.Types.ObjectId(req.params.id);
 
         //Find the game question and send it
         DNDQuestion.findOne({_id: id}).then((data) =>{
-            //Find any existing file
+            //Find any existing stimulus file
             fs.readdirSync(path.join(__dirname, '..', 'uploads', 'dnd')).forEach(file => {
                 if(file.indexOf(id) !== -1) {
                     data.stimulus = file;
@@ -546,39 +583,34 @@ const getDNDById = (async(req,res) =>{
                 }
             })
             res.send({status:200, data:data});
+            return;
         })
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
         res.sendStatus(500);
+        return;
     }
 })
 
+//Delete DNDQuestion by id endpoint controller
 const deleteDNDById = (async(req,res) =>{
-    //Check administrative status
-    try {
-        if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403});
-            return;
-        }
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
-        var admin = await User.findOne({email: adminEmail});
-        if(admin.isAdmin !== true) {
-            res.send({status: 403});
-            return;
-        }
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+
+    if(admin === 2) {
+        res.sendStatus(500);
+        return;
     }
-    catch(error) {
-        res.send({status: 500, error:error});
+    else if (admin !== 1) {
+        res.sendStatus(403);
         return;
     }
 
-    //Try these options
-    try{
-        //Set _id to the value given in url under :id
+    try {
         const _id = req.params.id;
 
+        //Grab the DNDQuestion and its parent GameQuestion
         const subquestion = await DNDQuestion.findById(_id);
         const parentQuestion = await GameQuestion.findById(subquestion.parentQuestionId);
         var tempQuestionData = parentQuestion.questionData;
@@ -591,11 +623,10 @@ const deleteDNDById = (async(req,res) =>{
 
         await GameQuestion.findByIdAndUpdate(subquestion.parentQuestionId, {questionData: tempQuestionData});
 
-        //Set result to true or false depending on if the question 
-        //was successfully found and deleted by its id
+        //Delete the DNDQuestion
         const result = await DNDQuestion.findByIdAndDelete(_id);
 
-        //Remove any existing file
+        //Remove any existing stimulus file
         fs.readdirSync(path.join(__dirname, '..', 'uploads', 'dnd')).forEach(file => {
             if(file.indexOf(_id.toString()) !== -1) {
                 fs.unlinkSync(path.join(__dirname, '..', 'uploads', 'dnd', file));
@@ -603,60 +634,55 @@ const deleteDNDById = (async(req,res) =>{
             }
         })
 
-        //If True
+        //If the operation was successful
         if (result) {
             //Send Status Code 202 (Accepted)
             res.sendStatus(202);
-        //Else False
+            return;
+        //If the operation was not successful
         } else {
             //Send Status Code 404 (Not Found)
             res.sendStatus(404);
+            return;
         }
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
         res.send({status: 500, error:error});
+        return;
     }
 })
 
+//Update DNDQuestion endpoint controller
 const updateDND = (async(req,res) =>{
-    //Check administrative status
-    try {
-        if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403, message: "Token was null or undefined"});
-            return;
-        }
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
-        var admin = await User.findOne({email: adminEmail});
-        if(admin.isAdmin !== true) {
-            res.send({status: 403, message: "User is not an admin"});
-            return;
-        }
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+
+    if(admin === 2) {
+        res.sendStatus(500);
+        return;
     }
-    catch(error) {
-        res.send({status: 500, error:error + ": Error getting user data."});
+    else if (admin !== 1) {
+        res.sendStatus(403);
         return;
     }
 
-    try{
-        //Set _id to the value given in url under :id
+    try {
         const _id = req.params.id;
 
         var result = false;
 
-        if(req.files != undefined && req.files.length === 1) {
-            //Set result to true or false depending on if the question was 
-            //successfully found by its id and updated
+        //If a file was sent with the request, put it in the file system
+        if(req.files !== undefined && req.files.length === 1) {
+            //Update the DNDQuestion
             result = await DNDQuestion.findByIdAndUpdate(_id, {
-                //Dynamically changes values based on the JSON data in the PUT request
                 question: req.body.question,
                 answer: req.body.answer,
                 explanation: req.body.explanation,
                 //NOTE: do not ever allow for the update of the parent question id. Instead, delete the subquestion and remake it under the correct parent.
             });
 
-            //Remove any existing file
+            //Remove any existing stimulus file
             fs.readdirSync(path.join(__dirname, '..', 'uploads', 'dnd')).forEach(file => {
                 if(file.indexOf(_id.toString()) !== -1) {
                     fs.unlinkSync(path.join(__dirname, '..', 'uploads', 'dnd', file));
@@ -664,16 +690,15 @@ const updateDND = (async(req,res) =>{
                 }
             })
 
-            //Store file contents in the filesystem
+            //Store stimulus file contents in the filesystem
             const dot = req.files[0].originalname.indexOf('.');
             const ext = req.files[0].originalname.substring(dot);
             fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'dnd', _id.toString() + ext), req.files[0].buffer, "binary");
         }
+        //If no file was sent with the request, just update the DNDQuestion
         else {
-            //Set result to true or false depending on if the question was 
-            //successfully found by its id and updated
+            //Update the DNDQuestion
             result = await DNDQuestion.findByIdAndUpdate(_id, {
-                //Dynamically changes values based on the JSON data in the PUT request
                 question: req.body.question,
                 answer: req.body.answer,
                 explanation: req.body.explanation,
@@ -681,12 +706,12 @@ const updateDND = (async(req,res) =>{
             });
         }
 
-        //If True
+        //If the operation was sucessful
         if (result) {
             //Send Status Code 202 (Accepted)
             res.sendStatus(202);
             return;
-        //Else False
+        //If the operation was not successful
         } else {
             //Send Status Code 404 (Not Found)
             res.sendStatus(404);
@@ -700,6 +725,7 @@ const updateDND = (async(req,res) =>{
     }
 })
 
+//Create DNDQuestion endpoint controller
 const createDND = (async(req,res) =>{
     try {
         //Perform file checks that can't be done in express validator
@@ -721,25 +747,20 @@ const createDND = (async(req,res) =>{
         return;
     }
 
-    //Check administrative status
-    try {
-        if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403});
-            return;
-        }
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
-        var admin = await User.findOne({email: adminEmail});
-        if(admin.isAdmin !== true) {
-            res.send({status: 403});
-            return;
-        }
-    }
-    catch(error) {
-        res.send({status: 500, error:error});
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+
+    if(admin === 2) {
+        res.sendStatus(500);
         return;
     }
-    try{
+    else if (admin !== 1) {
+        res.sendStatus(403);
+        return;
+    }
+
+    try {
+        //Cast the provided ID to ObjectId
         const pid = mongoose.Types.ObjectId(req.body.parentQuestionId);
 
         //Verify that the parent question exists in GameQuestion
@@ -754,8 +775,8 @@ const createDND = (async(req,res) =>{
             return;
         }
 
+        //Create a new DNDQuestion
         const question = new DNDQuestion({
-            //Dynamically changes values based on the JSON data in the POST request
             parentQuestionId: pid,
             question: req.body.question,
             answer: req.body.answer,
@@ -763,17 +784,19 @@ const createDND = (async(req,res) =>{
         })
         await question.save();
 
-        //Store file contents in the filesystem
+        //Store stimulus file contents in the filesystem
         const dot = req.files[0].originalname.indexOf('.');
         const ext = req.files[0].originalname.substring(dot);
         fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'dnd', question._id.toString() + ext), req.files[0].buffer, "binary");
         
+        //Update parent question with the ID of the new CYOAQuestion
         var tempQuestionData = parentQuestion.questionData;
         tempQuestionData.push(question._id);
 
         await GameQuestion.findByIdAndUpdate(pid, {questionData: tempQuestionData});
         
         res.sendStatus(201);
+        return;
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
@@ -783,40 +806,39 @@ const createDND = (async(req,res) =>{
 })
 
 //Matching Subquestion Routes ==================================================
+//Get matching question by id endpoint controller
 const getMatchingById = (async(req,res) =>{
     try {
         var id = mongoose.Types.ObjectId(req.params.id);
         //Find the game question and send it
         MatchingQuestion.findOne({_id: id}).then((data) =>{
             res.send({status:200, data:data});
+            return;
         })
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
         res.sendStatus(500);
+        return;
     }
 })
 
+//Create matching question endpoint controller
 const createMatching = (async(req,res) =>{
-    //Check administrative status
-    try {
-        if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403});
-            return;
-        }
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
-        var admin = await User.findOne({email: adminEmail});
-        if(admin.isAdmin !== true) {
-            res.send({status: 403});
-            return;
-        }
-    }
-    catch(error) {
-        res.send({status: 500, error:error});
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+
+    if(admin === 2) {
+        res.sendStatus(500);
         return;
     }
-    try{
+    else if (admin !== 1) {
+        res.sendStatus(403);
+        return;
+    }
+
+    try {
+        //Cast provided ID to ObjectId
         const pid = mongoose.Types.ObjectId(req.body.parentQuestionId);
 
         //Verify that the parent question exists in GameQuestion
@@ -831,6 +853,7 @@ const createMatching = (async(req,res) =>{
             return;
         }
 
+        //Create a new MatchingQuestion
         const question = new MatchingQuestion({
             //Dynamically changes values based on the JSON data in the POST request
             parentQuestionId: pid,
@@ -838,12 +861,14 @@ const createMatching = (async(req,res) =>{
         })
         await question.save();
         
+        //Update parent question with ID of new MatchingQuestion
         var tempQuestionData = parentQuestion.questionData;
         tempQuestionData.push(question._id);
 
         await GameQuestion.findByIdAndUpdate(pid, {questionData: tempQuestionData});
         
         res.sendStatus(201);
+        return;
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
@@ -852,44 +877,35 @@ const createMatching = (async(req,res) =>{
     }
 })
 
+//Update matching question endpoint controller
 const updateMatching = (async(req, res) =>{
-    //Check administrative status
-    try {
-        if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403, message: "Token was null or undefined"});
-            return;
-        }
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
-        var admin = await User.findOne({email: adminEmail});
-        if(admin.isAdmin !== true) {
-            res.send({status: 403, message: "User is not an admin"});
-            return;
-        }
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+
+    if(admin === 2) {
+        res.sendStatus(500);
+        return;
     }
-    catch(error) {
-        res.send({status: 500, error:error + ": Error getting user data."});
+    else if (admin !== 1) {
+        res.sendStatus(403);
         return;
     }
 
-    try{
-        //Set _id to the value given in url under :id
+    try {
         const _id = req.params.id;
 
-        //Set result to true or false depending on if the question was 
-        //successfully found by its id and updated
+        //Update matching question
         var result = await MatchingQuestion.findByIdAndUpdate(_id, {
-            //Dynamically changes values based on the JSON data in the PUT request
             //Don't allow updating of the parentId
             content: req.body.content
         });
 
-        //If True
+        //If the operation was successful
         if (result) {
             //Send Status Code 202 (Accepted)
             res.sendStatus(202);
             return;
-        //Else False
+        //If the operation was not successful
         } else {
             //Send Status Code 404 (Not Found)
             res.sendStatus(404);
@@ -903,49 +919,46 @@ const updateMatching = (async(req, res) =>{
     }
 })
 
+//Delete matching question endpoint controller
 const deleteMatching = (async(req, res) =>{
-    //Check administrative status
-    try {
-        if(req.body.token === null || req.body.token === undefined) {
-            res.send({status: 403, message: "Token was null or undefined"});
-            return;
-        }
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
-        var admin = await User.findOne({email: adminEmail});
-        if(admin.isAdmin !== true) {
-            res.send({status: 403, message: "User is not an admin"});
-            return;
-        }
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+
+    if(admin === 2) {
+        res.sendStatus(500);
+        return;
     }
-    catch(error) {
-        res.send({status: 500, error:error + ": Error getting user data."});
+    else if (admin !== 1) {
+        res.sendStatus(403);
         return;
     }
 
-    try{
-        //Set _id to the value given in url under :id
+    try {
         const _id = req.params.id;
-        //Set result to true or false depending on if the question 
-        //was successfully found and deleted by its id
+
+        //Delete the MatchingQuestion by id
         var result = await MatchingQuestion.findByIdAndDelete(_id);
 
-        //If True
+        //If the operation was successful
         if (result) {
             //Send Status Code 202 (Accepted)
             res.sendStatus(202);
-        //Else False
+            return;
+        //If the operation was not successful
         } else {
             //Send Status Code 404 (Not Found)
             res.sendStatus(404);
+            return;
         }
     //Catch any errors
     } catch(error) {
         //Send Status Code 500 (Internal Server Error)
         res.sendStatus(500);
+        return;
     }
 })
 
+//Exports
 module.exports = {
     getGameCount,
     getGameByTopic,

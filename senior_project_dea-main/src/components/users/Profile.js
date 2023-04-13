@@ -145,7 +145,7 @@ export default class ProfilePage extends React.Component {
                             <MDBProgress className="rounded" height='30'>
                             <MDBProgressBar striped animated width={learnPercentage} valuemin={0} valuemax={100}> {learnPercentage}% </MDBProgressBar>
                             </MDBProgress>
-                            <MDBCardText style={{paddingTop:'20px'}}>{learnScore}/{learnMax} Sections Completed</MDBCardText>
+                            <MDBCardText style={{paddingTop:'20px'}}>{learnScore}/{learnMax} Questions Completed</MDBCardText>
                           </MDBCol>
                           <MDBCol size="6" className="mb-3">
                             <MDBTypography tag="h6">Game</MDBTypography>
