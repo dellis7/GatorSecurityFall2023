@@ -157,7 +157,7 @@ function GamePage() {
                         <br></br>
                         (Photo by <a href="https://www.pexels.com/@pixabay/" className='link-text'>Pixabay</a> on <a href="https://www.pexels.com/photo/blur-bright-business-codes-207580/" className='link-text'>Pexels)</a>
                     </p>
-                    <button onClick={CYOAInstructions} className="btn btn-primary orange">Instructions</button>
+                    <button onClick={CYOAInstructions} className="btn btn-primary orange">How To Play</button>
                     <div style={spaceAfterQ} />
                     {cyoaQuestionDisplay}
                 </div>
@@ -173,7 +173,7 @@ function GamePage() {
                         <br></br>
                         (Photo by <a href="https://pixabay.com/users/thedigitalartist-202249/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=4868165" className='link-text'>Pete Linforth</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=4868165" className='link-text'>Pixabay)</a>
                     </p>
-                    <button onClick={DNDInstructions} className="btn btn-primary orange">Instructions</button>
+                    <button onClick={DNDInstructions} className="btn btn-primary orange">How To Play</button>
                     <div style={spaceAfterQ} />
                     {dndQuestionDisplay}
                 </div>
@@ -189,7 +189,7 @@ function GamePage() {
                         <br></br>
                         (Photo by <a href="https://pixabay.com/users/geralt-9301/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3706562" className='link-text'>Gerd Altmann</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3706562" className='link-text'>Pixabay)</a>  
                     </p>
-                    <button onClick={MatchingInstructions} className="btn btn-primary orange">Instructions</button>
+                    <button onClick={MatchingInstructions} className="btn btn-primary orange">How To Play</button>
                     <div style={spaceAfterQ} />
                     {matchingQuestionDisplay}
                 </div>
@@ -205,7 +205,7 @@ function GamePage() {
                         <br></br>
                         (Photo by <a href="https://unsplash.com/@kvalifik?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" className='link-text'>Kvalifik</a> on <a href="https://unsplash.com/photos/3TiNowmZluA?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" className='link-text'>Unsplash)</a>
                     </p>
-                    <button onClick={TraditionalInstructions} className="btn btn-primary orange">Instructions</button>
+                    <button onClick={TraditionalInstructions} className="btn btn-primary orange">How To Play</button>
                     <div style={spaceAfterQ} />
                     <a href="./gameTraditional" className="btn btn-primary">
                         Fill in the Blank Games
@@ -213,6 +213,7 @@ function GamePage() {
                 </div>
             </div>
         </div>
+    </div>
     );
   }
   
