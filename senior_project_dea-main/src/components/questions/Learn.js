@@ -83,9 +83,9 @@ function LearnPage() {
 
     for(let i = 0; i < data.data.length; i++) {
       questions.push((
-      <>
+      <div key={i}>
         <TradQuestion qdata={data.data[i]} num={i + 1} />
-      </>
+      </div>
       ))
     }
   
@@ -96,22 +96,22 @@ function LearnPage() {
     <div id="learndiv" style={container}>
       <h4 className='h1-text'>Learn</h4>
       <Tabs fill justify defaultActiveKey="first" style={tabs}>
-      <Tab eventKey="first" title="Input Validation" style={tab}>
+        <Tab key={1} eventKey="first" title="Input Validation" style={tab}>
           {createQuestions(questionData1)}
         </Tab>
-        <Tab eventKey="second" title="Encoding & Escaping" style={tab}>
+        <Tab key={2} eventKey="second" title="Encoding & Escaping" style={tab}>
           {createQuestions(questionData2)}
         </Tab>
-        <Tab eventKey="third" title="Cross-Site Scripting" style={tab}>
+        <Tab key={3} eventKey="third" title="Cross-Site Scripting" style={tab}>
           {createQuestions(questionData3)}
         </Tab>
-        <Tab eventKey="fourth" title="SQL Injection" style={tab}>
+        <Tab key={4} eventKey="fourth" title="SQL Injection" style={tab}>
           {createQuestions(questionData4)}
         </Tab>
-        <Tab eventKey="fifth" title="Cryptography" style={tab}>
+        <Tab key={5} eventKey="fifth" title="Cryptography" style={tab}>
           {createQuestions(questionData5)}
         </Tab>
-        <Tab eventKey="sixth" title="User Authentication" style={tab}>
+        <Tab key={6} eventKey="sixth" title="User Authentication" style={tab}>
           {createQuestions(questionData6)}
         </Tab>
       </Tabs>

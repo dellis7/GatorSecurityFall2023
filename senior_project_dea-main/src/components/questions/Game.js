@@ -212,7 +212,6 @@ function GamePage() {
                     </a>
                 </div>
             </div>
-            </div>
         </div>
     );
   }

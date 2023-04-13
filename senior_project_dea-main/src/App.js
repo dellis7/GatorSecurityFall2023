@@ -19,7 +19,6 @@ import Admin from './components/users/Admin'
 import QuestionCRUD from './components/questions/QuestionCRUD';
 import DragNDrop from './components/questions/dragDrop/DragNDrop';
 import Matching from "./components/questions/Matching/Matching";
-
 function App() {
   
   const { pathname } = useLocation();
