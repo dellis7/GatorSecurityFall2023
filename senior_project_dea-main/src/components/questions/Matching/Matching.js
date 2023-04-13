@@ -9,10 +9,6 @@ function Matching () {
     const [vocab, setVocab] = useState([]);
     const [won, setWon] = useState(false);
 
-    //Colors to show which cards matched at the end of the game
-    //Red, Green, Blue, Yellow, Orange, Purple
-    const matchedColors = ["255,0,0, 0.1", "0,255,0,0.1", "0,0,255,0.1", "255,255,0,0.1", "255,155,0,0.1", "125,0,255,0.1"];
-
     // Loads data from database once
     React.useEffect(() => {
 
@@ -115,6 +111,10 @@ function Matching () {
 
     //this function generates a randomized subset of cards based on the input vocab set
     const generateCards = useCallback(() => {
+        //Colors to show which cards matched at the end of the game
+        //Red, Green, Blue, Yellow, Orange, Purple
+        const matchedColors = ["255,0,0, 0.1", "0,255,0,0.1", "0,0,255,0.1", "255,255,0,0.1", "255,155,0,0.1", "125,0,255,0.1"];
+
         //removed previous cards
         setCards([]);
         const tempCards = [];

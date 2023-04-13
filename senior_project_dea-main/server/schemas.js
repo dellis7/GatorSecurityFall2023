@@ -1,5 +1,6 @@
- const mongoose = require("mongoose")
+const mongoose = require("mongoose")
 
+//User information schema
 const userDBSchema = new mongoose.Schema(
     {
         fname:String,
@@ -15,6 +16,7 @@ const userDBSchema = new mongoose.Schema(
     }
 );
 
+//Traditional learn question schema
 const traditionalQuestionDBSchema = new mongoose.Schema(
     {
 		question:String,
@@ -32,6 +34,7 @@ const traditionalQuestionDBSchema = new mongoose.Schema(
     }
 );
 
+//Game question schema - game questions contain IDs for CYOA, DND, or Matching questions in the questionData array
 const gameQuestionDBSchema = new mongoose.Schema(
     {
         name:String,
@@ -44,6 +47,7 @@ const gameQuestionDBSchema = new mongoose.Schema(
     }
 )
 
+//CYOA question schema
 const CYOAQuestionDBSchema = new mongoose.Schema(
     {
         parentQuestionId:mongoose.Schema.Types.ObjectId,
@@ -60,6 +64,7 @@ const CYOAQuestionDBSchema = new mongoose.Schema(
     }
 )
 
+//DND question schema
 const DNDQuestionDBSchema = new mongoose.Schema(
     {
         parentQuestionId:mongoose.Schema.Types.ObjectId,
@@ -73,6 +78,7 @@ const DNDQuestionDBSchema = new mongoose.Schema(
     }
 )
 
+//Matching question schema
 const MatchingQuestionDBSchema = new mongoose.Schema(
     {
         parentQuestionId:mongoose.Schema.Types.ObjectId,
@@ -83,6 +89,7 @@ const MatchingQuestionDBSchema = new mongoose.Schema(
     }
 )
 
+//Model each schema
 mongoose.model("UserInfo", userDBSchema);
 mongoose.model("TraditionalQuestionInfo", traditionalQuestionDBSchema);
 mongoose.model("GameQuestionInfo", gameQuestionDBSchema);
