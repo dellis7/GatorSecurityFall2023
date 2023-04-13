@@ -1,6 +1,7 @@
 import React from 'react';
 import Table from 'react-bootstrap/Table';
 import GetConfig from '../../Config.js';
+import {CSVLink} from "react-csv";
 
 export default class Admin extends React.Component {
     constructor(props){
@@ -93,34 +94,56 @@ export default class Admin extends React.Component {
         return (<>You are not authorized to access this page.</>)
       }
 
-      return (
-        <Table striped bordered hover>
-            <thead>
-                <tr>
-                <th>#</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Learn Sections</th>
-                <th>Game Sections</th>
-                </tr>
-            </thead>
-            <tbody>
-                {
-                this.state.allUsers.map((user, index) => (
-                    <tr>
-                        <td>{index}</td>
-                        <td>{user["fname"]}</td>
-                        <td>{user["lname"]}</td>
-                        <td>{user["email"]}</td>
-                        {createLearnView(user)}
-                        {createGameView(user)}
-                    </tr>
-                ))
-                }
-            </tbody>
-        </Table>
+      const headerCSV = [
+          {label: "First Name", key: "firstName"},
+          {label: "Last Name", key: "lastName"},
+          {label: "Email", key: "email"},
+          {label: "Learn Score", key: "learnScore"},
+          {label: "Game Score", key: "gameScore"}
+      ];
 
+      let userCSV = [];
+      this.state.allUsers.map((user) => (
+          userCSV.push({firstName: user["fname"], lastName: user["lname"], email: user["email"], learnScore: user["learnscore"].length, gameScore: user["gamescore"].length})
+      ));
+      userCSV.push({});
+      userCSV.push({email: "Total Questions", learnScore: `${learnMax}`, gameScore: `${gameMax}`});
+      console.log(userCSV.at(0));
+
+      return (
+          <div>
+              <div style={{textAlign: "left"}}>
+                  <CSVLink className="btn btn-primary btn-lg" headers={headerCSV} data={userCSV} filename={"gatorsecurity-student-progress.csv"} target="_blank" style={{margin: 10}}>
+                      Download Student Progress Data
+                  </CSVLink>
+              </div>
+            <Table striped bordered hover>
+                <thead>
+                    <tr>
+                    <th>#</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Learn Sections</th>
+                    <th>Game Sections</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                    this.state.allUsers.map((user, index) => (
+                        <tr>
+                            <td>{index}</td>
+                            <td>{user["fname"]}</td>
+                            <td>{user["lname"]}</td>
+                            <td>{user["email"]}</td>
+                            {createLearnView(user)}
+                            {createGameView(user)}
+                        </tr>
+                    ))
+                    }
+                </tbody>
+            </Table>
+          </div>
       );
     }
     
