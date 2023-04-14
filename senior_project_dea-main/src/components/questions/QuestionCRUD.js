@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import QuestionCard from "./QuestionCard";
 import QuestionForm from "./QuestionForm";
 import GetConfig from '../../Config.js';
@@ -56,7 +56,7 @@ function QuestionCRUD() {
       <div className="container">
         {questionsData.map((entry, index) => (
           <QuestionCard
-            key={index}
+            key={entry._id}
             question_Card={entry.question}
             topic_Card={entry.topic}
             type_Card={entry.type}

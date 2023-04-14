@@ -17,10 +17,6 @@ const User = mongoose.model("UserInfo")
 const dotenv = require("dotenv")
 dotenv.config('./.env')
 
-//JWT information
-const jwtObj = require("jsonwebtoken");
-const Jwt_secret_Obj = process.env.JWT_SECRET;
-
 //Topic map
 const questionTopicMap = {other: 0, input_validation: 1, encoding_escaping: 2, xss: 3, sql_injection: 4, crypto: 5, auth: 6};
 
@@ -29,11 +25,9 @@ const questionTopicMap = {other: 0, input_validation: 1, encoding_escaping: 2, x
 const getGameCount = (async(req,res) =>{
     GameQuestion.count().then((count)=>{
         res.send({status:"ok", data:count});
-        return;
     })
     .catch((error)=>{
         res.send({status: "error", data:error});
-        return;
     });
 })
 
@@ -45,21 +39,18 @@ const getGameByTopic = (async(req,res) =>{
             //Retrieve all question data in database and send it
 			GameQuestion.find({}).then((data)=>{
 				res.send({status:200, data:data});
-                return;
 			});
         //Else if the topic is a numerical id
 		} else if(!isNaN(parseInt(req.params.topic))) {
             //Find specific question information in database and send it
 			GameQuestion.find({topic: req.params.topic}).then((data)=>{
 				res.send({status:200, data:data});
-                return;
 			});
         //Else the topic is a string identifier
 		} else {
             //Find specific question information in database and send it
 			GameQuestion.find({topic: questionTopicMap[req.params.topic]}).then((data)=>{
 				res.send({status:200, data:data});
-                return;
 			});
 		}
     //Catch any errors
@@ -76,7 +67,6 @@ const getGameByType = (async(req,res) =>{
         //Find the game questions and send them
         GameQuestion.find({type: req.params.type}).then((data) =>{
             res.send({status:200, data:data});
-            return;
         })
     //Catch any errors
     } catch(error) {
@@ -90,12 +80,11 @@ const getGameByType = (async(req,res) =>{
 const getGameById = (async(req,res) =>{
     try{
         //Cast provided ID to ObjectId
-        var id = mongoose.Types.ObjectId(req.params.id);
+        let id = mongoose.Types.ObjectId(req.params.id);
 
         //Find the game question and send it
         GameQuestion.findOne({_id: id}).then((data) =>{
             res.send({status:200, data:data});
-            return;
         })
     //Catch any errors
     } catch(error) {
@@ -134,7 +123,6 @@ const deleteGameById = (async(req,res) =>{
                 fs.readdirSync(path.join(__dirname, '..', 'uploads', 'cyoa')).forEach(file => {
                     if(file.indexOf(subquestion.toString()) !== -1) {
                         fs.unlinkSync(path.join(__dirname, '..', 'uploads', 'cyoa', file));
-                        return;
                     }
                 })
 
@@ -151,7 +139,6 @@ const deleteGameById = (async(req,res) =>{
                 fs.readdirSync(path.join(__dirname, '..', 'uploads', 'dnd')).forEach(file => {
                     if(file.indexOf(subquestion.toString()) !== -1) {
                         fs.unlinkSync(path.join(__dirname, '..', 'uploads', 'dnd', file));
-                        return;
                     }
                 })
 
@@ -177,9 +164,9 @@ const deleteGameById = (async(req,res) =>{
         
         //Find all users with references to the old questions and delete the old questions
         const usersWithOldQuestions = await User.find({gamescore: _id});
-        for(let i = 0; i < (await usersWithOldQuestions).length; i++) {
-            var user = usersWithOldQuestions[i];
-            var index = user.gamescore.indexOf(_id);
+        for(const element of usersWithOldQuestions) {
+            let user = element;
+            let index = user.gamescore.indexOf(_id);
             if(index > -1) {
                 user.gamescore.splice(index, 1);
                 await User.findOneAndUpdate({_id: user._id}, {$set: {gamescore:user.gamescore}});
@@ -289,7 +276,7 @@ const createGame = (async(req,res) =>{
 const getCYOAById = (async(req,res) =>{
     try{
         //Cast provided ID to ObjectId
-        var id = mongoose.Types.ObjectId(req.params.id);
+        let id = mongoose.Types.ObjectId(req.params.id);
 
         //Find the game question and send it
         CYOAQuestion.findOne({_id: id}).then((data) =>{
@@ -297,11 +284,9 @@ const getCYOAById = (async(req,res) =>{
             fs.readdirSync(path.join(__dirname, '..', 'uploads', 'cyoa')).forEach(file => {
                 if(file.indexOf(id) !== -1) {
                     data.stimulus = file;
-                    return;
                 }
             })
             res.send({status:200, data:data});
-            return;
         })
     //Catch any errors
     } catch(error) {
@@ -331,7 +316,7 @@ const deleteCYOAById = (async(req,res) =>{
         //Identify the CYOAQuestion and the GameQuestion it is linked to
         const subquestion = await CYOAQuestion.findById(_id);
         const parentQuestion = await GameQuestion.findById(subquestion.parentQuestionId);
-        var tempQuestionData = parentQuestion.questionData;
+        let tempQuestionData = parentQuestion.questionData;
     
         //Remove the parent's reference to the child
         const indexToRemove = tempQuestionData.indexOf(_id);
@@ -349,7 +334,6 @@ const deleteCYOAById = (async(req,res) =>{
         fs.readdirSync(path.join(__dirname, '..', 'uploads', 'cyoa')).forEach(file => {
             if(file.indexOf(_id.toString()) !== -1) {
                 fs.unlinkSync(path.join(__dirname, '..', 'uploads', 'cyoa', file));
-                return;
             }
         })
 
@@ -389,7 +373,7 @@ const updateCYOA = (async(req,res) =>{
     try {
         const _id = req.params.id;
 
-        var result = false;
+        let result = false;
 
         //NOTE: This request MUST be made as a multipart/form-data with zero or one files
 
@@ -409,7 +393,6 @@ const updateCYOA = (async(req,res) =>{
             fs.readdirSync(path.join(__dirname, '..', 'uploads', 'cyoa')).forEach(file => {
                 if(file.indexOf(_id.toString()) !== -1) {
                     fs.unlinkSync(path.join(__dirname, '..', 'uploads', 'cyoa', file));
-                    return;
                 }
             })
 
@@ -418,7 +401,7 @@ const updateCYOA = (async(req,res) =>{
             const ext = req.files[0].originalname.substring(dot);
 
             //Check for path injection attacks
-            var p = path.join(__dirname, '..', 'uploads', 'cyoa', _id.toString() + ext);
+            let p = path.join(__dirname, '..', 'uploads', 'cyoa', _id.toString() + ext);
             p = fs.realpath(p)
             if(!p.startsWith(__dirname)) {
                 res.sendStatus(400);
@@ -465,8 +448,8 @@ const updateCYOA = (async(req,res) =>{
 const createCYOA = (async(req,res) =>{
     try {
         //Perform file checks that can't be done in express validator
-        for(let i = 0; i < req.files.length; i++) {
-            const dotIndex = req.files[i].originalname.indexOf(".")
+        for(const element of req.files) {
+            const dotIndex = element.originalname.indexOf(".")
             
             if(dotIndex === -1) {
                 res.send({status: 400, error: "All provided image files must have an extension."});
@@ -529,7 +512,7 @@ const createCYOA = (async(req,res) =>{
         fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'cyoa', question._id.toString() + ext), req.files[0].buffer, "binary");
         
         //Update parent question with the ID of the new CYOAQuestion
-        var tempQuestionData = parentQuestion.questionData;
+        let tempQuestionData = parentQuestion.questionData;
         tempQuestionData.push(question._id);
 
         await GameQuestion.findByIdAndUpdate(pid, {questionData: tempQuestionData});
@@ -571,7 +554,7 @@ const checkCYOAAnswer = (async(req, res) => {
 const getDNDById = (async(req,res) =>{
     try {
         //Cast provided ID to ObjectId
-        var id = mongoose.Types.ObjectId(req.params.id);
+        let id = mongoose.Types.ObjectId(req.params.id);
 
         //Find the game question and send it
         DNDQuestion.findOne({_id: id}).then((data) =>{
@@ -579,11 +562,9 @@ const getDNDById = (async(req,res) =>{
             fs.readdirSync(path.join(__dirname, '..', 'uploads', 'dnd')).forEach(file => {
                 if(file.indexOf(id) !== -1) {
                     data.stimulus = file;
-                    return;
                 }
             })
             res.send({status:200, data:data});
-            return;
         })
     //Catch any errors
     } catch(error) {
@@ -613,7 +594,7 @@ const deleteDNDById = (async(req,res) =>{
         //Grab the DNDQuestion and its parent GameQuestion
         const subquestion = await DNDQuestion.findById(_id);
         const parentQuestion = await GameQuestion.findById(subquestion.parentQuestionId);
-        var tempQuestionData = parentQuestion.questionData;
+        let tempQuestionData = parentQuestion.questionData;
 
         //Remove the parent's reference to the child
         const indexToRemove = tempQuestionData.indexOf(_id);
@@ -630,7 +611,6 @@ const deleteDNDById = (async(req,res) =>{
         fs.readdirSync(path.join(__dirname, '..', 'uploads', 'dnd')).forEach(file => {
             if(file.indexOf(_id.toString()) !== -1) {
                 fs.unlinkSync(path.join(__dirname, '..', 'uploads', 'dnd', file));
-                return;
             }
         })
 
@@ -670,7 +650,7 @@ const updateDND = (async(req,res) =>{
     try {
         const _id = req.params.id;
 
-        var result = false;
+        let result = false;
 
         //If a file was sent with the request, put it in the file system
         if(req.files !== undefined && req.files.length === 1) {
@@ -686,7 +666,6 @@ const updateDND = (async(req,res) =>{
             fs.readdirSync(path.join(__dirname, '..', 'uploads', 'dnd')).forEach(file => {
                 if(file.indexOf(_id.toString()) !== -1) {
                     fs.unlinkSync(path.join(__dirname, '..', 'uploads', 'dnd', file));
-                    return;
                 }
             })
 
@@ -729,8 +708,8 @@ const updateDND = (async(req,res) =>{
 const createDND = (async(req,res) =>{
     try {
         //Perform file checks that can't be done in express validator
-        for(let i = 0; i < req.files.length; i++) {
-            const dotIndex = req.files[i].originalname.indexOf(".")
+        for(const element of req.files) {
+            const dotIndex = element.originalname.indexOf(".")
             
             if(dotIndex === -1) {
                 res.send({status: 400, error: "All provided image files must have an extension."});
@@ -790,7 +769,7 @@ const createDND = (async(req,res) =>{
         fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'dnd', question._id.toString() + ext), req.files[0].buffer, "binary");
         
         //Update parent question with the ID of the new CYOAQuestion
-        var tempQuestionData = parentQuestion.questionData;
+        let tempQuestionData = parentQuestion.questionData;
         tempQuestionData.push(question._id);
 
         await GameQuestion.findByIdAndUpdate(pid, {questionData: tempQuestionData});
@@ -809,11 +788,10 @@ const createDND = (async(req,res) =>{
 //Get matching question by id endpoint controller
 const getMatchingById = (async(req,res) =>{
     try {
-        var id = mongoose.Types.ObjectId(req.params.id);
+        let id = mongoose.Types.ObjectId(req.params.id);
         //Find the game question and send it
         MatchingQuestion.findOne({_id: id}).then((data) =>{
             res.send({status:200, data:data});
-            return;
         })
     //Catch any errors
     } catch(error) {
@@ -862,7 +840,7 @@ const createMatching = (async(req,res) =>{
         await question.save();
         
         //Update parent question with ID of new MatchingQuestion
-        var tempQuestionData = parentQuestion.questionData;
+        let tempQuestionData = parentQuestion.questionData;
         tempQuestionData.push(question._id);
 
         await GameQuestion.findByIdAndUpdate(pid, {questionData: tempQuestionData});
@@ -895,7 +873,7 @@ const updateMatching = (async(req, res) =>{
         const _id = req.params.id;
 
         //Update matching question
-        var result = await MatchingQuestion.findByIdAndUpdate(_id, {
+        let result = await MatchingQuestion.findByIdAndUpdate(_id, {
             //Don't allow updating of the parentId
             content: req.body.content
         });
@@ -937,7 +915,7 @@ const deleteMatching = (async(req, res) =>{
         const _id = req.params.id;
 
         //Delete the MatchingQuestion by id
-        var result = await MatchingQuestion.findByIdAndDelete(_id);
+        let result = await MatchingQuestion.findByIdAndDelete(_id);
 
         //If the operation was successful
         if (result) {

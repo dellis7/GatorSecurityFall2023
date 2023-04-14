@@ -73,7 +73,6 @@ const login = (async (req, res) => {
     }
 
     res.json({status:"error", error:"Invalid password."})
-    return;
 })
 
 //Get user info endpoint controller
@@ -86,13 +85,11 @@ const getUserInfo = (async (req, res) => {
         const uEmail = user.email;
         //Find a user based on email and return the data
         User.findOne({email: uEmail}).then((data)=>{
-            var allData = {dbUserData: data};
+            let allData = {dbUserData: data};
             res.send({status:"ok", data:allData});
-            return;
         })
         .catch((error)=>{
             res.send({status: "error", data:error});
-            return;
         });
     } catch(error) {
         return res.sendStatus(500);
@@ -156,11 +153,9 @@ const getAllUsers = (async (req, res) => {
         try{
             User.find({}).then((data)=>{
                 res.send(data);
-                return;
             })
             .catch((error)=>{
                 res.send({status: "error", data:error});
-                return;
             });
         } catch(error) {
             res.sendStatus(500);
@@ -192,12 +187,11 @@ const checkAnswerAndUpdateScore = (async (req, res) => {
             const dbUser = await User.findOne({email: uEmail});
 
             //Determine if this is a learn question or a fill in the blank game question
-            if (questionData.displayType === 'learn')
-            {
+            if (questionData.displayType === 'learn') {
                 //Update learn score
-                var existingRawScores = dbUser["learnscore"];
+                let existingRawScores = dbUser["learnscore"];
 
-                var existingScores = [];
+                let existingScores = [];
                 if(existingRawScores !== undefined) {
                     existingScores = existingRawScores;
                 }
@@ -212,9 +206,9 @@ const checkAnswerAndUpdateScore = (async (req, res) => {
             else
             {
                 //Update game score
-                var existingRawScores = dbUser["gamescore"];
+                let existingRawScores = dbUser["gamescore"];
 
-                var existingScores = [];
+                let existingScores = [];
                 if(existingRawScores !== undefined) {
                     existingScores = existingRawScores;
                 }
@@ -248,9 +242,9 @@ const updateScore = (async (req,res) => {
         const dbUser = await User.findOne({email: uEmail});
 
         //Update game score
-        var existingRawScores = dbUser["gamescore"];
+        let existingRawScores = dbUser["gamescore"];
 
-        var existingScores = [];
+        let existingScores = [];
         if(existingRawScores !== undefined) {
             existingScores = existingRawScores;
         }
@@ -276,7 +270,6 @@ const checkPrivileges = (async (req, res) => {
 
     if(Number(admin) === Number(1)) {
         res.send({status: 200});
-        return;
     }
     else if(admin === 2) {
         res.sendStatus(500);
