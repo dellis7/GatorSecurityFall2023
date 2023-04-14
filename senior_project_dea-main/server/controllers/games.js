@@ -110,11 +110,11 @@ const deleteGameById = (async(req,res) =>{
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 2) {
+    if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
-    else if (admin !== 1) {
+    else if (Number(admin) !== Number(1)) {
         res.sendStatus(403);
         return;
     }
@@ -210,11 +210,11 @@ const updateGame = (async(req,res) =>{
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 2) {
+    if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
-    else if (admin !== 1) {
+    else if (Number(admin) !== Number(1)) {
         res.sendStatus(403);
         return;
     }
@@ -255,11 +255,11 @@ const createGame = (async(req,res) =>{
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 2) {
+    if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
-    else if (admin !== 1) {
+    else if (Number(admin) !== Number(1)) {
         res.sendStatus(403);
         return;
     }
@@ -316,11 +316,11 @@ const deleteCYOAById = (async(req,res) =>{
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 2) {
+    if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
-    else if (admin !== 1) {
+    else if (Number(admin) !== Number(1)) {
         res.sendStatus(403);
         return;
     }
@@ -377,11 +377,11 @@ const updateCYOA = (async(req,res) =>{
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 2) {
+    if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
-    else if (admin !== 1) {
+    else if (Number(admin) !== Number(1)) {
         res.sendStatus(403);
         return;
     }
@@ -486,11 +486,11 @@ const createCYOA = (async(req,res) =>{
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 2) {
+    if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
-    else if (admin !== 1) {
+    else if (Number(admin) !== Number(1)) {
         res.sendStatus(403);
         return;
     }
@@ -598,11 +598,11 @@ const deleteDNDById = (async(req,res) =>{
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 2) {
+    if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
-    else if (admin !== 1) {
+    else if (Number(admin) !== Number(1)) {
         res.sendStatus(403);
         return;
     }
@@ -658,11 +658,11 @@ const updateDND = (async(req,res) =>{
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 2) {
+    if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
-    else if (admin !== 1) {
+    else if (Number(admin) !== Number(1)) {
         res.sendStatus(403);
         return;
     }
@@ -750,11 +750,11 @@ const createDND = (async(req,res) =>{
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 2) {
+    if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
-    else if (admin !== 1) {
+    else if (Number(admin) !== Number(1)) {
         res.sendStatus(403);
         return;
     }
@@ -828,11 +828,11 @@ const createMatching = (async(req,res) =>{
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 2) {
+    if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
-    else if (admin !== 1) {
+    else if (Number(admin) !== Number(1)) {
         res.sendStatus(403);
         return;
     }
@@ -882,11 +882,11 @@ const updateMatching = (async(req, res) =>{
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 2) {
+    if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
-    else if (admin !== 1) {
+    else if (Number(admin) !== Number(1)) {
         res.sendStatus(403);
         return;
     }
@@ -924,11 +924,11 @@ const deleteMatching = (async(req, res) =>{
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 2) {
+    if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
-    else if (admin !== 1) {
+    else if (Number(admin) !== Number(1)) {
         res.sendStatus(403);
         return;
     }

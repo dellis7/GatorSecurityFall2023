@@ -39,7 +39,7 @@ const getByTopic = (async(req,res)=>{
             //Retrieve all question data in database and send it
 			TraditionalQuestion.find({}).then((data)=>{
                 //Ensure answers aren't sent to the frontend unless you are an admin
-                if(isAdmin !== 1) {
+                if(Number(isAdmin) !== Number(1)) {
                     for(let i = 0; i < data.length; i++) {
                         data[i].answer = "The answer is available only as an administrator.";
                     }
@@ -52,7 +52,7 @@ const getByTopic = (async(req,res)=>{
             //Find specific question information in database and send it
 			TraditionalQuestion.find({topic: req.params.topic.toString(), displayType: req.body.displayType.toString()}).then((data)=>{
                 //Ensure answers aren't sent to the frontend unless you are an admin
-                if(isAdmin !== 1) {
+                if(Number(isAdmin) !== Number(1)) {
                     for(let i = 0; i < data.length; i++) {
                         data[i].answer = "The answer is available only as an administrator.";
                     }
@@ -65,7 +65,7 @@ const getByTopic = (async(req,res)=>{
             //Find specific question information in database and send it
 			TraditionalQuestion.find({topic: questionTopicMap[req.params.topic.toString()], displayType: req.body.displayType.toString()}).then((data)=>{
                 //Ensure answers aren't sent to the frontend unless you are an admin
-                if(isAdmin !== 1) {
+                if(Number(isAdmin) !== Number(1)) {
                     for(let i = 0; i < data.length; i++) {
                         data[i].answer = "The answer is available only as an administrator.";
                     }
@@ -87,11 +87,11 @@ const deleteById = (async(req,res) => {
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 2) {
+    if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
-    else if (admin !== 1) {
+    else if (Number(admin) !== Number(1)) {
         res.sendStatus(403);
         return;
     }
@@ -139,11 +139,11 @@ const update = (async(req,res) => {
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 2) {
+    if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
-    else if (admin !== 1) {
+    else if (Number(admin) !== Number(1)) {
         res.sendStatus(403);
         return;
     }
@@ -181,11 +181,11 @@ const create = (async(req,res)=>{
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 2) {
+    if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
-    else if (admin !== 1) {
+    else if (Number(admin) !== Number(1)) {
         res.sendStatus(403);
         return;
     }
