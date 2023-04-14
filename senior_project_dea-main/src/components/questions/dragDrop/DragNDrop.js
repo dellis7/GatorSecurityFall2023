@@ -193,7 +193,6 @@ function DragNDrop() {
                     strategy={verticalListSortingStrategy}
                   >
                     <div className="card body">
-                      {/* We need components that use the useSortable hook */}
                       {dndOptions.map((item) => (
                         <SortableItem key={item} id={item} />
                       ))}

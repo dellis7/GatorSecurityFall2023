@@ -66,7 +66,6 @@ function GameAdventurePage() {
           }).then((res) => res.json())
           .then((data)=>{
             setCYOAQuestionData_(data.data);
-            //console.log(data.data)
         })
     }
 

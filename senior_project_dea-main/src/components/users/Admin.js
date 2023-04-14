@@ -108,12 +108,11 @@ export default class Admin extends React.Component {
       ));
       userCSV.push({});
       userCSV.push({email: "Total Questions", learnScore: `${learnMax}`, gameScore: `${gameMax}`});
-      console.log(userCSV.at(0));
 
       return (
           <div>
               <div style={{textAlign: "left"}}>
-                  <CSVLink className="btn btn-primary btn-lg" headers={headerCSV} data={userCSV} filename={"gatorsecurity-student-progress.csv"} target="_blank" style={{margin: 10}}>
+                  <CSVLink className="btn btn-primary orange btn-lg" headers={headerCSV} data={userCSV} filename={"gatorsecurity-student-progress.csv"} target="_blank" style={{margin: 10}}>
                       Download Student Progress Data
                   </CSVLink>
               </div>

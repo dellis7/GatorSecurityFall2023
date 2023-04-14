@@ -13,27 +13,22 @@ function MyNavbar() {
 
   useEffect(() => {
     async function adminStatus() {
-      fetch(GetConfig().SERVER_ADDRESS + "/users/checkPrivileges", 
-        {
+      const response = fetch(GetConfig().SERVER_ADDRESS + "/users/checkPrivileges", {
           method: "POST",
           crossDomain:true,
           headers:{
             "Content-Type":"application/json",
             Accept:"application/json",
-            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+            "Access-Control-Allow-Origin": GetConfig().SERVER_ADDRESS,
         },
-        body:JSON.stringify({
-          token:window.localStorage.getItem("token"),
-        }),
-        }).then((res)=>res.json())
-        .then((data)=>{
-          if(data.status === 200) {
-            setIsAdmin(true);
-          }
-          else {
-            setIsAdmin(false);
-          }
-        });
+        body:JSON.stringify({token: window.localStorage.getItem("token")})})
+    
+      if ((await response).status === 200) {
+        setIsAdmin(true);
+      }
+      else {
+        setIsAdmin(false);
+      }
     }
     adminStatus();
 }, []);
