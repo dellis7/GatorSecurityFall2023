@@ -133,7 +133,7 @@ function DragNDrop() {
         //If request was a success
         if(res.status === 204) {
           //If there is no explanation
-          if (DNDQuestionData.explanation === "") {
+          if (DNDQuestionData.explanation === "" || DNDQuestionData.explanation === undefined) {
             alert("Congratulations! You beat the game!");
           }
           //Else there is an explanation
