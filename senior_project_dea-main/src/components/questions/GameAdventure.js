@@ -182,7 +182,7 @@ function GameAdventurePage() {
                 {/* A loop that dynamically populates buttons with the current CYOAQuestionData options */}
                 <div style={{borderColor: "#2C74B3", borderStyle: "solid", borderSize: "10px", padding:"20px", borderRadius: "25px"}}>
                     {CYOAQuestionData.options.map((option, index) => (
-                        <div key={index}>
+                        <div key={option}>
                             <button onClick={() => {submit(index)}} type="button" className="btn btn-primary btn-lg btn-block" >{option}</button>
                             <div style={spaceAfterQ}></div>
                         </div>
