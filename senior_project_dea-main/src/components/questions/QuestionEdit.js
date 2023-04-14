@@ -203,7 +203,7 @@ export default function QuestionEdit(props) {
               </div>
               <div className="container">
                 {editOptions.map((option, index) => (
-                  <div key={index} className="row row-cols-2">
+                  <div key={option} className="row row-cols-2">
                     <div className="col-11">
                       <textarea
                         required

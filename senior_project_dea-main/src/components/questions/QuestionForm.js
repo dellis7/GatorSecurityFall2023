@@ -208,7 +208,7 @@ export default function QuestionForm({
               </div>
               <div className="container">
                 {newOptions.map((option, index) => (
-                  <div key={index} className="row row-cols-2">
+                  <div key={option} className="row row-cols-2">
                     <div className="col-11">
                       <textarea
                         required
