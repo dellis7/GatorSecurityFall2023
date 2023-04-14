@@ -3,28 +3,25 @@
 ## Section 1: Cloning the repo:
 * Make a folder somewhere on your computer
 * `cd` to that folder from the command line
-* Run `git clone https://github.com/erickcgt/senior_project_dea.git` to clone the repo
+* Run `git clone https://github.com/cwojtak/GatorSecurity.git` to clone the repo
 
 ## Section 2: Installing Node.js packages
-Start by deleting the package.json and package-lock.json from the server folder.
 Run the following commands from the `senior_project_dea-main` directory:
-* `npm init`
 * `npm i mdb-react-ui-kit`
-* `npm install express nodemon`
-* `npm install mongoose`
+
+Run the following commands from the `senior_project_dea-main/server` directory:
 * `npm install cors`
-* `npm install bcryptjs`
-* `npm install jsonwebtoken`
-* `npm install --save dotenv`
-* `npm install express-validator`
 
 ## Section 3: Connecting to the database
-From the `senior_project_dea-main` directory, do the following:
+From the `senior_project_dea-main/server` directory, do the following:
 * Run `touch .env` to create a `.env` file
 * Open that file and add the following:
+* Note: You will need to replace the first three variables with the corect database credentials and JWT secret
 ```
 DB_USERNAME=username
 DB_PASSWORD=password
+JWT_SECRET='secret'
+LPORT=5000
 ```
 * In the `GatorSecurity` directory (parent to `senior_project_dea-main` directory) create a `.gitignore` file if one does not already exist
 * Add `.env` to the `gitignore` to prevent login credentials from being pushed to the repo
@@ -61,6 +58,6 @@ If you've made changes locally and you want to commit and push those changes to 
 ## Section 7: Running the app locally
 To start the backend run the following commands from the `senior_project_dea-main` directory:
 * `cd server`
-* `npm run start`
+* `npm start`
 
-To start the frontend run, open a second terminal in the `senior_project_dea-main` directory and run `npm run start`.
+To start the frontend run, open a second terminal in the `senior_project_dea-main` directory and run `npm start`.
