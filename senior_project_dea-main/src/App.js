@@ -25,24 +25,19 @@ function App() {
 
   useEffect(() => {
     async function getAdminStatus() {
-      fetch(GetConfig().SERVER_ADDRESS + "/users/checkPrivileges", 
-        {
+      const response = fetch(GetConfig().SERVER_ADDRESS + "/users/checkPrivileges", {
           method: "POST",
           crossDomain:true,
           headers:{
             "Content-Type":"application/json",
             Accept:"application/json",
-            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+            "Access-Control-Allow-Origin": GetConfig().SERVER_ADDRESS,
         },
-        body:JSON.stringify({
-          token:window.localStorage.getItem("token"),
-        }),
-        }).then((res)=>res.json())
-        .then(data=>{
-          if(data.status !== 200) {
-            window.location.href = "./welcome";
-          }
-        });
+        body:JSON.stringify({token: window.localStorage.getItem("token")})})
+    
+      if ((await response).status !== 200) {
+        window.location.href = "./welcome";
+      }
     }
 
     if(pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/' || pathname === '/log-out') return;
