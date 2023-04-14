@@ -151,7 +151,7 @@ const getAllUsers = (async (req, res) => {
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 1) {
+    if(Number(admin) === Number(1)) {
         //Fetch all users and send them back in the response
         try{
             User.find({}).then((data)=>{
@@ -167,7 +167,7 @@ const getAllUsers = (async (req, res) => {
             return;
         }
     }
-    else if(admin === 2) {
+    else if(Number(admin) === Number(2)) {
         res.sendStatus(500);
         return;
     }
@@ -274,7 +274,7 @@ const checkPrivileges = (async (req, res) => {
     //Check administrative privileges
     const admin = await privileges.isAdmin(req);
 
-    if(admin === 1) {
+    if(Number(admin) === Number(1)) {
         res.send({status: 200});
         return;
     }
