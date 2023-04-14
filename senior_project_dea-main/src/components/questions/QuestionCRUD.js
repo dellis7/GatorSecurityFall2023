@@ -7,7 +7,7 @@ import '../componentStyling/textStyling.css';
 function QuestionCRUD() {
 
   //this state holds the data of questions pulled from the database
-  const [questionsData, setQuestionData] = useState([]);
+  const [questionsData, setQuestionData] = React.useState([]);
 
   //this function sets the question data
   const handleQuestionsData = (data) => {
@@ -33,8 +33,10 @@ function QuestionCRUD() {
   };
 
   //question data is retrieved automatically on initial load of page
-  useEffect(() => {
-    retrieveQuestions();
+  React.useEffect(() => {
+    if (questionsData.length === 0) {
+      retrieveQuestions();
+    }
   });
 
   //CSS
