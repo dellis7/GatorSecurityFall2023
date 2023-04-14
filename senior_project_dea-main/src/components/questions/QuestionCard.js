@@ -67,7 +67,7 @@ export default function QuestionCard({
               <ul style={{ listStyleType: "none" }}>
                 {options_Card.map((opt, index) => {
                   return (
-                    <li key={index} style={text_blk}>
+                    <li key={opt} style={text_blk}>
                       {opt}{" "}
                     </li>
                   );
