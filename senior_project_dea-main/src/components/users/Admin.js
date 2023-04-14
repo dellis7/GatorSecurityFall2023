@@ -130,7 +130,7 @@ export default class Admin extends React.Component {
                 <tbody>
                     {
                     this.state.allUsers.map((user, index) => (
-                        <tr>
+                        <tr key={user["email"]}>
                             <td>{index}</td>
                             <td>{user["fname"]}</td>
                             <td>{user["lname"]}</td>

@@ -29,9 +29,8 @@ const getCount = (async(req,res) =>{
 //Get traditional learn questions by topic endpoint controller
 const getByTopic = (async(req,res)=>{
     //Check administrative status
-    let isAdmin = privileges.isAdmin(req);
-    
-    try{
+    var isAdmin = await privileges.isAdmin(req);
+    try {
         //If url is /questions/get/all (more literally if :topic is equal to all)
 		if(req.params.topic === "all") {
             //Retrieve all question data in database and send it

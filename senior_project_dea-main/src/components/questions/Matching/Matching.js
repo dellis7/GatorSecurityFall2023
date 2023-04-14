@@ -227,7 +227,7 @@ function Matching () {
                 </div>
                 <div className="row" style={{marginTop: 50}}>
                 {cards.map((card, index) => (
-                    <div key={index} className="col-3" style={{display: "flex", justifyContent:"center"}}>
+                    <div key={card.text} className="col-3" style={{display: "flex", justifyContent:"center"}}>
                     <MatchingCard
                         card={card}
                         handleChoice={handleChoice}
