@@ -66,6 +66,8 @@ export default function QuestionForm({
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault()
+    
     fetch(GetConfig().SERVER_ADDRESS + "/questions/create", {
       method: "POST",
       crossDomain: true,

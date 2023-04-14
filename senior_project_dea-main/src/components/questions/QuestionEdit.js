@@ -66,7 +66,9 @@ export default function QuestionEdit(props) {
   };
 
   //this function makes a call to the database to update the selected question with its changed data
-  const handleUpdate = () => {
+  const handleUpdate = (e) => {
+    e.preventDefault()
+
     fetch(`${GetConfig().SERVER_ADDRESS}/questions/update/${props.editID}`, {
       method: "PUT",
       crossDomain: true,
