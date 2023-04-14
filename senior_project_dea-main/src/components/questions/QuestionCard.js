@@ -138,7 +138,6 @@ function DeleteModal(props) {
           className="btn btn-danger"
           onClick={() => {
             DeleteQuestion(props.id_delete);
-            window.location.reload();
           }}
         >
           Remove
@@ -200,6 +199,7 @@ const DeleteQuestion = (removeID) => {
     }),
   }).then(() => {
     alert("Question was successfully deleted.");
+    window.location.reload();
   });
 };
 

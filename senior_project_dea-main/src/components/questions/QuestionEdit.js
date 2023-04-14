@@ -88,6 +88,7 @@ export default function QuestionEdit(props) {
       }),
     }).then(() => {
       alert("Question has been updated successfully.");
+      window.location.reload();
     });
   };
 

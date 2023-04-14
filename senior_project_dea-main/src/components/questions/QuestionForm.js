@@ -97,6 +97,7 @@ export default function QuestionForm({
       else if (response.status === 201)
       {
         alert("Question has been added successfully.");
+        window.location.reload();
       }
     });
   };
