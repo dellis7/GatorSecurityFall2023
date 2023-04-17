@@ -12,6 +12,7 @@ function MyNavbar() {
   const [isAdmin, setIsAdmin] = useState({isAdmin: false});
 
   useEffect(() => {
+    //Function that checks if user is an admin via backend request
     async function adminStatus() {
       const response = fetch(GetConfig().SERVER_ADDRESS + "/users/checkPrivileges", {
           method: "POST",
@@ -22,18 +23,21 @@ function MyNavbar() {
             "Access-Control-Allow-Origin": GetConfig().SERVER_ADDRESS,
         },
         body:JSON.stringify({token: window.localStorage.getItem("token")})})
-    
+      
+      //If user is an admin, set adminstatus to true
       if ((await response).status === 200) {
         setIsAdmin(true);
       }
+      //Else user is not an admin, set adminstatus to false
       else {
         setIsAdmin(false);
       }
     }
+    
+    //Initial function call to adminStatus
     adminStatus();
 }, []);
 
-/* Navbar CSS? */
 const navbarTitle = {
   color: "white",
   fontFamily: "Inter",

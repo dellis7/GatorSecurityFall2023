@@ -15,9 +15,15 @@ export default class SignUp extends Component {
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  //Function that handles the user submitted signup data
   handleSubmit(e){
+    //Needed for Mozilla Firefox. Without it, forms won't be properly submitted to the backend.
     e.preventDefault();
+
     const{fname, lname, email, password} = this.state;
+
+    //Function that registers the user in the backend
     fetch(GetConfig().SERVER_ADDRESS + "/users/register", {
       method: "POST",
       crossDomain:true,
@@ -40,6 +46,7 @@ export default class SignUp extends Component {
       }
     })
   }
+
   render() {
     return (
       <div>
@@ -49,6 +56,7 @@ export default class SignUp extends Component {
         <form onSubmit={this.handleSubmit}>
           <h3 className='title-name'>Sign Up</h3>
 
+          {/*First Name Input*/}
           <div className="mb-3">
             <label>First name</label>
             <input
@@ -59,11 +67,18 @@ export default class SignUp extends Component {
             />
           </div>
 
+          {/*Last Name Input*/}
           <div className="mb-3">
             <label>Last name</label>
-            <input type="text" className="form-control" placeholder="Enter last name..." onChange={e=>this.setState({lname:e.target.value})}/>
+            <input 
+              type="text" 
+              className="form-control" 
+              placeholder="Enter last name..." 
+              onChange={e=>this.setState({lname:e.target.value})}
+            />
           </div>
 
+          {/*Email Input*/}
           <div className="mb-3">
             <label>Email </label>
             <input
@@ -74,6 +89,7 @@ export default class SignUp extends Component {
             />
           </div>
 
+          {/*Password Input*/}
           <div className="mb-3">
             <label>Password</label>
             <input
@@ -84,11 +100,14 @@ export default class SignUp extends Component {
             />
           </div>
 
+          {/*Submit Button*/}
           <div className="d-grid">
             <button type="submit" className="btn btn-primary">
               Sign Up
             </button>
           </div>
+          
+          {/* This is the login redirect text */}
           <p className="forgot-password text-right">
             Already registered? <a href="/sign-in">Sign in!</a>
           </p>

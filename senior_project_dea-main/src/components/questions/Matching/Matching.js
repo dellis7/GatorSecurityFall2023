@@ -214,11 +214,14 @@ function Matching () {
         }
     }, [cards, choiceOne, choiceTwo, numCorrect]);
 
+    //If game hasn't fully loaded yet
     if(vocab.length === 0) {
         //Display loading page
         return <div>Loading...</div>;
     }
+    //Else game has fully loaded
     else {
+        //Render the memory matching page
         return(
             <div className="container">
                 <div className="row" style={{marginTop:50, justifyContent:"center"}}>

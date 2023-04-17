@@ -29,6 +29,7 @@ function GamePage() {
             loadGames()
         },[cyoaGameQuestions, dndGameQuestions, matchingGameQuestions])
 
+    //Function call to backend to get the game questions by each type (CYOA, DND, MM)
     const getGameQuestionsByType = (type_, setGameQuestionData_) => {
         fetch(GetConfig().SERVER_ADDRESS + "/games/getByType/" + type_, {
           method: "POST",
@@ -41,6 +42,7 @@ function GamePage() {
           body:JSON.stringify({}),
           }).then((res) => res.json())
           .then((data)=>{
+            //Set the data retrieved to their respective state variables (e.g., set CYOA data to cyoaGameQuestions)
             setGameQuestionData_(data);
         })
     }
@@ -51,7 +53,9 @@ function GamePage() {
 
     let cyoaQuestionDisplay = [];
 
+    //If CYOA game questions have been loaded from the backend
     if(cyoaGameQuestions.length !== 0) {
+        //Populate the CYOA card with every CYOA question
         for(let i = 0; i < cyoaGameQuestions.data.length; i++) {
             cyoaQuestionDisplay.push(
                 <div key={i}>
@@ -66,7 +70,9 @@ function GamePage() {
 
     let dndQuestionDisplay = [];
 
+    //If DND game questions have been loaded from the backend
     if(dndGameQuestions.length !== 0) {
+        //Populate the DND card with every DND question
         for(let i = 0; i < dndGameQuestions.data.length; i++) {
             dndQuestionDisplay.push(
                 <div key={i}>
@@ -81,7 +87,9 @@ function GamePage() {
 
     let matchingQuestionDisplay = [];
 
+    //If MM game questions have been loaded from the backend
     if(matchingGameQuestions.length !== 0) {
+        //Populate the MM card with every MM question
         for(let i = 0; i < matchingGameQuestions.data.length; i++) {
             matchingQuestionDisplay.push(
                 <div key={i}>
@@ -94,6 +102,7 @@ function GamePage() {
         }
     }
 
+    //The How To Play CYOA Button Function
     let CYOAInstructions = function() {
         let alertString = "";
         alertString += "In these choose your own adventure games, you'll be presented with one question at a time accompanied by an image.\n\n";
@@ -106,6 +115,7 @@ function GamePage() {
         alert(alertString);
     }
 
+    //The How To Play DND Button Function
     let DNDInstructions = function() {
         let alertString = "";
         alertString += "In these drag and drop games, you'll be given an image, a question, and multiple elements to drag into order.\n\n";
@@ -119,6 +129,7 @@ function GamePage() {
         alert(alertString);
     }
 
+    //The How To Play MM Button Function
     let MatchingInstructions = function() {
         let alertString = "";
         alertString += "In these memory matching games, you'll be given a bunch of flipped over cards with words or definitions on their front.\n\n";
@@ -133,6 +144,7 @@ function GamePage() {
         alert(alertString);
     }
 
+    //The How To Play Fill in the Blank Button Function
     let TraditionalInstructions = function() {
         let alertString = "";
         alertString += "In these fill in the blank games, you'll be presented with a scenario and then asked to type a short answer.\n\n";
@@ -146,6 +158,7 @@ function GamePage() {
     return (
       <div>
           <div className='card-container game'>
+            {/* This is the Choose Your Own Adventure Card */}
             <div className='card game'>
                 <img src="./pexels-pixabay-207580.jpg" className='img-size' alt="Bright Business Code"/>
                 <div className="card-body">
@@ -162,6 +175,7 @@ function GamePage() {
                     {cyoaQuestionDisplay}
                 </div>
             </div>
+            {/* This is the Drag and Drop Card */}
             <div className='card game'>
                 <img src="./security-4868165_1920.jpg" className='img-size' alt="Cyber Lock"/>
                 <div className="card-body">
@@ -178,6 +192,7 @@ function GamePage() {
                     {dndQuestionDisplay}
                 </div>
             </div>
+            {/* This is the Memory Matching Card */}
             <div className='card game'>
                 <img src="./artificial-intelligence-gf9b982dc3_1920.jpg" className='img-size' alt="Blue Digital Human Head"/>
                 <div className="card-body">
@@ -194,6 +209,7 @@ function GamePage() {
                     {matchingQuestionDisplay}
                 </div>
             </div>
+            {/* This is the Fill in the Blank Card */}
             <div className='card game'>
                 <img src="./kvalifik-3TiNowmZluA-unsplash.jpg" className='img-size' alt="Edgy Blue Computer Monitor"/>
                 <div className="card-body">

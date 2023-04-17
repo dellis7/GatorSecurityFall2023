@@ -20,6 +20,7 @@ function GameTraditionalPage() {
     const [questionData4, setQuestionData4] = React.useState('');
     const [questionData5, setQuestionData5] = React.useState('');
   
+    //Function that retrieves all the Fill in the Blank Questions
     const getQuestions = (topic_, setQuestionData_) => {
       fetch(GetConfig().SERVER_ADDRESS + "/questions/get/" + topic_, {
         method: "POST",
@@ -38,6 +39,8 @@ function GameTraditionalPage() {
         })
     }
 
+    //For every if statement below, determine if the Fill in the Blank category (e.g., Cross-Site Scripting) has been loaded
+    //If not, load the questions from the database and store them in their respective state variables (e.g., questionData1)
     if(questionData1.length === 0) {
     getQuestions("3", setQuestionData1);
     }
@@ -54,6 +57,7 @@ function GameTraditionalPage() {
     getQuestions("5", setQuestionData5);
     }
 
+    //Function that populates each Fill in the Blank tab (e.g., Cross-Site Scripting) with questions
     const createQuestions = (data) => {
         if(data.length === 0) return (<></>);
 
@@ -74,6 +78,7 @@ function GameTraditionalPage() {
         <div id="gamepagediv">
             <h1 className='h1-text'>Fill in the Blank Games</h1>
     
+            {/* Renders each of the 5 Fill in the Blank Game Categories */}
             <Tab.Container id="left-tabs-example" defaultActiveKey="first">
             <Row style={box}>
                 <Col sm={3}>
@@ -117,8 +122,7 @@ function GameTraditionalPage() {
             </Row>
             </Tab.Container>
         </div>
-        
-      );
+    );
 }
 
 export default GameTraditionalPage;

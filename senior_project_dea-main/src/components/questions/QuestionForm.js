@@ -1,16 +1,7 @@
 import { useState } from "react";
-
 import GetConfig from '../../Config.js';
 
-export default function QuestionForm({
-  question_form,
-  topic_form,
-  type_form,
-  options_form,
-  answer_form,
-  id_form,
-  displayType_form,
-}) {
+export default function QuestionForm() {
   //these states store the data fields for the question being added
   const [newQuestion, setNewQuestion] = useState("");
   const [newTopic, setNewTopic] = useState("");
@@ -19,18 +10,22 @@ export default function QuestionForm({
   const [newAnswer, setNewAnswer] = useState("");
   const [newDisplayType, setNewDisplayType] = useState("");
 
+  //this function changes the question field
   const handleQuestionChange = (value) => {
     setNewQuestion(value);
   };
 
+  //this function changes the topic field
   const handleTopicChange = (value) => {
     setNewTopic(value);
   };
 
+  //this function changes the display type field
   const handleDisplayTypeChange = (value) => {
     setNewDisplayType(value);
   };
 
+  //this function makes changes to the type field
   const handleTypeChange = (value) => {
     if (value === "1") {
       let array = [""];
@@ -46,25 +41,30 @@ export default function QuestionForm({
     setNewType(value);
   };
 
+  //this function makes changes to the option(s) field(s)
   const handleOptionsChange = (index, value) => {
     let tempOptions = [...newOptions];
     tempOptions[index] = value;
     setNewOptions(tempOptions);
   };
 
+  //this function makes a change to the answer field
   const handleAnswerChange = (value) => {
     setNewAnswer(value);
   };
 
+  //this function adds additional options to the question
   const handleAddOption = () => {
     setNewOptions((options) => [...options, ""]);
   };
 
+   //this function removes options a user does not want/need
   const handleRemoveOption = (value) => {
     let filter = newOptions.filter((option, index) => index !== value);
     setNewOptions(filter);
   };
 
+  //this function makes a call to the database to create a new question
   const handleSubmit = (e) => {
     e.preventDefault()
     

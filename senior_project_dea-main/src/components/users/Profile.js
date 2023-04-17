@@ -14,65 +14,73 @@ export default class ProfilePage extends React.Component {
     }
     
     componentDidMount(){
-      //See server.js for server.post(/userInfo)
-      fetch(GetConfig().SERVER_ADDRESS + "/users/userInfo", 
-        {
-          method: "POST",
-          crossDomain:true,
-          headers:{
-            "Content-Type":"application/json",
-            Accept:"application/json",
-            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-        },
-        body:JSON.stringify({
-          token:window.localStorage.getItem("token"),
-        }),
-        }).then((res)=>res.json())
-        .then(data=>{
-          this.setState({userInfo: data.data.dbUserData});
-        });
-        fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", 
-        {
-          method: "POST",
-          crossDomain:true,
-          headers:{
-            "Content-Type":"application/json",
-            Accept:"application/json",
-            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-        },
-        body:JSON.stringify({displayType:'learn'}),
-        }).then((res)=>res.json())
-        .then(data=>{
-          this.setState({learnQuestionCount: data.data})
-        });
-        fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", 
-        {
-          method: "POST",
-          crossDomain:true,
-          headers:{
-            "Content-Type":"application/json",
-            Accept:"application/json",
-            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-        },
-        body:JSON.stringify({displayType:'game'}),
-        }).then((res)=>res.json())
-        .then(data=>{
-          this.setState({gameQuestionCount: data.data})
-        });
-        fetch(GetConfig().SERVER_ADDRESS + "/games/getCount", 
-        {
-          method: "POST",
-          crossDomain:true,
-          headers:{
-            "Content-Type":"application/json",
-            Accept:"application/json",
-            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-        },
-        body:JSON.stringify({}),
-        }).then((res)=>res.json())
-        .then(data=>{
-          this.setState({allGamesCount: data.data})
-        });
+
+      //Function that pulls the current user's profile info from the backend
+      fetch(GetConfig().SERVER_ADDRESS + "/users/userInfo", {
+        method: "POST",
+        crossDomain:true,
+        headers:{
+          "Content-Type":"application/json",
+          Accept:"application/json",
+          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+      },
+      body:JSON.stringify({
+        //User is identified by their cookie assigned at login
+        token:window.localStorage.getItem("token"),
+      }),
+      }).then((res)=>res.json())
+      .then(data=>{
+        //Set userInfo with data retrieved from backend
+        this.setState({userInfo: data.data.dbUserData});
+      });
+
+      //Function that pulls the total number of questions from the backend
+      fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", {
+        method: "POST",
+        crossDomain:true,
+        headers:{
+          "Content-Type":"application/json",
+          Accept:"application/json",
+          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+      },
+      body:JSON.stringify({displayType:'learn'}),
+      }).then((res)=>res.json())
+      .then(data=>{
+        //Set the total number of learn questions to learnQuestionCount
+        this.setState({learnQuestionCount: data.data})
+      });
+
+      //Function that pulls the total number of questions from the backend
+      fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", {
+        method: "POST",
+        crossDomain:true,
+        headers:{
+          "Content-Type":"application/json",
+          Accept:"application/json",
+          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+      },
+      body:JSON.stringify({displayType:'game'}),
+      }).then((res)=>res.json())
+      .then(data=>{
+        //Set the total number of fill in the blank questions to gameQuestionCount
+        this.setState({gameQuestionCount: data.data})
+      });
+
+      //Function that pulls the total number of games from the backend
+      fetch(GetConfig().SERVER_ADDRESS + "/games/getCount", {
+        method: "POST",
+        crossDomain:true,
+        headers:{
+          "Content-Type":"application/json",
+          Accept:"application/json",
+          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+      },
+      body:JSON.stringify({}),
+      }).then((res)=>res.json())
+      .then(data=>{
+        //Set the total number of game questions (except for Fill in the Blank Questions) to allGamesCount
+        this.setState({allGamesCount: data.data})
+      });
     }
 
     //Everything after this has to do with web page rendering
@@ -101,7 +109,7 @@ export default class ProfilePage extends React.Component {
       let learnMax = this.state.learnQuestionCount;
       let learnPercentage = Math.floor(learnScore/learnMax * 100);
 
-      //What is rendered to the webpage
+      //This is the HTML that is rendered to the webpage
       return (
         <section style={container}>
           <h1 className='h1-text'>My Profile</h1>
@@ -116,7 +124,7 @@ export default class ProfilePage extends React.Component {
                         alt="Avatar" className="my-5" style={{ width: '80px' }} fluid />
                       <MDBTypography tag="h5">{fullName}</MDBTypography>
                       <MDBCardText>CS Undergraduate</MDBCardText>
-                      {/*LinkContainer adds routing to the Edit Profile button. Sends the user to /userInfo*/}
+                      {/* LinkContainer adds routing to the Edit Profile button. Sends the user to /userInfo */}
                       <LinkContainer to="/userInfo">
                         <MDBBtn outline color="light" style={{height: '36px', overflow: 'visible'}}>
                           Edit profile

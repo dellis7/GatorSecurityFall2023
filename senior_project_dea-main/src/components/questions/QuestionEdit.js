@@ -54,7 +54,7 @@ export default function QuestionEdit(props) {
     setEditAnswer(value);
   };
 
-  //this function adds aditional options to the question
+  //this function adds additional options to the question
   const handleAddOption = () => {
     setEditOptions((options) => [...options, ""]);
   };

@@ -11,65 +11,73 @@ export default class Admin extends React.Component {
       };
     }
     componentDidMount(){
-      fetch(GetConfig().SERVER_ADDRESS + "/users/allUsers", 
-        {
-          method: "POST",
-          crossDomain:true,
-          headers:{
-            "Content-Type":"application/json",
-            Accept:"application/json",
-            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-        },
-        body:JSON.stringify({
-          token:window.localStorage.getItem("token"),
-        }),
-        }).then((res)=>res.json())
-        .then(data=>{
-          this.setState({allUsers: data});
-        });
-        fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", 
-        {
-          method: "POST",
-          crossDomain:true,
-          headers:{
-            "Content-Type":"application/json",
-            Accept:"application/json",
-            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-        },
-        body:JSON.stringify({displayType:'learn'}),
-        }).then((res)=>res.json())
-        .then(data=>{
-          this.setState({learnQuestionCount: data.data})
-        });
-        fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", 
-        {
-          method: "POST",
-          crossDomain:true,
-          headers:{
-            "Content-Type":"application/json",
-            Accept:"application/json",
-            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-        },
-        body:JSON.stringify({displayType:'game'}),
-        }).then((res)=>res.json())
-        .then(data=>{
-          this.setState({gameQuestionCount: data.data})
-        });
-        fetch(GetConfig().SERVER_ADDRESS + "/games/getCount", 
-        {
-          method: "POST",
-          crossDomain:true,
-          headers:{
-            "Content-Type":"application/json",
-            Accept:"application/json",
-            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-        },
-        body:JSON.stringify({}),
-        }).then((res)=>res.json())
-        .then(data=>{
-          this.setState({allGamesCount: data.data})
-        });
+      //Function that pulls all user data from the backend
+      fetch(GetConfig().SERVER_ADDRESS + "/users/allUsers", {
+        method: "POST",
+        crossDomain:true,
+        headers:{
+          "Content-Type":"application/json",
+          Accept:"application/json",
+          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+      },
+      body:JSON.stringify({
+        token:window.localStorage.getItem("token"),
+      }),
+      }).then((res)=>res.json())
+      .then(data=>{
+        //Set user retrieved to allUsers variable
+        this.setState({allUsers: data});
+      });
+
+      //Function that pulls the total number of questions from the backend
+      fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", {
+        method: "POST",
+        crossDomain:true,
+        headers:{
+          "Content-Type":"application/json",
+          Accept:"application/json",
+          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+      },
+      body:JSON.stringify({displayType:'learn'}),
+      }).then((res)=>res.json())
+      .then(data=>{
+        //Set the total number of learn questions to learnQuestionCount
+        this.setState({learnQuestionCount: data.data})
+      });
+
+      //Function that pulls the total number of questions from the backend
+      fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", {
+        method: "POST",
+        crossDomain:true,
+        headers:{
+          "Content-Type":"application/json",
+          Accept:"application/json",
+          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+      },
+      body:JSON.stringify({displayType:'game'}),
+      }).then((res)=>res.json())
+      .then(data=>{
+        //Set the total number of fill in the blank questions to gameQuestionCount
+        this.setState({gameQuestionCount: data.data})
+      });
+
+      //Function that pulls the total number of games from the backend
+      fetch(GetConfig().SERVER_ADDRESS + "/games/getCount", {
+        method: "POST",
+        crossDomain:true,
+        headers:{
+          "Content-Type":"application/json",
+          Accept:"application/json",
+          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+      },
+      body:JSON.stringify({}),
+      }).then((res)=>res.json())
+      .then(data=>{
+        //Set the total number of game questions (except for Fill in the Blank Questions) to allGamesCount
+        this.setState({allGamesCount: data.data})
+      });
     }
+
     render(){
       if(this.state.allUsers == null){
         return <div></div>
@@ -78,12 +86,14 @@ export default class Admin extends React.Component {
       let learnMax = this.state.learnQuestionCount;
       let gameMax = this.state.allGamesCount + this.state.gameQuestionCount;
 
+      //Function that calculates the total learn questions played/total learn questions
       function createLearnView(user){
         let learnScore = user["learnscore"].length;
         let totalScore = ["Total Score: " + learnScore + "/" + learnMax + "\n", "\n"]
         return <th style={{whiteSpace:"pre-wrap", wordWrap:"break-word"}}>{totalScore}</th>
       }
 
+      //Function that calculates the total game questions played/total game questions
       function createGameView(user){
         let gameScore = user["gamescore"].length;
         let totalScore = ["Total Score: " + gameScore + "/" + gameMax + "\n", "\n"]
@@ -111,11 +121,14 @@ export default class Admin extends React.Component {
 
       return (
           <div>
-              <div style={{textAlign: "left"}}>
-                  <CSVLink className="btn btn-primary orange btn-lg" headers={headerCSV} data={userCSV} filename={"gatorsecurity-student-progress.csv"} target="_blank" style={{margin: 10}}>
-                      Download Student Progress Data
-                  </CSVLink>
-              </div>
+            {/* Download Student Progress Data Button */}
+            <div style={{textAlign: "left"}}>
+                <CSVLink className="btn btn-primary orange btn-lg" headers={headerCSV} data={userCSV} filename={"gatorsecurity-student-progress.csv"} target="_blank" style={{margin: 10}}>
+                    Download Student Progress Data
+                </CSVLink>
+            </div>
+
+            {/* Table that displays each individual user's data/scores */}
             <Table striped bordered hover>
                 <thead>
                     <tr>

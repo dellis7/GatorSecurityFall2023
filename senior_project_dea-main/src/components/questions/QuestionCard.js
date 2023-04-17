@@ -105,7 +105,7 @@ export default function QuestionCard({
   );
 }
 
-//this component handles the deletion of a question by calling the DeleteQuestion() function
+//This component handles the deletion of a question by calling the DeleteQuestion() function
 function DeleteModal(props) {
   return (
     <Modal
@@ -147,7 +147,7 @@ function DeleteModal(props) {
   );
 }
 
-//this component handles the editing of a question
+//This component handles the editing of a question
 function EditModal(props) {
   return (
     <Modal

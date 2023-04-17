@@ -11,9 +11,10 @@ export default class WelcomePage extends React.Component {
       userInfo: null
     };
   }
+
   componentDidMount(){
-    fetch(GetConfig().SERVER_ADDRESS + "/users/userInfo", 
-      {
+    //Function that pulls the current user's profile info from the backend
+    fetch(GetConfig().SERVER_ADDRESS + "/users/userInfo", {
         method: "POST",
         crossDomain:true,
         headers:{
@@ -22,13 +23,16 @@ export default class WelcomePage extends React.Component {
           "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
       },
       body:JSON.stringify({
+        //User is identified by their cookie assigned at login
         token:window.localStorage.getItem("token"),
       }),
       }).then((res)=>res.json())
       .then(data=>{
+        //Set the state of userInfo to info of user retrieved from database
         this.setState({userInfo: data.data});
-      });
+    });
   }
+
   render(){
     const carousel = {    
         position: "absolute",
@@ -90,7 +94,7 @@ export default class WelcomePage extends React.Component {
         <div className='w-100 d-block' style={{backgroundColor:"#2613D8", height: "20rem"}}>
           <img src='./creatorImg.png' style={image} alt="Lightbulb"></img>
           <h5 style={title}>The Creators</h5>
-          <p style={caption}>Development of this website was continued in Spring 2023 by University of Florida seniors Kerry Hannigan, Dylan Tosh, Connor Wojtak, Jacob Boney, and Brian Hoblin under Professor Cheryl Resch.</p>
+          <p style={caption}>Development of this website was continued in Spring 2023 by University of Florida seniors Jacob Boney, Kerry Hannigan, Brian Hoblin, Dylan Tosh, and Connor Wojtak under Professor Cheryl Resch.</p>
         </div>
       </Carousel.Item>
     </Carousel>
