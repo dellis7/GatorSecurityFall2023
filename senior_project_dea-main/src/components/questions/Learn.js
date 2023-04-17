@@ -40,6 +40,7 @@ function LearnPage() {
   const [questionData5, setQuestionData5] = React.useState('');
   const [questionData6, setQuestionData6] = React.useState('');
 
+  //Function that pulls the traditional questions from the backend
   const getQuestions = (topic_, setQuestionData_) => {
     fetch(GetConfig().SERVER_ADDRESS + "/questions/get/" + topic_, {
       method: "POST",
@@ -57,6 +58,9 @@ function LearnPage() {
         setQuestionData_(data);
       })
   }
+
+  //For every if statement below, determine if the Traditional Question category (e.g., Input Validation) has been loaded
+  //If not, load the questions from the database and store them in their respective state variables (e.g., questionData1)
   if(questionData1.length === 0) {
     getQuestions("1", setQuestionData1);
   }
@@ -76,6 +80,7 @@ function LearnPage() {
     getQuestions("6", setQuestionData6);
   }
 
+  //Function that populates each Traditional Question tab (e.g., Input Validation) with questions
   const createQuestions = (data) => {
     if(data.length === 0) return (<></>);
 
@@ -95,6 +100,8 @@ function LearnPage() {
   return (
     <div id="learndiv" style={container}>
       <h4 className='h1-text'>Learn</h4>
+
+      {/* Renders each of the 6 Traditional Question Categories */}
       <Tabs fill justify defaultActiveKey="first" style={tabs}>
         <Tab key={1} eventKey="first" title="Input Validation" style={tab}>
           {createQuestions(questionData1)}

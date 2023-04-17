@@ -19,11 +19,13 @@ import Admin from './components/users/Admin'
 import QuestionCRUD from './components/questions/QuestionCRUD';
 import DragNDrop from './components/questions/dragDrop/DragNDrop';
 import Matching from "./components/questions/Matching/Matching";
+
 function App() {
   
   const { pathname } = useLocation();
 
   useEffect(() => {
+    //Function that checks if user is an admin via backend request
     async function getAdminStatus() {
       const response = fetch(GetConfig().SERVER_ADDRESS + "/users/checkPrivileges", {
           method: "POST",
@@ -35,15 +37,20 @@ function App() {
         },
         body:JSON.stringify({token: window.localStorage.getItem("token")})})
     
+      //If user is not an admin, redirect them to the welcome page
       if ((await response).status !== 200) {
         window.location.href = "./welcome";
       }
     }
 
     if(pathname === '/sign-in' || pathname === '/sign-up' || pathname === '/' || pathname === '/log-out') return;
+
+    //If an anonymous user attempts to access the site, send them to the sign-in page
     if(window.localStorage.getItem("token") === null) {
       window.location.href = "./sign-in";
     }
+    
+    //If a user attempts to access the /admin or /modify_questions pages, check if they are an admin
     if(pathname === '/admin' || pathname === '/modify_questions') {
       getAdminStatus();
     }
@@ -76,7 +83,6 @@ function App() {
         </div>
       </div>
     </>
-    
   );
 }
 

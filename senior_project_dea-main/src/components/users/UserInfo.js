@@ -6,17 +6,14 @@ export default class UserInfo extends Component{
 
     constructor(props){
         super(props);
-        //Defines the current state, in this case the information of the current user
         this.state = {
             userInfo: ""
         };
-        //Adds functionality to the Submit button
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    //componentDidMount sends a HTTP POST request to backend
     componentDidMount(){
-        //See server.js for server.post(/userInfo)
+        //Function that pulls the current user's profile info from the backend
         fetch(GetConfig().SERVER_ADDRESS + "/users/userInfo", {
         method: "POST",
         crossDomain:true,
@@ -25,13 +22,11 @@ export default class UserInfo extends Component{
             Accept:"application/json",
             "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
         },
-        //Turns the token received from the backend into a JSON string
         body:JSON.stringify({
+            //User is identified by their cookie assigned at login
             token:window.localStorage.getItem("token"),
         }),
-        //Get a response (res) from the server, then the json format of it?
         }).then((res)=>res.json())
-        //Use the user data from the response
         .then((data)=>{
             //Set the state of userInfo to info of user retrieved from database
             this.setState({userInfo: data.data.dbUserData});
@@ -51,32 +46,30 @@ export default class UserInfo extends Component{
 
             const{fname, lname, email, password} = this.state;
 
-            //Make a PUT HTTP request to backend (See server.js for server.put(/user/update/:id))
+            //Function that updates the user's profile information
             fetch(`${GetConfig().SERVER_ADDRESS}/users/update/${_id}`, {
-            method: "PUT",
-            crossDomain: true,
-            headers:{
-                "Content-Type":"application/json",
-                Accept:"application/json",
-                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-            },
-            body:JSON.stringify({
-                fname,
-                lname,
-                email, 
-                password
-                }),
-            //Get a response (res) from the server
+                method: "PUT",
+                crossDomain: true,
+                headers:{
+                    "Content-Type":"application/json",
+                    Accept:"application/json",
+                    "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+                },
+                body:JSON.stringify({
+                    fname,
+                    lname,
+                    email, 
+                    password
+                    }),
             }).then((res)=>{
                 //If a good response
                 if (res.ok) {
-                    //Send a popup stating successful edit, then redirect page to user profile (/myprofile)
+                    //Send a popup stating successful edit, delete user's token, then redirect page to /sign-in
                     alert("Update successful! You will now be logged out.")
                     window.localStorage.removeItem("token");
                     window.location.href = "./sign-in";
                 }
-                else if (res.status === 422)
-                {
+                else if (res.status === 422) {
                     alert("Unsuccessful update. This email address may already be in use.")
                 }
                 //Else a bad response
@@ -144,7 +137,7 @@ export default class UserInfo extends Component{
                 {/*Submit Button*/}
                 <div className="d-grid">
                     <button type="submit" className="btn btn-primary">
-                    Submit
+                        Submit
                     </button>
                 </div>
             </form>

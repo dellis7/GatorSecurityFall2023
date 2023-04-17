@@ -14,7 +14,7 @@ function QuestionCRUD() {
     setQuestionData(data);
   };
 
-  //this function retrieves question data from the database
+  //this function retrieves all question data from the database
   const retrieveQuestions = () => {
     fetch(GetConfig().SERVER_ADDRESS + "/questions/get/all", {
       method: "POST",
@@ -34,6 +34,7 @@ function QuestionCRUD() {
 
   //question data is retrieved automatically on initial load of page
   React.useEffect(() => {
+    //if questionsData has not been loaded yet, load the questions
     if (questionsData.length === 0) {
       retrieveQuestions();
     }
@@ -45,11 +46,14 @@ function QuestionCRUD() {
     paddingTop: "50px",
   };
 
-  //This is what is rendered to the user
   return (
     <div className="container" style={container}>
+
+      {/* This is where the Add a New Question Form is rendered */}
       <h1 className='h1-text'>Add a New Question</h1>
       <QuestionForm />
+
+      {/* This is where the Existing Questions are rendered */}
       <div style={{ marginTop: 100 }}>
         <h1 className='h1-text'>Existing Questions</h1>
       </div>
@@ -67,6 +71,7 @@ function QuestionCRUD() {
           />
         ))}
       </div>
+      
     </div>
   );
 }
