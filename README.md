@@ -62,6 +62,11 @@ To start the backend run the following commands from the `senior_project_dea-mai
 
 To start the frontend run, open a second terminal in the `senior_project_dea-main` directory and run `npm start`.
 
+# About the Included Database    
+A database with an existing admin user and questions is included with distributions of this project.         
+
+The administrative user has a default email `admin@localhost` and a default password `admin` that can be changed when using the application while logged in as the admin. It is highly recommended that these default credentials be changed when first using the application.
+
 # Backend Documentation
 
 For the complete backend API documentation, please refer to the PDF in the main Github folder. Accompanying this documentation are example Postman requests available under the Postman folder in the main Github folder. You can refer to [this document](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-from-github-repositories:~:text=an%20API.-,Importing%20from%20GitHub%20repositories,-You%20can%20import) to see how to import these example requests into Postman.
