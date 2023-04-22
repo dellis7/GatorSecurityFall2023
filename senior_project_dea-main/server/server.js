@@ -23,7 +23,7 @@ connectDb()
 
 //Tell server to listen on port specified in ENV file
 server.listen(process.env.LPORT, ()=>{
-    console.log("Server started on port " + toString(process.env.LPORT));
+    console.log("Server started on port " + process.env.LPORT);
 })
 
 //Reveal uploaded CYOA and DND images
