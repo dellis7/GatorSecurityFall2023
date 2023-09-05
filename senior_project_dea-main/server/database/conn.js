@@ -3,7 +3,8 @@ const dotenv = require("dotenv")
 
 //Prepare environment file and connection string
 dotenv.config('./.env')
-const mongoUrl = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.pfxgixu.mongodb.net/?retryWrites=true&w=majority`
+//const mongoUrl = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.pfxgixu.mongodb.net/?retryWrites=true&w=majority`
+const mongoUrl = `mongodb+srv://admin:admin@cluster0.haqdv9a.mongodb.net/?retryWrites=true&w=majority`
 
 //Perform connection
 const connectDb = async() =>
