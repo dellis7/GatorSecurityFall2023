@@ -139,14 +139,14 @@ export default function QuestionForm() {
 
   return (
     <div className="card">
-      <div>
+      {/* <div>
         DEBUG
         {newDisplayType !== "" && newAnswer !== "" && newQuestion !== "" && newTopic !== "" && newType !== "" && (
           <div>
             Display, Answer, Question, Topic, and Type are all set!
           </div>
         )}
-      </div>
+      </div> */}
       <div className="card-body">
         <form onSubmit={handleSubmit}>
         <div

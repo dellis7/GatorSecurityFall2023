@@ -1,0 +1,10 @@
+.table-container {
+    width: 80vw; /* Set the desired width for the container */
+    overflow: auto; /* Enable scrolling when table content exceeds the container width */
+    margin-left: 2vw;
+  }
+  
+  .scrollable-table {
+    border-collapse: collapse;
+    min-width: 100%; /* Ensure the table takes up the full available width */
+  }
