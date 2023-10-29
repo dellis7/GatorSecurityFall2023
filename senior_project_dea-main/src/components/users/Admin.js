@@ -127,6 +127,11 @@ export default class Admin extends React.Component {
                     Download Student Progress Data
                 </CSVLink>
             </div>
+            <div style={{textAlign: "left"}}>
+                <button className="btn btn-primary blue btn-lg" style={{margin: 10}}>
+                    Invite Students
+                </button>
+            </div>
 
             {/* Table that displays each individual user's data/scores */}
             <Table striped bordered hover>
@@ -136,6 +141,7 @@ export default class Admin extends React.Component {
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Email</th>
+                    <th>Class</th>
                     <th>Learn Sections</th>
                     <th>Game Sections</th>
                     </tr>
@@ -148,6 +154,7 @@ export default class Admin extends React.Component {
                             <td>{user["fname"]}</td>
                             <td>{user["lname"]}</td>
                             <td>{user["email"]}</td>
+                            <td>COP3400</td>
                             {createLearnView(user)}
                             {createGameView(user)}
                         </tr>

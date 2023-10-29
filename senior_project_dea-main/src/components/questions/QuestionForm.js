@@ -9,6 +9,20 @@ export default function QuestionForm() {
   const [newOptions, setNewOptions] = useState([""]);
   const [newAnswer, setNewAnswer] = useState("");
   const [newDisplayType, setNewDisplayType] = useState("");
+  const [newGameType, setNewGameType] = useState("");
+
+  //CYOA
+  const [groupOfQuestions, setGroupOfQuestions] = useState([""]);
+  const [groupOfImagePaths, setGroupOfImagePaths] = useState([""]);
+  const [groupOfImages, setGroupOfImages] = useState([""]);
+  const [groupOfGroupOfAnswers,setGroupOfGroupOfAnswers] = useState([[""]]);
+  
+  //DND
+  const [image, setImage] = useState([""]);
+  const [pathOfImage, setPathOfImage] = useState("");
+
+  //MM
+  //const [setOfPairsOfAnswers]
 
   //this function changes the question field
   const handleQuestionChange = (value) => {
@@ -25,11 +39,22 @@ export default function QuestionForm() {
     setNewDisplayType(value);
   };
 
+  //this function changes the game type field
+  const handleGameTypeChange = (value) => {
+    setNewGameType(value);
+
+    if(value === "FITB") {
+      handleTypeChange("1");
+      console.log('FITB selected')
+    }
+  }
+
   //this function makes changes to the type field
   const handleTypeChange = (value) => {
     if (value === "1") {
       let array = [""];
       setNewOptions(array);
+      console.log('type set to 1, options set')
     } else if (value === "2") {
       let array = ["True", "False"];
       setNewOptions(array);
@@ -68,38 +93,43 @@ export default function QuestionForm() {
   const handleSubmit = (e) => {
     e.preventDefault()
     
-    fetch(GetConfig().SERVER_ADDRESS + "/questions/create", {
-      method: "POST",
-      crossDomain: true,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body: JSON.stringify({
-        question: newQuestion,
-        type: newType,
-        topic: newTopic,
-        options: newOptions,
-        answer: newAnswer,
-        displayType: newDisplayType,
-        token: window.localStorage.getItem("token"),
-      }),
-    }).then((response) => {
-      if(response.status === 500)
-      {
-        alert("Internal server error. Please try again")
-      }
-      else if (response.status === 422)
-      {
-        alert("Please ensure all fields are properly filled out and try again.")
-      }
-      else if (response.status === 201)
-      {
-        alert("Question has been added successfully.");
-        window.location.reload();
-      }
-    });
+    if (newDisplayType === "learn" || newGameType === "FITB") {
+      fetch(GetConfig().SERVER_ADDRESS + "/questions/create", {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+        },
+        body: JSON.stringify({
+          question: newQuestion,
+          type: newType,
+          topic: newTopic,
+          options: newOptions,
+          answer: newAnswer,
+          displayType: newDisplayType,
+          token: window.localStorage.getItem("token"),
+        }),
+      }).then((response) => {
+        if(response.status === 500)
+        {
+          alert("Internal server error. Please try again")
+        }
+        else if (response.status === 422)
+        {
+          alert("Please ensure all fields are properly filled out and try again.")
+        }
+        else if (response.status === 201)
+        {
+          alert("Question has been added successfully.");
+          window.location.reload();
+        }
+      });
+    } else if (newDisplayType === "game") {
+      //here will be the fetch function(s) that inserts a new game question
+
+    }
   };
 
   const text = {
@@ -109,48 +139,17 @@ export default function QuestionForm() {
 
   return (
     <div className="card">
+      <div>
+        DEBUG
+        {newDisplayType !== "" && newAnswer !== "" && newQuestion !== "" && newTopic !== "" && newType !== "" && (
+          <div>
+            Display, Answer, Question, Topic, and Type are all set!
+          </div>
+        )}
+      </div>
       <div className="card-body">
         <form onSubmit={handleSubmit}>
-          <div className="form-group" style={{ textAlign: "left" }}>
-            <label htmlFor="formQuestion" style={text}>
-              Question
-            </label>
-            <textarea
-              required
-              className="form-control"
-              id="formQuestion"
-              rows="2"
-              placeholder="Enter your question here"
-              onChange={(e) => {
-                handleQuestionChange(e.target.value);
-              }}
-            ></textarea>
-          </div>
-          <div
-            className="form-group"
-            style={{ textAlign: "left", marginTop: 10 }}
-          >
-            <label htmlFor="form-topic" style={text}>
-              Topic
-            </label>
-            <select
-              required
-              className="form-select"
-              id="form-topic"
-              onChange={(e) => {
-                handleTopicChange(e.target.value);
-              }}
-            >
-              <option value="">Choose a Topic</option>
-              <option value="1">Input Validation</option>
-              <option value="2">Encoding & Escaping</option>
-              <option value="3">Cross-Site Scripting</option>
-              <option value="4">SQL Injection</option>
-              <option value="5">Cryptography</option>
-              <option value="6">User Authentication</option>
-            </select>
-          </div>
-          <div
+        <div
             className="form-group"
             style={{ textAlign: "left", marginTop: 10 }}
           >
@@ -170,98 +169,242 @@ export default function QuestionForm() {
               <option value="game">Game Page</option>
             </select>
           </div>
-          <div
+          {newDisplayType === "game" && (
+            <div
             className="form-group"
             style={{ textAlign: "left", marginTop: 10 }}
-          >
-            <label htmlFor="form-type" style={text}>
-              Type
-            </label>
-            <select
-              className="form-select"
-              id="form-type"
-              required
-              onChange={(e) => {
-                handleTypeChange(e.target.value);
-              }}
             >
-              <option value="">Choose a Question Type</option>
-              <option value="1">Text Response</option>
-              <option value="2">True/False</option>
-              <option value="3">Multiple Choice</option>
-            </select>
-          </div>
-          {newType === "3" && (
-            <div
-              className="form-group"
-              style={{ textAlign: "left", marginTop: 10 }}
-            >
-              <div className="container">
-                <label style={text}>Enter your options below</label>
-                <button
-                  type="button"
-                  className="btn btn-primary btn-sm"
-                  style={{ marginLeft: 10 }}
-                  onClick={() => {
-                    handleAddOption();
+              <label htmlFor="form-topic" style={text}>
+                Game Type
+              </label>
+              <select
+                required
+                className="form-select"
+                id="form-topic"
+                onChange={(e) => {
+                  handleGameTypeChange(e.target.value);
+                }}
+              >
+                <option value="">Choose a Game Type</option>
+                <option value="CYOA">Choose Your Own Adventure</option>
+                <option value="DND">Drag and Drop</option>
+                <option value="MM">Memory Matching</option>
+                <option value="FITB">Fill in the Blank</option>
+              </select>
+              {newGameType === "CYOA" && (
+              <div>
+                CYOA
+              </div>            
+              )}
+              {newGameType === "DND" && (
+              <div>
+                DND
+              </div>            
+              )}
+              {newGameType === "MM" && (
+              <div>
+                MM
+              </div>            
+              )}
+              {newGameType === "FITB" && (
+              <div>
+                <div className="form-group" style={{ textAlign: "left" }}>
+                  <label htmlFor="formQuestion" style={text}>
+                    Question
+                  </label>
+                  <textarea
+                    required
+                    className="form-control"
+                    id="formQuestion"
+                    rows="2"
+                    placeholder="Enter your question here"
+                    onChange={(e) => {
+                      handleQuestionChange(e.target.value);
+                    }}
+                  ></textarea>
+                </div>
+                <div
+                className="form-group"
+                style={{ textAlign: "left", marginTop: 10 }}
+                >
+                  <label htmlFor="form-topic" style={text}>
+                    Topic
+                  </label>
+                  <select
+                    required
+                    className="form-select"
+                    id="form-topic"
+                    onChange={(e) => {
+                      handleTopicChange(e.target.value);
+                    }}
+                  >
+                    <option value="">Choose a Topic</option>
+                    <option value="1">Input Validation</option>
+                    <option value="2">Encoding & Escaping</option>
+                    <option value="3">Cross-Site Scripting</option>
+                    <option value="4">SQL Injection</option>
+                    <option value="5">Cryptography</option>
+                    <option value="6">User Authentication</option>
+                  </select>
+                </div>
+                <div
+                className="form-group"
+                style={{ textAlign: "left", marginTop: 10 }}
+                >
+                  <label htmlFor="form-answer" style={text}>
+                    Answer
+                  </label>
+                  <textarea
+                    className="form-control"
+                    rows="1"
+                    placeholder="Enter your solution to the question here"
+                    required
+                    onChange={(e) => {
+                      handleAnswerChange(e.target.value);
+                    }}
+                  ></textarea>
+                </div>
+              </div>            
+              )}
+            </div>
+            
+          )}
+          {newDisplayType === "learn" && (
+            <div>
+              <div className="form-group" style={{ textAlign: "left" }}>
+                <label htmlFor="formQuestion" style={text}>
+                  Question
+                </label>
+                <textarea
+                  required
+                  className="form-control"
+                  id="formQuestion"
+                  rows="2"
+                  placeholder="Enter your question here"
+                  onChange={(e) => {
+                    handleQuestionChange(e.target.value);
+                  }}
+                ></textarea>
+              </div>
+              <div
+                className="form-group"
+                style={{ textAlign: "left", marginTop: 10 }}
+              >
+                <label htmlFor="form-topic" style={text}>
+                  Topic
+                </label>
+                <select
+                  required
+                  className="form-select"
+                  id="form-topic"
+                  onChange={(e) => {
+                    handleTopicChange(e.target.value);
                   }}
                 >
-                  +
-                </button>
+                  <option value="">Choose a Topic</option>
+                  <option value="1">Input Validation</option>
+                  <option value="2">Encoding & Escaping</option>
+                  <option value="3">Cross-Site Scripting</option>
+                  <option value="4">SQL Injection</option>
+                  <option value="5">Cryptography</option>
+                  <option value="6">User Authentication</option>
+                </select>
               </div>
-              <div className="container">
-                {newOptions.map((option, index) => (
-                  <div key={option} className="row row-cols-2">
-                    <div className="col-11">
-                      <textarea
-                        required
-                        className="form-control"
-                        rows="1"
-                        style={{ marginTop: 10 }}
-                        value={option}
-                        placeholder="Enter your option here"
-                        onChange={(e) => {
-                          handleOptionsChange(index, e.target.value);
-                        }}
-                      ></textarea>
-                    </div>
-                    {index >= 2 && (
-                      <div className="col-1">
-                        <button
-                          required
-                          type="button"
-                          className="btn btn-danger btn-sm"
-                          style={{ marginTop: 13 }}
-                          onClick={() => {
-                            handleRemoveOption(index);
-                          }}
-                        >
-                          X
-                        </button>
-                      </div>
-                    )}
+              <div
+                className="form-group"
+                style={{ textAlign: "left", marginTop: 10 }}
+              >
+                <label htmlFor="form-type" style={text}>
+                  Type
+                </label>
+                <select
+                  className="form-select"
+                  id="form-type"
+                  required
+                  onChange={(e) => {
+                    handleTypeChange(e.target.value);
+                  }}
+                >
+                  <option value="">Choose a Question Type</option>
+                  <option value="1">Text Response</option>
+                  <option value="2">True/False</option>
+                  <option value="3">Multiple Choice</option>
+                </select>
+              </div>
+              
+              {newType === "3" && (
+                <div
+                  className="form-group"
+                  style={{ textAlign: "left", marginTop: 10 }}
+                >
+                  <div className="container">
+                    <label style={text}>Enter your options below</label>
+                    <button
+                      type="button"
+                      className="btn btn-primary btn-sm"
+                      style={{ marginLeft: 10 }}
+                      onClick={() => {
+                        handleAddOption();
+                      }}
+                    >
+                      +
+                    </button>
                   </div>
-                ))}
+                  <div className="container">
+                    {newOptions.map((option, index) => (
+                      <div key={index} className="row row-cols-2">
+                        <div className="col-11">
+                          <textarea
+                            required
+                            className="form-control"
+                            rows="1"
+                            style={{ marginTop: 10 }}
+                            value={option}
+                            placeholder="Enter your option here"
+                            onChange={(e) => {
+                              handleOptionsChange(index, e.target.value);
+                            }}
+                          ></textarea>
+                        </div>
+                        {index >= 2 && (
+                          <div className="col-1">
+                            <button
+                              required
+                              type="button"
+                              className="btn btn-danger btn-sm"
+                              style={{ marginTop: 13 }}
+                              onClick={() => {
+                                handleRemoveOption(index);
+                              }}
+                            >
+                              X
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div
+                className="form-group"
+                style={{ textAlign: "left", marginTop: 10 }}
+              >
+                <label htmlFor="form-answer" style={text}>
+                  Answer
+                </label>
+                <textarea
+                  className="form-control"
+                  rows="1"
+                  placeholder="Enter your solution to the question here"
+                  required
+                  onChange={(e) => {
+                    handleAnswerChange(e.target.value);
+                  }}
+                ></textarea>
               </div>
             </div>
           )}
-          <div
-            className="form-group"
-            style={{ textAlign: "left", marginTop: 10 }}
-          >
-            <label htmlFor="form-answer" style={text}>
-              Answer
-            </label>
-            <textarea
-              className="form-control"
-              rows="1"
-              placeholder="Enter your solution to the question here"
-              required
-              onChange={(e) => {
-                handleAnswerChange(e.target.value);
-              }}
-            ></textarea>
-          </div>
           <button
             type="submit"
             className="btn btn-primary btn-lg"
