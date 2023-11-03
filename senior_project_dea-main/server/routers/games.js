@@ -4,7 +4,11 @@ const multer = require('multer')
 const router = express.Router()
 
 //Prepare multer for file uploads
-const storage = multer.memoryStorage()
+const storage = multer.memoryStorage({
+    limits: {
+        fileSize: 8000000
+    }
+})
 const upload = multer({
     storage: storage,
     limits: {
