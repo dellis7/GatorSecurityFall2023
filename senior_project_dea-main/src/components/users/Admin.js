@@ -137,12 +137,13 @@ export default class Admin extends React.Component {
       return (
           <div>
             {/* Functionality to invite a student to a class */}
-            <div className="tlmargins align-left" style={{textAlign: 'left'}}>
+            <div className="tlmargins align-left flex-sa" style={{textAlign: 'left'}}>
+              <div>
               <div style={{fontSize: '28px'}}>
                 Invite Students!
               </div>
               <div className="flex-sb" style={{marginTop: '2vh', width: '25%'}}>
-                <div style={{paddingLeft: '0.5vw'}}>Email(s)</div>
+                <div style={{paddingLeft: '0.5vw'}}>Email</div>
 
                 <div>
                   <label htmlFor="email"></label>
@@ -150,11 +151,11 @@ export default class Admin extends React.Component {
                 </div>
                 
               </div>
-              <div style={{paddingLeft: '5vw', fontSize: '10px', margin: '10px'}}>
+              {/* <div style={{paddingLeft: '5vw', fontSize: '10px', margin: '10px'}}>
                   -- Pro tip:  paste a list of emails separated
                   <br></br>
                   by commas to invite several students at once!
-              </div>
+              </div> */}
               <div className="flex-sb" style={{marginTop: '4vh', width: '25%'}}>
                 <div style={{paddingLeft: '0.5vw'}}>Class</div>
 
@@ -166,6 +167,29 @@ export default class Admin extends React.Component {
 
               <div className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
                   Submit
+              </div>
+              </div>
+
+              <div>
+                <div style={{fontSize: '28px'}}>
+                  Add a Class!
+                </div>
+
+                <div className="flex-sb" style={{marginTop: '2vh', width: '25%'}}>
+                  <div style={{paddingLeft: '0.5vw'}}>
+                    Class Name
+                  </div>
+
+                  <div>
+                    <label htmlFor="newclass"></label>
+                    <input type="text" id="newclass" name="newclass" />
+                  </div>
+                </div>
+
+                <div className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
+                  Submit
+                </div>
+
               </div>
             </div>
 

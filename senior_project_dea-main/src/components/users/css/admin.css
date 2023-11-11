@@ -18,3 +18,8 @@
     display: flex;
     justify-content: space-between;
 }
+
+.flex-sa {
+    display: flex;
+    justify-content: space-around;
+}
