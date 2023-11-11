@@ -3,7 +3,7 @@
 ## Section 1: Cloning the repo:
 * Make a folder somewhere on your computer
 * `cd` to that folder from the command line
-* Run `git clone https://github.com/cwojtak/GatorSecurity.git` to clone the repo
+* Run `git clone [https://github.com/cwojtak/GatorSecurity.git](https://github.com/dellis7/GatorSecurityFall2023.git)` to clone the repo
 
 ## Section 2: Installing Node.js packages
 Run the following commands from the `senior_project_dea-main` directory:
