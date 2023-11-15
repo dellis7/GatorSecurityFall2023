@@ -11,11 +11,12 @@ import GamePage from './components/questions/Game';
 import GameTraditionalPage from './components/questions/GameTraditional';
 import GameAdventurePage from './components/questions/GameAdventure';
 import ProfilePage from './components/users/Profile';
-import Login from './components/users/Login'
-import SignUp from './components/users/SignUp'
-import Logout from './components/users/Logout'
-import UserInfo from './components/users/UserInfo'
-import Admin from './components/users/Admin'
+import Login from './components/users/Login';
+import SignUp from './components/users/SignUp';
+import Logout from './components/users/Logout';
+import UserInfo from './components/users/UserInfo';
+import Admin from './components/users/Admin';
+import ClassManagement from './components/users/classManagement';
 import QuestionCRUD from './components/questions/QuestionCRUD';
 import DragNDrop from './components/questions/dragDrop/DragNDrop';
 import Matching from "./components/questions/Matching/Matching";
@@ -78,6 +79,7 @@ function App() {
               <Route path="/userInfo" element={<UserInfo />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/modify_questions" element={<QuestionCRUD/>} />
+              <Route path="/admin/classmanagement" element={<ClassManagement/>} />
             </Routes>
           </div>
         </div>

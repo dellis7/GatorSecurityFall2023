@@ -1,0 +1,25 @@
+.tlmargins {
+    margin-top: 2vw;
+    margin-left: 2vw;
+}
+
+.align-left {
+    float: 'left';
+    width: auto;
+}
+
+.debug {
+    background-color: lightblue;
+    border: 10px;
+    border-color: black;
+}
+
+.flex-sb {
+    display: flex;
+    justify-content: space-between;
+}
+
+.flex-sa {
+    display: flex;
+    justify-content: space-around;
+}
