@@ -16,6 +16,7 @@ server.use(express.urlencoded({extended:true}))
 const userRoutes = require('./routers/users')
 const questionRoutes = require('./routers/questions')
 const gameRoutes = require('./routers/games')
+const classRoutes = require('./routers/classes')
 
 //Connect database
 const connectDb = require('./database/conn')
@@ -35,3 +36,4 @@ server.use('/uploads/dnd', express.static('./uploads/dnd'))
 server.use('/users', userRoutes)
 server.use('/questions', questionRoutes)
 server.use('/games', gameRoutes)
+server.use('/classes', classRoutes)

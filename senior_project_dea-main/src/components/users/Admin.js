@@ -10,9 +10,15 @@ export default class Admin extends React.Component {
     constructor(props){
       super(props)
       this.state = {
-        allUsers: null
+        allUsers: null,
+        cname: "",
+        inviteClass:"",
+        email:"",
+
       };
+      this.handleSubmitAddClass = this.handleSubmitAddClass.bind(this);
     }
+
     componentDidMount(){
       //Function that pulls all user data from the backend
       fetch(GetConfig().SERVER_ADDRESS + "/users/allUsers", {
@@ -81,6 +87,34 @@ export default class Admin extends React.Component {
       });
     }
 
+    //Inviting students or adding a new class
+    handleSubmitAddClass(e) {
+        //Needed for Mozilla Firefox. Without it, forms won't be properly submitted to the backend.
+        e.preventDefault();
+
+        const cname = this.state.cname
+
+        //Function that registers the user in the backend
+        fetch(GetConfig().SERVER_ADDRESS + "/classes/createClass", {
+            method: "POST",
+            crossDomain:true,
+            headers:{
+                "Content-Type":"application/json",
+                Accept:"application/json",
+                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+            },
+            body:JSON.stringify({
+                cname
+            }),
+        }).then((res)=>res.json())
+            .then((data)=>{
+                if(data.status==="ok"){
+                    alert("test success"); //TODO change
+                    window.location.href="./admin"
+                }
+            })
+    }
+
     
 
     render(){
@@ -147,7 +181,10 @@ export default class Admin extends React.Component {
 
                 <div>
                   <label htmlFor="email"></label>
-                  <input type="text" id="emails" name="emails" />
+                  <input type="text" id="emails" name="emails"
+                         placeholder={"Emails to Invite"}
+                         onChange={e=>this.setState({email:e.target.value})}
+                  />
                 </div>
                 
               </div>
@@ -161,7 +198,10 @@ export default class Admin extends React.Component {
 
                 <div>
                   <label htmlFor="class"></label>
-                  <input type="text" id="class" name="class" />
+                  <input type="text" id="class" name="class"
+                         placeholder={"Name of Class"}
+                         onChange={e=>this.setState({inviteClass:e.target.value})}
+                  />
                 </div>
               </div>
 
@@ -171,26 +211,35 @@ export default class Admin extends React.Component {
               </div>
 
               <div>
-                <div style={{fontSize: '28px'}}>
-                  Add a Class!
-                </div>
+                <form onSubmit={this.handleSubmitAddClass}>
+                    <div style={{fontSize: '28px'}}>
+                      Add a Class!
+                    </div>
 
-                <div className="flex-sb" style={{marginTop: '2vh', width: '25%'}}>
-                  <div style={{paddingLeft: '0.5vw'}}>
-                    Class Name
-                  </div>
+                    <div className="flex-sb" style={{marginTop: '2vh', width: '25%'}}>
+                      <div style={{paddingLeft: '0.5vw'}}>
+                        Class Name
+                      </div>
 
-                  <div>
-                    <label htmlFor="newclass"></label>
-                    <input type="text" id="newclass" name="newclass" />
-                  </div>
-                </div>
+                      <div>
+                        <label htmlFor="newclass"></label>
+                        <input type="text" id="newclass" name="newclass"
+                               placeholder={"Enter new class name"}
+                               onChange={e=>this.setState({cname:e.target.value})}
+                        />
+                      </div>
+                    </div>
 
-                <div className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
-                  Submit
-                </div>
+                    <div className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
+                        <button type="submit" className="btn btn-primary">
+                            Test {/*TODO change*/}
+                        </button>
+
+                    </div>
+                </form>
 
               </div>
+
             </div>
 
             {/* Download Student Progress Data Button */}
