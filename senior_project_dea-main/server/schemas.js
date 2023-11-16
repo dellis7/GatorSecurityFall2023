@@ -92,13 +92,12 @@ const MatchingQuestionDBSchema = new mongoose.Schema(
 //Class schema
 const ClassDBSchema = new mongoose.Schema(
     {
-        teacher:Array,
-        students:Array,
-        name:String,
-        joinCode:String,
+        name:{type:String, unique:true},
+        educator:String,
+        students:{type:Array, default:null}
     },
     {
-        collection:"ClassInfo"
+        collection:"Classes"
     }
 )
 

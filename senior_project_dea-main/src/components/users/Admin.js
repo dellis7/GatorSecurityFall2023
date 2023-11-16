@@ -10,16 +10,39 @@ export default class Admin extends React.Component {
     constructor(props){
       super(props)
       this.state = {
+        userInfo: null,
         allUsers: null,
+        studentEmail: "",
         cname: "",
         inviteClass:"",
         email:"",
 
       };
       this.handleSubmitAddClass = this.handleSubmitAddClass.bind(this);
+      this.handleSubmitAddStudent = this.handleSubmitAddStudent.bind(this);
     }
 
     componentDidMount(){
+
+        //Function that pulls the current user's profile info from the backend
+        fetch(GetConfig().SERVER_ADDRESS + "/users/userInfo", {
+            method: "POST",
+            crossDomain:true,
+            headers:{
+                "Content-Type":"application/json",
+                Accept:"application/json",
+                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+            },
+            body:JSON.stringify({
+                //User is identified by their cookie assigned at login
+                token:window.localStorage.getItem("token"),
+            }),
+        }).then((res)=>res.json())
+            .then(data=>{
+                //Set userInfo with data retrieved from backend
+                this.setState({userInfo: data.data.dbUserData});
+            });
+
       //Function that pulls all user data from the backend
       fetch(GetConfig().SERVER_ADDRESS + "/users/allUsers", {
         method: "POST",
@@ -93,6 +116,7 @@ export default class Admin extends React.Component {
         e.preventDefault();
 
         const cname = this.state.cname
+        const educatorEmail = this.state.userInfo["email"]
 
         //Function that registers the user in the backend
         fetch(GetConfig().SERVER_ADDRESS + "/classes/createClass", {
@@ -104,16 +128,93 @@ export default class Admin extends React.Component {
                 "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
             },
             body:JSON.stringify({
-                cname
+                cname,
+                educatorEmail
             }),
         }).then((res)=>res.json())
             .then((data)=>{
                 if(data.status==="ok"){
-                    alert("test success"); //TODO change
+                    alert("Class Created!");
                     window.location.href="./admin"
+                }
+                else if (data.status==="classExists"){
+                    alert("This class name already exists!")
                 }
             })
     }
+
+    //Remove class (current user must own class)
+    handleSubmitRemoveClass(e){
+        //Needed for Mozilla Firefox. Without it, forms won't be properly submitted to the backend.
+        e.preventDefault();
+
+        const cname = this.state.cname
+        const educatorEmail = this.state.userInfo["email"]
+
+        //Function that removes class from backend
+        fetch(GetConfig().SERVER_ADDRESS + "/classes/removeClass", {
+            method: "POST",
+            crossDomain:true,
+            headers:{
+                "Content-Type":"application/json",
+                Accept:"application/json",
+                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+            },
+            body:JSON.stringify({
+                cname,
+                educatorEmail
+            }),
+        }).then((res)=>res.json())
+            .then((data)=>{
+                if(data.status==="ok"){
+                    alert("Class Deleted!");
+                    window.location.href="./admin"
+                }
+                else if (data.status==="noSuchClass"){
+                    alert("This class name doesn't exist!")
+                }
+                else if (data.status==="notClassOwner"){
+                    alert("You aren't this class's owner!")
+                }
+            })
+    }
+
+    handleSubmitAddStudent(e){
+        //Needed for Mozilla Firefox. Without it, forms won't be properly submitted to the backend.
+        e.preventDefault();
+
+        const studentEmail = this.state.studentEmail;
+        const className = this.state.inviteClass;
+        const educatorEmail = this.state.userInfo["email"]
+
+        fetch(GetConfig().SERVER_ADDRESS + "/classes/addStudent", {
+            method: "POST",
+            crossDomain:true,
+            headers:{
+                "Content-Type":"application/json",
+                Accept:"application/json",
+                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+            },
+            body:JSON.stringify({
+                studentEmail,
+                className,
+                educatorEmail
+            }),
+        }).then((res)=>res.json())
+            .then((data)=>{
+                if(data.status==="ok"){
+                    alert(studentEmail + " added to class " + className);
+                    window.location.href="./admin"
+                }
+                else if (data.status==="noSuchStudent"){
+                    alert("This student doesn't exist!")
+                }
+                else if (data.status==="noSuchClass"){
+                    alert("You don't own a class with this name!")
+                }
+            })
+    }
+
 
     
 
@@ -173,6 +274,7 @@ export default class Admin extends React.Component {
             {/* Functionality to invite a student to a class */}
             <div className="tlmargins align-left flex-sa" style={{textAlign: 'left'}}>
               <div>
+              <form onSubmit={this.handleSubmitAddStudent}>
               <div style={{fontSize: '28px'}}>
                 Invite Students!
               </div>
@@ -183,7 +285,7 @@ export default class Admin extends React.Component {
                   <label htmlFor="email"></label>
                   <input type="text" id="emails" name="emails"
                          placeholder={"Emails to Invite"}
-                         onChange={e=>this.setState({email:e.target.value})}
+                         onChange={e=>this.setState({studentEmail:e.target.value})}
                   />
                 </div>
                 
@@ -204,10 +306,10 @@ export default class Admin extends React.Component {
                   />
                 </div>
               </div>
-
-              <div className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
+              <button className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}} type="submit">
                   Submit
-              </div>
+              </button>
+              </form>
               </div>
 
               <div>
@@ -230,12 +332,10 @@ export default class Admin extends React.Component {
                       </div>
                     </div>
 
-                    <div className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
-                        <button type="submit" className="btn btn-primary">
-                            Test {/*TODO change*/}
-                        </button>
+                    <button type="submit" className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
+                        Submit
 
-                    </div>
+                    </button>
                 </form>
 
               </div>
