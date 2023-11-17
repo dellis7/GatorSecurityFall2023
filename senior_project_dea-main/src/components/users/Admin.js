@@ -5,6 +5,7 @@ import {CSVLink} from "react-csv";
 import { LinkContainer } from 'react-router-bootstrap';
 import "./css/tables.css"
 import "./css/admin.css"
+import "./css/inputs.css"
 
 export default class Admin extends React.Component {
     constructor(props){
@@ -137,56 +138,45 @@ export default class Admin extends React.Component {
       return (
           <div>
             {/* Functionality to invite a student to a class */}
-            <div className="tlmargins align-left flex-sa" style={{textAlign: 'left'}}>
-              <div>
-              <div style={{fontSize: '28px'}}>
+            <div className="tlrmargins align-left flex-sa" style={{textAlign: 'left'}}>
+              <div style={{width: '25vw'}}>
+              <div style={{fontSize: '28px', paddingLeft: '2vw'}}>
                 Invite Students!
               </div>
-              <div className="flex-sb" style={{marginTop: '2vh', width: '25%'}}>
-                <div style={{paddingLeft: '0.5vw'}}>Email</div>
+              <div style={{marginTop: '2vh', width: '90%'}}>
 
-                <div>
-                  <label htmlFor="email"></label>
-                  <input type="text" id="emails" name="emails" />
-                </div>
-                
-              </div>
-              {/* <div style={{paddingLeft: '5vw', fontSize: '10px', margin: '10px'}}>
-                  -- Pro tip:  paste a list of emails separated
-                  <br></br>
-                  by commas to invite several students at once!
-              </div> */}
-              <div className="flex-sb" style={{marginTop: '4vh', width: '25%'}}>
-                <div style={{paddingLeft: '0.5vw'}}>Class</div>
+                  <label className="text-label" htmlFor="email">Email</label>
+                  <input className="text-form" type="text" id="email" name="email" />
 
-                <div>
-                  <label htmlFor="class"></label>
-                  <input type="text" id="class" name="class" />
-                </div>
               </div>
 
-              <div className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
+              <div style={{marginTop: '4vh', width: '90%'}}>
+
+                <label className="text-label" htmlFor="class">Class</label>
+                <input className="text-form" type="text" id="class" name="class" />
+
+              </div>
+
+              <div className="btn btn-primary blue btn-lg" style={{marginTop: '5vh', marginLeft: '2vw'}}>
                   Submit
               </div>
               </div>
 
-              <div>
-                <div style={{fontSize: '28px'}}>
+              <div style={{width: '25vw'}}>
+                <div style={{fontSize: '28px', paddingLeft: '2vw'}}>
                   Add a Class!
                 </div>
 
-                <div className="flex-sb" style={{marginTop: '2vh', width: '25%'}}>
-                  <div style={{paddingLeft: '0.5vw'}}>
+                <div style={{marginTop: '2vh', width: '90%'}}>
+                  {/* <div style={{paddingLeft: '0.5vw'}}>
                     Class Name
-                  </div>
-
-                  <div>
-                    <label htmlFor="newclass"></label>
-                    <input type="text" id="newclass" name="newclass" />
-                  </div>
+                  </div> */}
+                    <label className="text-label" htmlFor="newclass">Class Name</label>
+                    <input className="text-form" type="text" id="newclass" name="newclass" />
+                  
                 </div>
 
-                <div className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
+                <div className="btn btn-primary blue btn-lg" style={{marginTop: '5vh', marginLeft: '2vw'}}>
                   Submit
                 </div>
 

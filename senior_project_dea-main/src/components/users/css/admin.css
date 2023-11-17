@@ -3,6 +3,12 @@
     margin-left: 2vw;
 }
 
+.tlrmargins {
+    margin-top: 2vw;
+    margin-left: 2vw;
+    margin-right: 2vw;
+}
+
 .align-left {
     float: 'left';
     width: auto;
@@ -10,7 +16,13 @@
 
 .debug {
     background-color: lightblue;
-    border: 10px;
+    border: 2px solid;
+    border-color: black;
+}
+
+.debug-red {
+    background-color: palevioletred;
+    border: 2px solid;
     border-color: black;
 }
 
