@@ -11,10 +11,39 @@ export default class Admin extends React.Component {
     constructor(props){
       super(props)
       this.state = {
-        allUsers: null
+        userInfo: null,
+        allUsers: null,
+        studentEmail: "",
+        cname: "",
+        inviteClass:"",
+        email:"",
+
       };
+      this.handleSubmitAddClass = this.handleSubmitAddClass.bind(this);
+      this.handleSubmitAddStudent = this.handleSubmitAddStudent.bind(this);
     }
+
     componentDidMount(){
+
+        //Function that pulls the current user's profile info from the backend
+        fetch(GetConfig().SERVER_ADDRESS + "/users/userInfo", {
+            method: "POST",
+            crossDomain:true,
+            headers:{
+                "Content-Type":"application/json",
+                Accept:"application/json",
+                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+            },
+            body:JSON.stringify({
+                //User is identified by their cookie assigned at login
+                token:window.localStorage.getItem("token"),
+            }),
+        }).then((res)=>res.json())
+            .then(data=>{
+                //Set userInfo with data retrieved from backend
+                this.setState({userInfo: data.data.dbUserData});
+            });
+
       //Function that pulls all user data from the backend
       fetch(GetConfig().SERVER_ADDRESS + "/users/allUsers", {
         method: "POST",
@@ -82,6 +111,112 @@ export default class Admin extends React.Component {
       });
     }
 
+    //Inviting students or adding a new class
+    handleSubmitAddClass(e) {
+        //Needed for Mozilla Firefox. Without it, forms won't be properly submitted to the backend.
+        e.preventDefault();
+
+        const cname = this.state.cname
+        const educatorEmail = this.state.userInfo["email"]
+
+        //Function that registers the user in the backend
+        fetch(GetConfig().SERVER_ADDRESS + "/classes/createClass", {
+            method: "POST",
+            crossDomain:true,
+            headers:{
+                "Content-Type":"application/json",
+                Accept:"application/json",
+                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+            },
+            body:JSON.stringify({
+                cname,
+                educatorEmail
+            }),
+        }).then((res)=>res.json())
+            .then((data)=>{
+                if(data.status==="ok"){
+                    alert("Class Created!");
+                    window.location.href="./admin"
+                }
+                else if (data.status==="classExists"){
+                    alert("This class name already exists!")
+                }
+            })
+    }
+
+    //Remove class (current user must own class)
+    handleSubmitRemoveClass(e){
+        //Needed for Mozilla Firefox. Without it, forms won't be properly submitted to the backend.
+        e.preventDefault();
+
+        const cname = this.state.cname
+        const educatorEmail = this.state.userInfo["email"]
+
+        //Function that removes class from backend
+        fetch(GetConfig().SERVER_ADDRESS + "/classes/removeClass", {
+            method: "POST",
+            crossDomain:true,
+            headers:{
+                "Content-Type":"application/json",
+                Accept:"application/json",
+                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+            },
+            body:JSON.stringify({
+                cname,
+                educatorEmail
+            }),
+        }).then((res)=>res.json())
+            .then((data)=>{
+                if(data.status==="ok"){
+                    alert("Class Deleted!");
+                    window.location.href="./admin"
+                }
+                else if (data.status==="noSuchClass"){
+                    alert("This class name doesn't exist!")
+                }
+                else if (data.status==="notClassOwner"){
+                    alert("You aren't this class's owner!")
+                }
+            })
+    }
+
+    handleSubmitAddStudent(e){
+        //Needed for Mozilla Firefox. Without it, forms won't be properly submitted to the backend.
+        e.preventDefault();
+
+        const studentEmail = this.state.studentEmail;
+        const className = this.state.inviteClass;
+        const educatorEmail = this.state.userInfo["email"]
+
+        fetch(GetConfig().SERVER_ADDRESS + "/classes/addStudent", {
+            method: "POST",
+            crossDomain:true,
+            headers:{
+                "Content-Type":"application/json",
+                Accept:"application/json",
+                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
+            },
+            body:JSON.stringify({
+                studentEmail,
+                className,
+                educatorEmail
+            }),
+        }).then((res)=>res.json())
+            .then((data)=>{
+                if(data.status==="ok"){
+                    alert(studentEmail + " added to class " + className);
+                    window.location.href="./admin"
+                }
+                else if (data.status==="noSuchStudent"){
+                    alert("This student doesn't exist!")
+                }
+                else if (data.status==="noSuchClass"){
+                    alert("You don't own a class with this name!")
+                }
+            })
+    }
+
+
     
 
     render(){
@@ -140,47 +275,73 @@ export default class Admin extends React.Component {
             {/* Functionality to invite a student to a class */}
             <div className="tlrmargins align-left flex-sa" style={{textAlign: 'left'}}>
               <div style={{width: '25vw'}}>
+              <form onSubmit={this.handleSubmitAddStudent}>
               <div style={{fontSize: '28px', paddingLeft: '2vw'}}>
                 Invite Students!
               </div>
-              <div style={{marginTop: '2vh', width: '90%'}}>
+              <div className="flex-sb" style={{marginTop: '2vh', width: '25%'}}>
+                <div style={{paddingLeft: '0.5vw'}}>Email</div>
 
-                  <label className="text-label" htmlFor="email">Email</label>
-                  <input className="text-form" type="text" id="email" name="email" />
+                <div>
+                  <label htmlFor="email"></label>
+                  <input type="text" id="emails" name="emails"
+                         placeholder={"Emails to Invite"}
+                         onChange={e=>this.setState({studentEmail:e.target.value})}
+                  />
+                </div>
+                
+              </div>
+              {/* <div style={{paddingLeft: '5vw', fontSize: '10px', margin: '10px'}}>
+                  -- Pro tip:  paste a list of emails separated
+                  <br></br>
+                  by commas to invite several students at once!
+              </div> */}
+              <div className="flex-sb" style={{marginTop: '4vh', width: '25%'}}>
+                <div style={{paddingLeft: '0.5vw'}}>Class</div>
 
+                <div>
+                  <label htmlFor="class"></label>
+                  <input type="text" id="class" name="class"
+                         placeholder={"Name of Class"}
+                         onChange={e=>this.setState({inviteClass:e.target.value})}
+                  />
+                </div>
               </div>
 
-              <div style={{marginTop: '4vh', width: '90%'}}>
-
-                <label className="text-label" htmlFor="class">Class</label>
-                <input className="text-form" type="text" id="class" name="class" />
-
-              </div>
-
-              <div className="btn btn-primary blue btn-lg" style={{marginTop: '5vh', marginLeft: '2vw'}}>
+              <button className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
                   Submit
-              </div>
+              </button>
+              </form>
               </div>
 
               <div style={{width: '25vw'}}>
-                <div style={{fontSize: '28px', paddingLeft: '2vw'}}>
-                  Add a Class!
-                </div>
+                <form onSubmit={this.handleSubmitAddClass}>
+                    <div style={{fontSize: '28px', paddingLeft: '2vw'}}>
+                      Add a Class!
+                    </div>
 
-                <div style={{marginTop: '2vh', width: '90%'}}>
-                  {/* <div style={{paddingLeft: '0.5vw'}}>
-                    Class Name
-                  </div> */}
-                    <label className="text-label" htmlFor="newclass">Class Name</label>
-                    <input className="text-form" type="text" id="newclass" name="newclass" />
-                  
-                </div>
+                    <div className="flex-sb" style={{marginTop: '2vh', width: '25%'}}>
+                      <div style={{paddingLeft: '0.5vw'}}>
+                        Class Name
+                      </div>
 
-                <div className="btn btn-primary blue btn-lg" style={{marginTop: '5vh', marginLeft: '2vw'}}>
-                  Submit
-                </div>
+                      <div>
+                        <label htmlFor="newclass"></label>
+                        <input type="text" id="newclass" name="newclass"
+                               placeholder={"Enter new class name"}
+                               onChange={e=>this.setState({cname:e.target.value})}
+                        />
+                      </div>
+                    </div>
+
+                    <button type="submit" className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
+                        Submit
+
+                    </button>
+                </form>
 
               </div>
+
             </div>
 
             {/* Download Student Progress Data Button */}

@@ -89,6 +89,18 @@ const MatchingQuestionDBSchema = new mongoose.Schema(
     }
 )
 
+//Class schema
+const ClassDBSchema = new mongoose.Schema(
+    {
+        name:{type:String, unique:true},
+        educator:String,
+        students:{type:Array, default:null}
+    },
+    {
+        collection:"Classes"
+    }
+)
+
 //Model each schema
 mongoose.model("UserInfo", userDBSchema);
 mongoose.model("TraditionalQuestionInfo", traditionalQuestionDBSchema);
@@ -96,3 +108,5 @@ mongoose.model("GameQuestionInfo", gameQuestionDBSchema);
 mongoose.model("CYOAQuestionInfo", CYOAQuestionDBSchema);
 mongoose.model("DNDQuestionInfo", DNDQuestionDBSchema);
 mongoose.model("MatchingQuestionInfo", MatchingQuestionDBSchema);
+
+mongoose.model("Classes", ClassDBSchema);
