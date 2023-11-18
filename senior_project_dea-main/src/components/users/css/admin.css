@@ -14,18 +14,6 @@
     width: auto;
 }
 
-.debug {
-    background-color: lightblue;
-    border: 2px solid;
-    border-color: black;
-}
-
-.debug-red {
-    background-color: palevioletred;
-    border: 2px solid;
-    border-color: black;
-}
-
 .flex-sb {
     display: flex;
     justify-content: space-between;

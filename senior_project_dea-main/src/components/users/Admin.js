@@ -6,6 +6,8 @@ import { LinkContainer } from 'react-router-bootstrap';
 import "./css/tables.css"
 import "./css/admin.css"
 import "./css/inputs.css"
+import "./css/debug.css"
+
 
 export default class Admin extends React.Component {
     constructor(props){
@@ -308,7 +310,7 @@ export default class Admin extends React.Component {
                 </div>
               </div>
 
-              <button className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
+              <button type="submit" className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
                   Submit
               </button>
               </form>

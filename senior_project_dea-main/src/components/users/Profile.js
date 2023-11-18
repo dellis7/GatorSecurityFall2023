@@ -4,6 +4,8 @@ import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCar
 import { LinkContainer } from "react-router-bootstrap";
 import '../componentStyling/textStyling.css';
 import GetConfig from '../../Config.js';
+import "./css/profile.css"
+import "./css/debug.css"
 
 export default class ProfilePage extends React.Component {
     constructor(props){
@@ -111,8 +113,24 @@ export default class ProfilePage extends React.Component {
 
       //This is the HTML that is rendered to the webpage
       return (
+        <div>
+        <div style={{marginRight: '2vw'}}>
+          <form  style={{marginTop: '4vh', width: '25%', marginLeft: 'auto', textAlign: 'left'}}>
+            <div style={{marginTop: '1vh', fontSize: '28px'}}>Join a Class!</div>
+            <div>
+              <div>
+                <label htmlFor="class"></label>
+                <input type="text" id="class" name="class"
+                        placeholder={"Enter the Class ID"}/>
+              </div>
+            </div>
+
+            <button type="submit" className="btn btn-primary blue btn-lg" style={{marginTop: '5vh', marginLeft: '5vw'}}>
+                Submit
+            </button>
+          </form>
+        </div>
         <section style={container}>
-          <h1 className='h1-text'>My Profile</h1>
           <MDBContainer className="py-5 h-100">
             <MDBRow className="justify-content-center align-items-center h-100">
               <MDBCol lg="8" className="mb-4 mb-lg-0">
@@ -171,6 +189,7 @@ export default class ProfilePage extends React.Component {
             </MDBRow>
           </MDBContainer>
       </section>
+      </div>
     );
   }
 }

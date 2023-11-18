@@ -1,0 +1,17 @@
+.debug {
+    background-color: lightblue;
+    border: 2px solid;
+    border-color: black;
+}
+
+.debug-red {
+    background-color: palevioletred;
+    border: 2px solid;
+    border-color: black;
+}
+
+.debug-yellow {
+    background-color: yellow;
+    border: 2px solid;
+    border-color: black;
+}
