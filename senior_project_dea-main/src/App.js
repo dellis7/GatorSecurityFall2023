@@ -29,15 +29,7 @@ function App() {
   useEffect(() => {
     //Function that checks if user is an admin via backend request
     async function getAdminStatus() {
-      const response = apiRequest("/users/checkPrivileges", {
-          method: "POST",
-          crossDomain:true,
-          headers:{
-            "Content-Type":"application/json",
-            Accept:"application/json",
-            "Access-Control-Allow-Origin": GetConfig().SERVER_ADDRESS,
-        },
-        body:JSON.stringify({token: window.localStorage.getItem("token")})})
+      const response = apiRequest("/users/checkPrivileges")
     
       //If user is not an admin, redirect them to the welcome page
       if ((await response).status !== 200) {
