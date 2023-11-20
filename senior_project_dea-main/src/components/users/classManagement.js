@@ -4,7 +4,7 @@ import GetConfig from '../../Config.js';
 import {CSVLink} from "react-csv";
 import { LinkContainer } from 'react-router-bootstrap';
 
-export default class classManagement extends React.Component {
+export default class ClassManagement extends React.Component {
     constructor(props){
       super(props)
       this.state = {
