@@ -8,11 +8,9 @@ const Jwt_secret_Obj = process.env.JWT_SECRET;
 const { header } = require('express-validator')
 
 const parseToken = (value) => {
-    console.log(value)
     return value.split(' ')[1]
 }
 const validateToken = (value) => {
-    console.log(value)
     return jwtObj.verify(value, Jwt_secret_Obj)
   };
   
