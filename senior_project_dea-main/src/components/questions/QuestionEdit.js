@@ -71,12 +71,7 @@ export default function QuestionEdit(props) {
 
     fetch(`${GetConfig().SERVER_ADDRESS}/questions/update/${props.editID}`, {
       method: "PUT",
-      crossDomain: true,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
+      
       body: JSON.stringify({
         question: editQuestion,
         type: editType,

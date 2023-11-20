@@ -7,6 +7,7 @@ import "./css/tables.css"
 import "./css/admin.css"
 import "./css/inputs.css"
 import "./css/debug.css"
+import apiRequest from '../../util/api.js';
 
 
 export default class Admin extends React.Component {
@@ -28,85 +29,35 @@ export default class Admin extends React.Component {
     componentDidMount(){
 
         //Function that pulls the current user's profile info from the backend
-        fetch(GetConfig().SERVER_ADDRESS + "/users/userInfo", {
-            method: "POST",
-            crossDomain:true,
-            headers:{
-                "Content-Type":"application/json",
-                Accept:"application/json",
-                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-            },
-            body:JSON.stringify({
-                //User is identified by their cookie assigned at login
-                token:window.localStorage.getItem("token"),
-            }),
-        }).then((res)=>res.json())
+        apiRequest("/users/userInfo").then((res)=>res.json())
             .then(data=>{
                 //Set userInfo with data retrieved from backend
                 this.setState({userInfo: data.data.dbUserData});
             });
 
       //Function that pulls all user data from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/users/allUsers", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({
-        token:window.localStorage.getItem("token"),
-      }),
-      }).then((res)=>res.json())
+      apiRequest("/users/allUsers").then((res)=>res.json())
       .then(data=>{
         //Set user retrieved to allUsers variable
         this.setState({allUsers: data});
       });
 
       //Function that pulls the total number of questions from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({displayType:'learn'}),
-      }).then((res)=>res.json())
+      apiRequest("/questions/getCount/learn").then((res)=>res.json())
       .then(data=>{
         //Set the total number of learn questions to learnQuestionCount
         this.setState({learnQuestionCount: data.data})
       });
 
       //Function that pulls the total number of questions from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({displayType:'game'}),
-      }).then((res)=>res.json())
+      apiRequest("/questions/getCount/game").then((res)=>res.json())
       .then(data=>{
         //Set the total number of fill in the blank questions to gameQuestionCount
         this.setState({gameQuestionCount: data.data})
       });
 
       //Function that pulls the total number of games from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/games/getCount", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({}),
-      }).then((res)=>res.json())
+      apiRequest("/games/getCount").then((res)=>res.json())
       .then(data=>{
         //Set the total number of game questions (except for Fill in the Blank Questions) to allGamesCount
         this.setState({allGamesCount: data.data})
@@ -122,14 +73,8 @@ export default class Admin extends React.Component {
         const educatorEmail = this.state.userInfo["email"]
 
         //Function that registers the user in the backend
-        fetch(GetConfig().SERVER_ADDRESS + "/classes/createClass", {
+        apiRequest("/classes/createClass", {
             method: "POST",
-            crossDomain:true,
-            headers:{
-                "Content-Type":"application/json",
-                Accept:"application/json",
-                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-            },
             body:JSON.stringify({
                 cname,
                 educatorEmail
@@ -155,14 +100,8 @@ export default class Admin extends React.Component {
         const educatorEmail = this.state.userInfo["email"]
 
         //Function that removes class from backend
-        fetch(GetConfig().SERVER_ADDRESS + "/classes/removeClass", {
-            method: "POST",
-            crossDomain:true,
-            headers:{
-                "Content-Type":"application/json",
-                Accept:"application/json",
-                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-            },
+        apiRequest("/classes/removeClass", {
+            method: "DELETE",
             body:JSON.stringify({
                 cname,
                 educatorEmail
@@ -190,14 +129,9 @@ export default class Admin extends React.Component {
         const className = this.state.inviteClass;
         const educatorEmail = this.state.userInfo["email"]
 
-        fetch(GetConfig().SERVER_ADDRESS + "/classes/addStudent", {
+        apiRequest("/classes/addStudent", {
             method: "POST",
             crossDomain:true,
-            headers:{
-                "Content-Type":"application/json",
-                Accept:"application/json",
-                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-            },
             body:JSON.stringify({
                 studentEmail,
                 className,

@@ -20,6 +20,7 @@ import ClassManagement from './components/users/classManagement';
 import QuestionCRUD from './components/questions/QuestionCRUD';
 import DragNDrop from './components/questions/dragDrop/DragNDrop';
 import Matching from "./components/questions/Matching/Matching";
+import apiRequest from './util/api.js';
 
 function App() {
   
@@ -28,7 +29,7 @@ function App() {
   useEffect(() => {
     //Function that checks if user is an admin via backend request
     async function getAdminStatus() {
-      const response = fetch(GetConfig().SERVER_ADDRESS + "/users/checkPrivileges", {
+      const response = apiRequest("/users/checkPrivileges", {
           method: "POST",
           crossDomain:true,
           headers:{

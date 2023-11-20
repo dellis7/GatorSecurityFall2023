@@ -47,13 +47,13 @@ const { validateCYOAQuestion, validateDNDQuestion, validateMatchingQuestion } = 
 //Overarching Game Question Routes (NOTE: Each / should be preceded by /questions when testing with Postman e.g. localhost:5000/questions/getcount)
 
 //Overarching Game Question Routes
-router.post('/getcount', getGameCount);
+router.get('/getcount', getGameCount);
 
-router.post('/getByTopic/:topic', getGameByTopic);
+router.get('/getByTopic/:topic', getGameByTopic);
 
-router.post('/getByType/:type', getGameByType);
+router.get('/getByType/:type', getGameByType);
 
-router.post('/getById/:id', getGameById);
+router.get('/getById/:id', getGameById);
 
 router.delete('/delete/:id', deleteGameById);
 
@@ -73,7 +73,7 @@ router.post('/cyoa/create', upload.any(), validateCYOAQuestion, createCYOA);
 router.post('/checkAnswer/:id', checkCYOAAnswer)
 
 //DND Subquestion Routes
-router.post('/dnd/getById/:id', getDNDById);
+router.get('/dnd/getById/:id', getDNDById);
 
 router.delete('/dnd/delete/:id', deleteDNDById);
 
@@ -82,7 +82,7 @@ router.put('/dnd/update/:id', upload.any(), updateDND);
 router.post('/dnd/create', upload.any(), validateDNDQuestion, createDND);
 
 //Matching Subquestion Routes
-router.post('/matching/getById/:id', getMatchingById);
+router.get('/matching/getById/:id', getMatchingById);
 
 router.post('/matching/create', validateMatchingQuestion, createMatching);
 

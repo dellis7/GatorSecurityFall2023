@@ -188,12 +188,7 @@ function EditModal(props) {
 const DeleteQuestion = (removeID) => {
   fetch(`${GetConfig().SERVER_ADDRESS}/questions/delete/${removeID}`, {
     method: "DELETE",
-    crossDomain: true,
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-    },
+    
     body: JSON.stringify({
       token: window.localStorage.getItem("token"),
     }),

@@ -5,6 +5,7 @@ import { DndContext, closestCenter } from "@dnd-kit/core";
 import { useSortable, arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import GetConfig from '../../../Config.js';
+import apiRequest from '../../../util/api.js';
 
 function DragNDrop() {
 
@@ -48,16 +49,7 @@ function DragNDrop() {
 
   //Function that pulls gameQuestion data from backend
   const getGameQuestion = (id_, setGameQuestionData_) => {
-    fetch(GetConfig().SERVER_ADDRESS + "/games/getById/" + id_, {
-      method: "POST",
-      crossDomain:true,
-      headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({}),
-      }).then((res) => res.json())
+    apiRequest("/games/getById/" + id_).then((res) => res.json())
       .then((data)=>{
         //Set the gameQuestionData's state to the data received from the backend (data.data)
         setGameQuestionData_(data.data);
@@ -66,16 +58,7 @@ function DragNDrop() {
 
   //Function that pulls DnD Question data from backend
   const getDNDQuestion = (questionNumber_, setDNDQuestionData_) => {
-    fetch(GetConfig().SERVER_ADDRESS + "/games/dnd/getById/" + questionNumber_, {
-      method: "POST",
-      crossDomain:true,
-      headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({}),
-      }).then((res) => res.json())
+    apiRequest("/games/dnd/getById/" + questionNumber_).then((res) => res.json())
       .then((data)=>{
         //Set the DNDQuestionData's state to the data received from the backend (data.data)
         setDNDQuestionData_(data.data);
@@ -117,16 +100,9 @@ function DragNDrop() {
     //If this is the end of the game
     if (currentQuestion + 1 >= gameQuestionData.questionData.length) {
       //Update the user's score via HTTP request
-      fetch(GetConfig().SERVER_ADDRESS + "/users/updateScore", {
+      apiRequest("/users/updateScore", {
         method: "POST",
-        crossDomain:true,
-        headers:{
-            "Content-Type":"application/json",
-            Accept:"application/json",
-            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-        },
         body:JSON.stringify({
-            token:window.localStorage.getItem("token"),
             qid: gameQuestionData._id, 
         }),
       }).then((res) => {

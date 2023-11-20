@@ -7,22 +7,15 @@ import { useEffect, useState } from 'react';
 import './componentStyling/Navbar.css';
 
 import GetConfig from '../Config.js';
+import apiRequest from '../util/api.js';
 
 function MyNavbar() {
   const [isAdmin, setIsAdmin] = useState({isAdmin: false});
-
+  const [isEducator, setIsEducator] = useState({isEducator: false})
   useEffect(() => {
     //Function that checks if user is an admin via backend request
     async function adminStatus() {
-      const response = fetch(GetConfig().SERVER_ADDRESS + "/users/checkPrivileges", {
-          method: "POST",
-          crossDomain:true,
-          headers:{
-            "Content-Type":"application/json",
-            Accept:"application/json",
-            "Access-Control-Allow-Origin": GetConfig().SERVER_ADDRESS,
-        },
-        body:JSON.stringify({token: window.localStorage.getItem("token")})})
+      const response = apiRequest("/users/checkPrivileges")
       
       //If user is an admin, set adminstatus to true
       if ((await response).status === 200) {
@@ -113,7 +106,12 @@ const navbarStyle = {
                     <NavDropdown.Item style={dropdownItem} eventKey={3.3}>
                       Question Editor
                     </NavDropdown.Item>
-                  </LinkContainer></>
+                  </LinkContainer>
+                  <LinkContainer to="/admin/classmanagement" style={dropdownItem}>
+                  <NavDropdown.Item style={dropdownItem} eventKey={3.3}>
+                    Manage Classes
+                  </NavDropdown.Item>
+                </LinkContainer></>
               }
               <LinkContainer to="/log-out" style={dropdownItem}>
                 <NavDropdown.Item style={dropdownItem} eventKey={3.4}>

@@ -7,6 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
 import '../componentStyling/buttons.css';
 import '../componentStyling/textStyling.css';
+import apiRequest from '../../util/api.js';
 
 const box = {
     boxShadow: "0 3px 10px rgba(0,0,0,.3)",
@@ -22,18 +23,7 @@ function GameTraditionalPage() {
   
     //Function that retrieves all the Fill in the Blank Questions
     const getQuestions = (topic_, setQuestionData_) => {
-      fetch(GetConfig().SERVER_ADDRESS + "/questions/get/" + topic_, {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-            "Content-Type":"application/json",
-            Accept:"application/json",
-            "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-        },
-        body:JSON.stringify({
-          displayType: 'game'
-        }),
-        }).then((res)=>res.json())
+      apiRequest("/questions/get/" + topic_ + '/game').then((res)=>res.json())
         .then((data)=>{
           setQuestionData_(data);
         })

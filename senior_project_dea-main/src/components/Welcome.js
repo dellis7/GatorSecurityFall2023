@@ -1,7 +1,7 @@
 import React from 'react';
 import GetConfig from '../Config.js';
 import Carousel from 'react-bootstrap/Carousel'
-
+import apiRequest from '../util/api.js';
 import './componentStyling/textStyling.css'
 
 export default class WelcomePage extends React.Component {
@@ -14,19 +14,7 @@ export default class WelcomePage extends React.Component {
 
   componentDidMount(){
     //Function that pulls the current user's profile info from the backend
-    fetch(GetConfig().SERVER_ADDRESS + "/users/userInfo", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({
-        //User is identified by their cookie assigned at login
-        token:window.localStorage.getItem("token"),
-      }),
-      }).then((res)=>res.json())
+    apiRequest("/users/userInfo").then((res)=>res.json())
       .then(data=>{
         //Set the state of userInfo to info of user retrieved from database
         this.setState({userInfo: data.data});

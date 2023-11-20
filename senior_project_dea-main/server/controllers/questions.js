@@ -18,7 +18,7 @@ const questionTopicMap = {other: 0, input_validation: 1, encoding_escaping: 2, x
 //Get count of all traditional learn questions in the database endpoint controller
 const getCount = (async(req,res) =>{
     //Count learn questions and return the count in the response
-    TraditionalQuestion.count({displayType:req.body.displayType.toString()}).then((count)=>{
+    TraditionalQuestion.count({displayType:req.params.displayType.toString()}).then((count)=>{
         res.send({status:200, data:count});
     })
     .catch((error)=>{
@@ -47,7 +47,7 @@ const getByTopic = (async(req,res)=>{
         //Else if the topic is a numerical id
 		} else if(!isNaN(parseInt(req.params.topic))) {
             //Find specific question information in database and send it
-			TraditionalQuestion.find({topic: req.params.topic.toString(), displayType: req.body.displayType.toString()}).then((data)=>{
+			TraditionalQuestion.find({topic: req.params.topic.toString(), displayType: req.params.displayType.toString()}).then((data)=>{
                 //Ensure answers aren't sent to the frontend unless you are an admin
                 if(Number(isAdmin) !== Number(1)) {
                     for(const element of data) {

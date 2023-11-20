@@ -2,6 +2,7 @@ import React, {useEffect, useState, useCallback} from "react";
 import MatchingCard from "./MatchingCard";
 import arrayShuffle from "array-shuffle";
 import GetConfig from '../../../Config.js';
+import apiRequest from '../../../util/api.js';
 
 function Matching () {
     const [gameQuestionData, setGameQuestionData] = React.useState('');
@@ -43,16 +44,7 @@ function Matching () {
 
     //Function that pulls gameQuestion data from backend
     const getGameQuestion = (id_, setGameQuestionData_) => {
-        fetch(GetConfig().SERVER_ADDRESS + "/games/getById/" + id_, {
-            method: "POST",
-            crossDomain:true,
-            headers:{
-                "Content-Type":"application/json",
-                Accept:"application/json",
-                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-            },
-            body:JSON.stringify({}),
-            }).then((res) => res.json())
+        apiRequest("/games/getById/" + id_).then((res) => res.json())
             .then((data)=>{
                 setGameQuestionData_(data.data);
         })
@@ -60,16 +52,7 @@ function Matching () {
 
     //Function that pulls Matching Question data from backend
     const getMatchingQuestion = (questionNumber_, setMatchingQuestionData_) => {
-        fetch(GetConfig().SERVER_ADDRESS + "/games/matching/getById/" + questionNumber_, {
-            method: "POST",
-            crossDomain:true,
-            headers:{
-                "Content-Type":"application/json",
-                Accept:"application/json",
-                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-            },
-            body:JSON.stringify({}),
-            }).then((res) => res.json())
+        apiRequest("/games/matching/getById/" + questionNumber_).then((res) => res.json())
             .then((data)=>{
                 setMatchingQuestionData_(data.data);
         })
@@ -163,17 +146,10 @@ function Matching () {
             //if number of correct matches equals total number of pairs (keywords and definitions) displayed
             if(numCorrect === 4) {
                 //Update the user's score via HTTP request
-            fetch(GetConfig().SERVER_ADDRESS + "/users/updateScore", {
+            apiRequest("/users/updateScore", {
               method: "POST",
-              crossDomain:true,
-              headers:{
-                "Content-Type":"application/json",
-                Accept:"application/json",
-                "Access-Control-Allow-Origin": GetConfig().SERVER_ADDRESS,
-            },
-            body:JSON.stringify({
-                token:window.localStorage.getItem("token"),
-                qid: gameQuestionData._id, 
+                body:JSON.stringify({
+                    qid: gameQuestionData._id, 
             }),
             }).then((res) => {
             //If request was a success

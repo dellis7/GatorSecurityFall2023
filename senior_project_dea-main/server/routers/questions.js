@@ -15,9 +15,9 @@ const { validateQuestion } = require('../validators/questionValidator')
 //Connect learn question controller functions to endpoints
 //Overarching Traditional Question Routes (NOTE: Each / should be preceded by /questions when testing with Postman e.g. localhost:5000/questions/getcount)
 
-router.post('/getcount', getCount)
+router.get('/getcount', getCount)
 
-router.post('/get/:topic', getByTopic)
+router.get('/get/:topic/:displayType', getByTopic)
 
 router.delete('/delete/:id', deleteById)
 

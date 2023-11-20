@@ -1,5 +1,6 @@
 import { useState } from "react";
 import GetConfig from '../../Config.js';
+import apiRequest from '../../util/api.js';
 
 export default function QuestionForm() {
   //these states store the data fields for the question being added
@@ -94,14 +95,8 @@ export default function QuestionForm() {
     e.preventDefault()
     
     if (newDisplayType === "learn" || newGameType === "FITB") {
-      fetch(GetConfig().SERVER_ADDRESS + "/questions/create", {
+      apiRequest("/questions/create", {
         method: "POST",
-        crossDomain: true,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-        },
         body: JSON.stringify({
           question: newQuestion,
           type: newType,
@@ -109,7 +104,6 @@ export default function QuestionForm() {
           options: newOptions,
           answer: newAnswer,
           displayType: newDisplayType,
-          token: window.localStorage.getItem("token"),
         }),
       }).then((response) => {
         if(response.status === 500)

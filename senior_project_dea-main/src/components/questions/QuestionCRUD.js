@@ -3,6 +3,7 @@ import QuestionCard from "./QuestionCard";
 import QuestionForm from "./QuestionForm";
 import GetConfig from '../../Config.js';
 import '../componentStyling/textStyling.css';
+import apiRequest from '../../util/api.js';
 
 function QuestionCRUD() {
 
@@ -16,16 +17,7 @@ function QuestionCRUD() {
 
   //this function retrieves all question data from the database
   const retrieveQuestions = () => {
-    fetch(GetConfig().SERVER_ADDRESS + "/questions/get/all", {
-      method: "POST",
-      crossDomain: true,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body: JSON.stringify({token: window.localStorage.getItem("token")}),
-    })
+    apiRequest("/questions/get/all")
       .then((res) => res.json())
       .then((data) => {
         handleQuestionsData(data.data);
