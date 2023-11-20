@@ -6,6 +6,7 @@ import '../componentStyling/textStyling.css';
 import GetConfig from '../../Config.js';
 import "./css/profile.css"
 import "./css/debug.css"
+import apiRequest from '../../util/api.js';
 
 export default class ProfilePage extends React.Component {
     constructor(props){
@@ -18,26 +19,14 @@ export default class ProfilePage extends React.Component {
     componentDidMount(){
 
       //Function that pulls the current user's profile info from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/users/userInfo", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({
-        //User is identified by their cookie assigned at login
-        token:window.localStorage.getItem("token"),
-      }),
-      }).then((res)=>res.json())
+      apiRequest("/users/userInfo").then((res)=>res.json())
       .then(data=>{
         //Set userInfo with data retrieved from backend
         this.setState({userInfo: data.data.dbUserData});
       });
 
       //Function that pulls the total number of questions from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", {
+      apiRequest("/questions/getCount", {
         method: "POST",
         crossDomain:true,
         headers:{
@@ -53,7 +42,7 @@ export default class ProfilePage extends React.Component {
       });
 
       //Function that pulls the total number of questions from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", {
+      apiRequest("/questions/getCount", {
         method: "POST",
         crossDomain:true,
         headers:{
@@ -69,7 +58,7 @@ export default class ProfilePage extends React.Component {
       });
 
       //Function that pulls the total number of games from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/games/getCount", {
+      apiRequest("/games/getCount", {
         method: "POST",
         crossDomain:true,
         headers:{

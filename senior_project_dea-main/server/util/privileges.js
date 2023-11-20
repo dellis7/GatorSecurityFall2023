@@ -16,13 +16,9 @@ const User = mongoose.model("UserInfo")
 async function isAdmin(req)
 {
     try {
-        //Check for the token
-        if(req.body.token === null || req.body.token === undefined) {
-            return 0; //Not an admin if no token is provided
-        }
-
+        const token = req.headers.authorization
         //Check the user in the database to verify they are an admin
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const adminFromToken = jwtObj.verify(token, Jwt_secret_Obj);
         const adminEmail = adminFromToken.email;
 
         let admin = await User.findOne({email: adminEmail});

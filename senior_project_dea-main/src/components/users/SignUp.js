@@ -3,6 +3,7 @@ import LoginBanner from './LoginBanner';
 import gator from '../../images/gator.png';
 import GetConfig from '../../Config.js';
 import './css/LoginAndSignUp.css';
+import apiRequest from '../../util/api.js';
 
 export default class SignUp extends Component {
   constructor(props){
@@ -24,14 +25,8 @@ export default class SignUp extends Component {
     const{fname, lname, email, password} = this.state;
 
     //Function that registers the user in the backend
-    fetch(GetConfig().SERVER_ADDRESS + "/users/register", {
+    apiRequest("/users/register", {
       method: "POST",
-      crossDomain:true,
-      headers:{
-        "Content-Type":"application/json",
-        Accept:"application/json",
-        "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
       body:JSON.stringify({
         fname,
         lname,

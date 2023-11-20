@@ -17,68 +17,11 @@ dotenv.config('./.env')
 const jwtObj = require("jsonwebtoken");
 const Jwt_secret_Obj = process.env.JWT_SECRET;
 
-//Register endpoint controller
-const register = (async (req, res) => {
-    //Obtain user information
-    const fname = req.body.fname.toString();
-    const lname = req.body.lname.toString();
-    const email = req.body.email.toString();
-    const password = req.body.password.toString();
-    const encryptedPass = await bcrypt.hash(password, 10);
-
-    //Create the user as long as they have a unique email
-    try {
-        const existingUser = await User.findOne({email});
-
-        //If user information already exists in database, return error
-        if (existingUser) {
-            return res.send({error: "A GatorSecurity account already exists with this email address."})
-        }
-
-        await User.create({
-            fname,
-            lname,
-            email,
-            password:encryptedPass,
-        });
-        res.send({status:"ok"});
-        return;
-    } catch(error) {
-        res.send({status: "error"});
-        return;
-    }
-})
-
-//Login endpoint controller
-const login = (async (req, res) => {
-    //Obtain user information
-    const email = req.body.email.toString();
-    const password = req.body.password.toString();
-    const user=await User.findOne({email});
-
-    //If user information was not found, return error
-    if (!user) {
-        return res.json({error: "User email not found."});
-    }
-
-    //Attempt to login with provided credentials
-    if (await bcrypt.compare(password, user.password)) {
-        const tempToken = jwtObj.sign({email:user.email}, Jwt_secret_Obj);
-
-        if (res.status(201)) {
-            return res.json({status:"ok", data: tempToken});
-        } else {
-            return res.json({error:"error"});
-        }
-    }
-
-    res.json({status:"error", error:"Invalid password."})
-})
 
 //Get user info endpoint controller
 const getUserInfo = (async (req, res) => {
     //"Grab" token from request body (req.body)
-    const {token} = req.body;
+    const token = req.headers.authorization;
     try{
         //Decode token and get email
         const user = jwtObj.verify(token, Jwt_secret_Obj);
@@ -180,7 +123,7 @@ const checkAnswerAndUpdateScore = (async (req, res) => {
 
         //Check to see if they answered it correctly
         if(questionData.answer === req.body.answer) {
-            const user = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+            const user = jwtObj.verify(req.headers.authorization, Jwt_secret_Obj);
             const uEmail = user.email;
 
             //Get existing scores
@@ -236,7 +179,7 @@ const updateScore = (async (req,res) => {
     //so we only need to pass the parent question ID here to count it (along with the user token)
     try{
         //Obtain user
-        const user = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const user = jwtObj.verify(req.headers.authorization, Jwt_secret_Obj);
         const uEmail = user.email;
 
         const dbUser = await User.findOne({email: uEmail});
@@ -283,8 +226,6 @@ const checkPrivileges = (async (req, res) => {
 
 //Exports
 module.exports = {
-    register,
-    login,
     getUserInfo,
     updateUser,
     getAllUsers,

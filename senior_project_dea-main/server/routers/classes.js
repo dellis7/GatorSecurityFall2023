@@ -14,7 +14,7 @@ const {
 
 router.post('/createClass', createClass)
 
-router.post('/removeClass', removeClass)
+router.delete('/removeClass', removeClass)
 
 router.post('/addStudent', addStudent)
 //

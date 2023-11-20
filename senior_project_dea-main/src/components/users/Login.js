@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./css/LoginAndSignUp.css";
 import gator from "../../images/gator.png";
 import GetConfig from '../../Config.js';
+import apiRequest from "../../util/api.js";
 
 export default class Login extends Component {
     constructor(props){
@@ -21,14 +22,8 @@ export default class Login extends Component {
       const{email, password} = this.state;
 
       //Function that checks user's login information in the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/users/login", {
+      apiRequest("/login/login", {
         method: "POST",
-        crossDomain: true,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-        },
         body: JSON.stringify({
           email,
           password,

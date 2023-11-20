@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import GetConfig from '../../Config.js';
+import apiRequest from '../../util/api.js';
 
 function TradQuestion({ qdata, num }) {
 
@@ -61,16 +62,10 @@ function TradQuestion({ qdata, num }) {
         if(qdata.type === 1) {
             theAnswer = document.getElementById("answer-box-" + qdata._id).value;
         }
-        fetch(GetConfig().SERVER_ADDRESS + "/users/updatelearnscore", {
+        apiRequest("/users/updatelearnscore", {
             method: "PUT",
             crossDomain:true,
-            headers:{
-                "Content-Type":"application/json",
-                Accept:"application/json",
-                "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-            },
             body:JSON.stringify({
-                token:window.localStorage.getItem("token"),
                 qid:qdata._id,
                 answer:theAnswer,
             }),
