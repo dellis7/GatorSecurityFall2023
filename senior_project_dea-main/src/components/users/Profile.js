@@ -26,48 +26,21 @@ export default class ProfilePage extends React.Component {
       });
 
       //Function that pulls the total number of questions from the backend
-      apiRequest("/questions/getCount", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({displayType:'learn'}),
-      }).then((res)=>res.json())
+      apiRequest("/questions/getCount/learn").then((res)=>res.json())
       .then(data=>{
         //Set the total number of learn questions to learnQuestionCount
         this.setState({learnQuestionCount: data.data})
       });
 
       //Function that pulls the total number of questions from the backend
-      apiRequest("/questions/getCount", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({displayType:'game'}),
-      }).then((res)=>res.json())
+      apiRequest("/questions/getCount/game").then((res)=>res.json())
       .then(data=>{
         //Set the total number of fill in the blank questions to gameQuestionCount
         this.setState({gameQuestionCount: data.data})
       });
 
       //Function that pulls the total number of games from the backend
-      apiRequest("/games/getCount", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({}),
-      }).then((res)=>res.json())
+      apiRequest("/games/getCount").then((res)=>res.json())
       .then(data=>{
         //Set the total number of game questions (except for Fill in the Blank Questions) to allGamesCount
         this.setState({allGamesCount: data.data})
