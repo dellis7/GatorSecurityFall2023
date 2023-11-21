@@ -1,5 +1,6 @@
 import React from 'react';
 import Table from 'react-bootstrap/Table';
+import Form from 'react-bootstrap/Form'
 import GetConfig from '../../Config.js';
 import {CSVLink} from "react-csv";
 import { LinkContainer } from 'react-router-bootstrap';
@@ -16,6 +17,8 @@ export default class Admin extends React.Component {
       this.state = {
         userInfo: null,
         allUsers: null,
+        accountTypes: null,
+        canEdit: false,
         studentEmail: "",
         cname: "",
         inviteClass:"",
@@ -62,6 +65,17 @@ export default class Admin extends React.Component {
         //Set the total number of game questions (except for Fill in the Blank Questions) to allGamesCount
         this.setState({allGamesCount: data.data})
       });
+      apiRequest("/users/getAccountTypes").then((res) => res.json())
+        .then(data => {
+          //Set user retrieved to allUsers variable
+          this.setState({ accountTypes: data });
+        });
+      //Function that pulls the total number of questions from the backend
+      apiRequest("/users/checkPrivileges").then((res) => res.status === 200)
+        .then(status => {
+          //Set user retrieved to allUsers variable
+          this.setState({ canEdit: status.toString() });
+        });
     }
 
     //Inviting students or adding a new class
@@ -149,10 +163,27 @@ export default class Admin extends React.Component {
                 else if (data.status==="noSuchClass"){
                     alert("You don't own a class with this name!")
                 }
-            })
+            });
     }
 
+    async handleChangeAccountType(user, event) {
+    
+      this.value = event.target.value;
+      console.log(event)
+      let res = await apiRequest(`/users/update/${user}`, {
+        method: "PUT",
+        body: JSON.stringify(
 
+          { "accountType": event.target.value }
+        ),
+      }).then((res) => res);
+      if (res.status == 202) {
+        alert("Update Successful");
+      }
+      else {
+        alert("Update Failed")
+      }
+  }
     
 
     render(){
@@ -299,7 +330,7 @@ export default class Admin extends React.Component {
 
             {/* Table that displays each individual user's data/scores */}
             <div className="table-container" style={{marginTop: '20vh'}}>
-              <Table striped bordered hover classname="scrollable-table" 
+              <Table striped bordered hover className="scrollable-table" 
                   style={{ width: '100%', overflowX: 'auto', whiteSpace: 'nowrap' }}>
                   <thead>
                       <tr>
@@ -323,6 +354,15 @@ export default class Admin extends React.Component {
                               <td>COP3400</td>
                               {createLearnView(user)}
                               {createGameView(user)}
+                              {
+                                this.state.canEdit && this.state.accountTypes !== null ? <td>
+                                  <Form.Select aria-label="Account Type" defaultValue={user["accountType"]} onChange={async (event) => this.handleChangeAccountType(user["_id"], event)}>
+                                    {this.state.accountTypes.map((type, index) => <option key={index} value={type}>{type}</option>)}
+                                  </Form.Select>
+                                </td>
+                                  :
+                                  <td>{user["accountType"]}</td>
+                              }
                           </tr>
                       ))
                       }

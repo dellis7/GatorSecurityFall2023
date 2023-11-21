@@ -8,6 +8,7 @@ const bcrypt = require("bcryptjs")
 //DB Models
 const User = mongoose.model("UserInfo")
 const TraditionalQuestion = mongoose.model("TraditionalQuestionInfo")
+const AccountType = mongoose.model("AccountType")
 
 //ENV preparation
 const dotenv = require("dotenv")
@@ -21,10 +22,9 @@ const Jwt_secret_Obj = process.env.JWT_SECRET;
 //Get user info endpoint controller
 const getUserInfo = (async (req, res) => {
     //"Grab" token from request body (req.body)
-    const token = req.headers.authorization;
+    const user = req.headers.authorization;
     try{
         //Decode token and get email
-        const user = jwtObj.verify(token, Jwt_secret_Obj);
         const uEmail = user.email;
         //Find a user based on email and return the data
         User.findOne({email: uEmail}).then((data)=>{
@@ -45,18 +45,14 @@ const updateUser = (async (req, res) => {
         //Set _id to the value given in url under :id
         const _id = req.params.id;
 
-        //Hash the provided password
-        if (req.body.password !== undefined) {
-            req.body.password = await bcrypt.hash(req.body.password, 10);
-        }
-
+        const token = req.headers.authorization;
         //Use provided email to find existing user in the database
-        if (req.body.email !== undefined) {
-            const email = req.body.email
+        if (token.email !== undefined) {
+            const email = token.email;
             const existingUser = await User.findOne({email});
 
             //If another user besides the one we're updating has the same email
-            if (existingUser && existingUser._id !== _id) {
+            if (existingUser && existingUser._id !== _id && !privileges.isAdmin(req)) {
                 res.sendStatus(403);
                 return;
             }
@@ -123,7 +119,7 @@ const checkAnswerAndUpdateScore = (async (req, res) => {
 
         //Check to see if they answered it correctly
         if(questionData.answer === req.body.answer) {
-            const user = jwtObj.verify(req.headers.authorization, Jwt_secret_Obj);
+            const user = req.headers.authorization;
             const uEmail = user.email;
 
             //Get existing scores
@@ -179,7 +175,7 @@ const updateScore = (async (req,res) => {
     //so we only need to pass the parent question ID here to count it (along with the user token)
     try{
         //Obtain user
-        const user = jwtObj.verify(req.headers.authorization, Jwt_secret_Obj);
+        const user = req.headers.authorization;
         const uEmail = user.email;
 
         const dbUser = await User.findOne({email: uEmail});
@@ -223,7 +219,9 @@ const checkPrivileges = (async (req, res) => {
         return;
     }
 })
-
+const getAccountTypes = (async (req, res) => {
+    res.send(await AccountType.distinct("name"))
+})
 //Exports
 module.exports = {
     getUserInfo,
@@ -231,5 +229,6 @@ module.exports = {
     getAllUsers,
     checkAnswerAndUpdateScore,
     updateScore,
-    checkPrivileges
+    checkPrivileges,
+    getAccountTypes
 }

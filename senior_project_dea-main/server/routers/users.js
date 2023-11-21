@@ -8,7 +8,8 @@ const {
     getAllUsers,
     checkAnswerAndUpdateScore,
     checkPrivileges,
-    updateScore
+    updateScore,
+    getAccountTypes
 } = require('../controllers/users.js')
 
 //Connect user controller functions to endpoints
@@ -25,5 +26,7 @@ router.put('/updatelearnscore', checkAnswerAndUpdateScore);
 router.get('/checkPrivileges', checkPrivileges)
 
 router.post('/updateScore', updateScore)
+
+router.get('/getAccountTypes', getAccountTypes)
 
 module.exports = router

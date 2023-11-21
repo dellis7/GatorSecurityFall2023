@@ -10,6 +10,7 @@ const userDBSchema = new mongoose.Schema(
         learnscore:Array,
         gamescore:Array,
         isAdmin:{type:Boolean, default:false},
+        accountType:String
     },
     {
         collection: "UserInfo",
@@ -100,7 +101,15 @@ const ClassDBSchema = new mongoose.Schema(
         collection:"Classes"
     }
 )
-
+//Account Type schema
+const AccountTypeSchema = new mongoose.Schema(
+    {
+        name: String
+    },
+    {
+        collection: "AccountType"
+    }
+)
 //Model each schema
 mongoose.model("UserInfo", userDBSchema);
 mongoose.model("TraditionalQuestionInfo", traditionalQuestionDBSchema);
@@ -108,5 +117,5 @@ mongoose.model("GameQuestionInfo", gameQuestionDBSchema);
 mongoose.model("CYOAQuestionInfo", CYOAQuestionDBSchema);
 mongoose.model("DNDQuestionInfo", DNDQuestionDBSchema);
 mongoose.model("MatchingQuestionInfo", MatchingQuestionDBSchema);
-
+mongoose.model("AccountType", AccountTypeSchema);
 mongoose.model("Classes", ClassDBSchema);

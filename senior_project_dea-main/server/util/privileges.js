@@ -18,8 +18,7 @@ async function isAdmin(req)
     try {
         const token = req.headers.authorization
         //Check the user in the database to verify they are an admin
-        const adminFromToken = jwtObj.verify(token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
+        const adminEmail = token.email;
 
         let admin = await User.findOne({email: adminEmail});
         if(admin.isAdmin !== true) {
