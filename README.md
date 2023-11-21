@@ -16,8 +16,9 @@ Run the following commands from the `senior_project_dea-main/server` directory:
 From the `senior_project_dea-main/server` directory, do the following:
 * Run `touch .env` to create a `.env` file
 * Open that file and add the following:
-* Note: You will need to replace the first three variables with the correct database credentials and JWT secret
+* Note: You will need to replace the first four variables with the correct database credentials and JWT secret
 ```
+DB_URI=mongodb_url
 DB_USERNAME=username
 DB_PASSWORD=password
 JWT_SECRET='secret'
