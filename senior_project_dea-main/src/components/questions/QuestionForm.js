@@ -266,6 +266,30 @@ export default function QuestionForm() {
               <option value="game">Game Page</option>
             </select>
           </div>
+          <div
+            className="form-group"
+            style={{ textAlign: "left", marginTop: 10 }}
+            >
+              <label htmlFor="form-topic" style={text}>
+                Topic
+              </label>
+              <select
+                required
+                className="form-select"
+                id="form-topic"
+                onChange={(e) => {
+                  handleTopicChange(e.target.value);
+                }}
+              >
+                <option value="">Choose a Topic</option>
+                <option value="1">Input Validation</option>
+                <option value="2">Encoding & Escaping</option>
+                <option value="3">Cross-Site Scripting</option>
+                <option value="4">SQL Injection</option>
+                <option value="5">Cryptography</option>
+                <option value="6">User Authentication</option>
+              </select>
+            </div>
           
           {newDisplayType === "game" && (
             <div
@@ -473,30 +497,6 @@ export default function QuestionForm() {
                       handleQuestionChange(e.target.value);
                     }}
                   ></textarea>
-                </div>
-                <div
-                className="form-group"
-                style={{ textAlign: "left", marginTop: 10 }}
-                >
-                  <label htmlFor="form-topic" style={text}>
-                    Topic
-                  </label>
-                  <select
-                    required
-                    className="form-select"
-                    id="form-topic"
-                    onChange={(e) => {
-                      handleTopicChange(e.target.value);
-                    }}
-                  >
-                    <option value="">Choose a Topic</option>
-                    <option value="1">Input Validation</option>
-                    <option value="2">Encoding & Escaping</option>
-                    <option value="3">Cross-Site Scripting</option>
-                    <option value="4">SQL Injection</option>
-                    <option value="5">Cryptography</option>
-                    <option value="6">User Authentication</option>
-                  </select>
                 </div>
                 <div
                 className="form-group"
