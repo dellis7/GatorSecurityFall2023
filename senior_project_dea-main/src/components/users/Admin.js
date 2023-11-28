@@ -33,6 +33,7 @@ export default class Admin extends React.Component {
       };
       this.handleSubmitAddClass = this.handleSubmitAddClass.bind(this);
       this.handleSubmitAddStudent = this.handleSubmitAddStudent.bind(this);
+      this.handleSubmitRemoveClass = this.handleSubmitRemoveClass.bind(this);
     }
 
     componentDidMount(){
@@ -125,11 +126,11 @@ export default class Admin extends React.Component {
     }
 
     //Remove class (current user must own class)
-    handleSubmitRemoveClass(e){
+    handleSubmitRemoveClass(classInfo){ //I took out the 'e' parameter
         //Needed for Mozilla Firefox. Without it, forms won't be properly submitted to the backend.
-        e.preventDefault();
+        //e.preventDefault();
 
-        const cname = this.state.cname
+        const cname = classInfo.className
         const educatorEmail = this.state.userInfo["email"]
 
         //Function that removes class from backend
@@ -348,7 +349,7 @@ export default class Admin extends React.Component {
             {/* <div style={emptyspace}></div> */}
 
             {/* Table that displays each individual user's data/scores */}
-            
+
             <div className="table-container" style={{marginTop: '20vh'}}>
               <Table striped bordered hover className="scrollable-table" 
                   style={{ width: '100%', overflowX: 'auto', whiteSpace: 'nowrap' }}>
@@ -383,6 +384,11 @@ export default class Admin extends React.Component {
                                   :
                                   <td>{user["accountType"]}</td>
                               }
+                              {/* <td>
+                                <button onClick={() => handleDeleteUser(user.email)}>
+                                  Delete
+                                </button>
+                              </td> */}
                           </tr>
                       ))
                       }
@@ -407,6 +413,11 @@ export default class Admin extends React.Component {
                         <td>{index}</td>
                         <td>{classInfo.id}</td>
                         <td>{classInfo.className}</td>
+                        <td>
+                          <button onClick={() => this.handleSubmitRemoveClass(classInfo)}>
+                            Delete
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -430,6 +441,11 @@ export default class Admin extends React.Component {
                         <td>{index}</td>
                         <td>{student.email}</td>
                         <td>{student.name}</td>
+                        {/* <td>
+                          <button onClick={() => handleKickOutStudent(student.email)}>
+                            Remove
+                          </button>
+                        </td> */}
                       </tr>
                     ))}
                   </tbody>
