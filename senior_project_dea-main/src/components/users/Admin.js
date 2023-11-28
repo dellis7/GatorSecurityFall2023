@@ -23,7 +23,13 @@ export default class Admin extends React.Component {
         cname: "",
         inviteClass:"",
         email:"",
-
+        // myStudents:null,
+        // myClasses:null,
+        myClasses: [{id: '1', className: 'COP1000'},
+                    {id: '2', className: 'COP2000'},
+                    {id: '3', className: 'COP3000'} ],
+        myStudents: [{email: 'EXAMPLE1@EX.COM', name: 'EXAMPLE1 JR.', classes: ['COP1000', 'COP2000']},
+                     {email: 'EXAMPLE2@EX.COM', name: 'EXAMPLE2 JR.', classes: ['COP2000', 'COP3000']}],
       };
       this.handleSubmitAddClass = this.handleSubmitAddClass.bind(this);
       this.handleSubmitAddStudent = this.handleSubmitAddStudent.bind(this);
@@ -31,12 +37,12 @@ export default class Admin extends React.Component {
 
     componentDidMount(){
 
-        //Function that pulls the current user's profile info from the backend
-        apiRequest("/users/userInfo").then((res)=>res.json())
-            .then(data=>{
-                //Set userInfo with data retrieved from backend
-                this.setState({userInfo: data.data.dbUserData});
-            });
+      //Function that pulls the current user's profile info from the backend
+      apiRequest("/users/userInfo").then((res)=>res.json())
+          .then(data=>{
+              //Set userInfo with data retrieved from backend
+              this.setState({userInfo: data.data.dbUserData});
+          });
 
       //Function that pulls all user data from the backend
       apiRequest("/users/allUsers").then((res)=>res.json())
@@ -76,6 +82,19 @@ export default class Admin extends React.Component {
           //Set user retrieved to allUsers variable
           this.setState({ canEdit: status.toString() });
         });
+      
+      //Function that pulls all the teacher's classes
+      apiRequest("API_ENDPOINT").then((res)=>res.json())
+      .then(data=>{
+        //Set user retrieved to myClasses variable
+        this.setState({myClasses: data});
+      });
+      //Function that pulls all the teacher's students
+      apiRequest("API_ENDPOINT").then((res)=>res.json())
+      .then(data=>{
+        //Set user retrieved to myStudents variable
+        this.setState({myStudents: data});
+      });
     }
 
     //Inviting students or adding a new class
@@ -371,8 +390,50 @@ export default class Admin extends React.Component {
             </div>
             {/* Functionalities to delete a class, remove a student from a class*/}
             <div>
-              
+              <h2 style={{marginTop: '5vh'}}>All of Your Classes</h2>
+              <div className="table-container" style={{marginTop: '10vh'}}>
+                <Table striped bordered hover className="scrollable-table" style={{ width: '100%', overflowX: 'auto', whiteSpace: 'nowrap' }}>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Class ID</th>
+                      <th>Class Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.state.myClasses.map((classInfo, index) => (
+                      <tr key={classInfo.id}>
+                        <td>{index}</td>
+                        <td>{classInfo.id}</td>
+                        <td>{classInfo.className}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
             </div>
+
+            <h2 style={{marginTop: '5vh'}}>All of Your Students</h2>
+            <div className="table-container" style={{marginTop: '10vh'}}>
+                <Table striped bordered hover className="scrollable-table" style={{ width: '100%', overflowX: 'auto', whiteSpace: 'nowrap' }}>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Email</th>
+                      <th>Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.state.myStudents.map((student, index) => (
+                      <tr key={student.email}>
+                        <td>{index}</td>
+                        <td>{student.email}</td>
+                        <td>{student.name}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
           </div>
       );
     }
