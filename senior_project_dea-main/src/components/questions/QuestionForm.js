@@ -12,11 +12,14 @@ export default function QuestionForm() {
   const [newDisplayType, setNewDisplayType] = useState("");
   const [newGameType, setNewGameType] = useState("");
 
+  //GAMES
+  const [gameName, setGameName] = useState("");
+
   //CYOA
-  const [groupOfQuestions, setGroupOfQuestions] = useState([""]);
-  const [groupOfImagePaths, setGroupOfImagePaths] = useState([""]);
-  const [groupOfImages, setGroupOfImages] = useState([""]);
-  const [groupOfGroupOfAnswers,setGroupOfGroupOfAnswers] = useState([[""]]);
+  // const [groupOfQuestions, setGroupOfQuestions] = useState([""]);
+  // const [groupOfImagePaths, setGroupOfImagePaths] = useState([""]);
+  // const [groupOfImages, setGroupOfImages] = useState([""]);
+  // const [groupOfGroupOfAnswers,setGroupOfGroupOfAnswers] = useState([[""]]);
   
   //DND
   const [DNDFormData, setDNDFormData] = useState({
@@ -90,6 +93,11 @@ export default function QuestionForm() {
   const handleAnswerChange = (value) => {
     setNewAnswer(value);
   };
+
+  //this function makes a change to the gameName field
+  const handleGameNameChange = (value) => {
+    setGameName(value);
+  }
 
   //this function makes a change to the MMFormData fields
   const handleMMInputChange = (e) => {
@@ -258,11 +266,24 @@ export default function QuestionForm() {
               <option value="game">Game Page</option>
             </select>
           </div>
+          
           {newDisplayType === "game" && (
             <div
             className="form-group"
             style={{ textAlign: "left", marginTop: 10 }}
             >
+              <div style={{marginBottom: '0.5vh'}}>
+                <label htmlFor="gameName" style={text}>Game Name</label>
+                <input
+                  type="text"
+                  id="gameName"
+                  name="gameName"
+                  onChange={handleGameNameChange}
+                  required
+                  />
+              </div>
+              <br></br>
+
               <label htmlFor="form-topic" style={text}>
                 Game Type
               </label>
@@ -280,6 +301,8 @@ export default function QuestionForm() {
                 <option value="MM">Memory Matching</option>
                 <option value="FITB">Fill in the Blank</option>
               </select>
+              <br></br>
+              
               {newGameType === "CYOA" && (
               <div>
                 CYOA
@@ -288,10 +311,10 @@ export default function QuestionForm() {
               {newGameType === "DND" && (
               <div>
                 <form>
-                  <label htmlFor="DNDimage">Image URL:</label>
+                  <label htmlFor="DNDimage">Image:</label>
                   <input
                     type="file"
-                    id="image"
+                    id="DNDimage"
                     name="image"
                     accept="image/*"
                     onChange={handleDNDImageChange}
@@ -513,30 +536,6 @@ export default function QuestionForm() {
                     handleQuestionChange(e.target.value);
                   }}
                 ></textarea>
-              </div>
-              <div
-                className="form-group"
-                style={{ textAlign: "left", marginTop: 10 }}
-              >
-                <label htmlFor="form-topic" style={text}>
-                  Topic
-                </label>
-                <select
-                  required
-                  className="form-select"
-                  id="form-topic"
-                  onChange={(e) => {
-                    handleTopicChange(e.target.value);
-                  }}
-                >
-                  <option value="">Choose a Topic</option>
-                  <option value="1">Input Validation</option>
-                  <option value="2">Encoding & Escaping</option>
-                  <option value="3">Cross-Site Scripting</option>
-                  <option value="4">SQL Injection</option>
-                  <option value="5">Cryptography</option>
-                  <option value="6">User Authentication</option>
-                </select>
               </div>
               <div
                 className="form-group"

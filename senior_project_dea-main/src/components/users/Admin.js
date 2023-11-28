@@ -260,9 +260,9 @@ export default class Admin extends React.Component {
           <div>
             {/* Functionality to invite a student to a class */}
             <div className="tlrmargins align-left flex-sa" style={{textAlign: 'left'}}>
-              <div style={{width: '25vw'}}>
+              <div className='form-a' style={{width: '25vw', borderRadius: '15px', padding: '1vh'}}>
               <form onSubmit={this.handleSubmitAddStudent}>
-              <div style={{fontSize: '28px', paddingLeft: '2vw'}}>
+              <div style={{fontSize: '28px', marginLeft: '5vw'}}>
                 Invite Students!
               </div>
               <div className="flex-sb" style={{marginTop: '2vh', width: '25%'}}>
@@ -271,7 +271,7 @@ export default class Admin extends React.Component {
                 <div>
                   <label htmlFor="email"></label>
                   <input type="text" id="emails" name="emails"
-                         placeholder={"Emails to Invite"}
+                         placeholder={"Email to Invite"}
                          onChange={e=>this.setState({studentEmail:e.target.value})}
                   />
                 </div>
@@ -294,20 +294,20 @@ export default class Admin extends React.Component {
                 </div>
               </div>
 
-              <button type="submit" className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
+              <button type="submit" className="btn btn-primary blue btn-lg" style={{marginTop: '5vh', marginLeft: '15vw'}}>
                   Submit
               </button>
               </form>
               </div>
 
-              <div style={{width: '25vw'}}>
+              <div className="form-b" style={{width: '25vw', padding: '2vh'}}>
                 <form onSubmit={this.handleSubmitAddClass}>
-                    <div style={{fontSize: '28px', paddingLeft: '2vw'}}>
+                    <div style={{fontSize: '28px', paddingLeft: '5.5vw'}}>
                       Add a Class!
                     </div>
 
                     <div className="flex-sb" style={{marginTop: '2vh', width: '25%'}}>
-                      <div style={{paddingLeft: '0.5vw'}}>
+                      <div style={{paddingLeft: '0.5 vw'}}>
                         Class Name
                       </div>
 
@@ -320,7 +320,7 @@ export default class Admin extends React.Component {
                       </div>
                     </div>
 
-                    <button type="submit" className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
+                    <button type="submit" className="btn btn-primary blue btn-lg" style={{marginTop: '10vh', marginLeft: '15vw'}}>
                         Submit
 
                     </button>
@@ -348,6 +348,7 @@ export default class Admin extends React.Component {
             {/* <div style={emptyspace}></div> */}
 
             {/* Table that displays each individual user's data/scores */}
+            
             <div className="table-container" style={{marginTop: '20vh'}}>
               <Table striped bordered hover className="scrollable-table" 
                   style={{ width: '100%', overflowX: 'auto', whiteSpace: 'nowrap' }}>
