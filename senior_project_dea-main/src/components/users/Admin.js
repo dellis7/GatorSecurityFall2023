@@ -23,13 +23,15 @@ export default class Admin extends React.Component {
         cname: "",
         inviteClass:"",
         email:"",
-        // myStudents:null,
-        // myClasses:null,
-        myClasses: [{id: '1', className: 'COP1000'},
-                    {id: '2', className: 'COP2000'},
-                    {id: '3', className: 'COP3000'} ],
-        myStudents: [{email: 'EXAMPLE1@EX.COM', name: 'EXAMPLE1 JR.', classes: ['COP1000', 'COP2000']},
-                     {email: 'EXAMPLE2@EX.COM', name: 'EXAMPLE2 JR.', classes: ['COP2000', 'COP3000']}],
+        myStudents:null,
+        myClasses:null,
+
+        // These are examples of how the myStudents and myClasses data is structured.
+        // myClasses: [{id: '1', className: 'COP1000'},
+        //             {id: '2', className: 'COP2000'},
+        //             {id: '3', className: 'COP3000'} ],
+        // myStudents: [{email: 'EXAMPLE1@EX.COM', name: 'EXAMPLE1 JR.', classes: ['COP1000', 'COP2000']},
+        //              {email: 'EXAMPLE2@EX.COM', name: 'EXAMPLE2 JR.', classes: ['COP2000', 'COP3000']}],
       };
       this.handleSubmitAddClass = this.handleSubmitAddClass.bind(this);
       this.handleSubmitAddStudent = this.handleSubmitAddStudent.bind(this);
@@ -85,17 +87,33 @@ export default class Admin extends React.Component {
         });
       
       //Function that pulls all the teacher's classes
-      apiRequest("API_ENDPOINT").then((res)=>res.json())
-      .then(data=>{
+      apiRequest("/classes/getAllClasses", {
+          method: "POST",
+        }).then((res) => res.json())
+        .then(data=>{
         //Set user retrieved to myClasses variable
-        this.setState({myClasses: data});
-      });
+            this.setState({myClasses: data});
+        });
+
       //Function that pulls all the teacher's students
-      apiRequest("API_ENDPOINT").then((res)=>res.json())
-      .then(data=>{
-        //Set user retrieved to myStudents variable
-        this.setState({myStudents: data});
+      apiRequest("API_ENDPOINT", {
+          method: "POST",
+          }
+        ).then((res)=>res.json())
+
+        .then(data=>{
+            //Set user retrieved to myStudents variable
+            this.setState({myStudents: data});
       });
+
+      if (this.state.myClasses == null){
+          this.state.myClasses = [{id: '0', className: 'You have no classes!'}]
+      }
+
+      if (this.state.myStudents == null){
+          this.state.myStudents = [{email: 'EXAMPLE1@EX.COM', name: 'You have no students!', classes: ['COP1000', 'COP2000']}]
+      }
+
     }
 
     //Inviting students or adding a new class
@@ -126,11 +144,11 @@ export default class Admin extends React.Component {
     }
 
     //Remove class (current user must own class)
-    handleSubmitRemoveClass(classInfo){ //I took out the 'e' parameter
+    handleSubmitRemoveClass(classInfo){
         //Needed for Mozilla Firefox. Without it, forms won't be properly submitted to the backend.
-        //e.preventDefault();
+        // e.preventDefault();
 
-        const cname = classInfo.className
+        const cname = classInfo.name;
         const educatorEmail = this.state.userInfo["email"]
 
         //Function that removes class from backend
@@ -412,7 +430,7 @@ export default class Admin extends React.Component {
                       <tr key={classInfo.id}>
                         <td>{index}</td>
                         <td>{classInfo.id}</td>
-                        <td>{classInfo.className}</td>
+                        <td>{classInfo.name}</td>
                         <td>
                           <button onClick={() => this.handleSubmitRemoveClass(classInfo)}>
                             Delete

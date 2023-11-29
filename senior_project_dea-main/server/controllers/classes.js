@@ -102,10 +102,49 @@ const addStudent = (async (req, res) => {
 
 })
 
+// const removeStudent = (async (req, res) => {
+//
+// })
+//
+// const getAllStudents = (async (req, res) => {
+//
+// })
+//
+const getAllClasses = (async (req, res) => {
+    //Only allow access if the request has a valid admin token
+    const admin = await privileges.isAdmin(req);
+    const user = req.headers.authorization;
+    const educatorEmail = user.email;
+
+    if(Number(admin) === Number(1)) {
+        //Fetch all users and send them back in the response
+        try{
+            Class.find({educator: educatorEmail}).then((data)=>{
+                res.send(data);
+            })
+                .catch((error)=>{
+                    res.send({status: "error", data:error});
+                });
+        } catch(error) {
+            res.sendStatus(500);
+            return;
+        }
+    }
+    else if(Number(admin) === Number(2)) {
+        res.sendStatus(500);
+        return;
+    }
+    else {
+        res.sendStatus(403);
+        return;
+    }
+})
+
 module.exports = {
     createClass,
     removeClass,
     addStudent,
     // removeStudent,
-    // getAllStudents
+    // getAllStudents,
+    getAllClasses
 }

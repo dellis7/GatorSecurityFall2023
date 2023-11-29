@@ -7,7 +7,8 @@ const {
     removeClass,
     addStudent,
     removeStudent,
-    getAllStudents
+    getAllStudents,
+    getAllClasses
 } = require('../controllers/classes.js')
 
 //Connect classes controller functions to endpoints
@@ -21,6 +22,8 @@ router.post('/addStudent', addStudent)
 // router.post('/removeStudent', removeStudent)
 //
 // router.post('/getAllStudents', getAllStudents)
+
+router.post('/getAllClasses', getAllClasses)
 
 
 module.exports = router
