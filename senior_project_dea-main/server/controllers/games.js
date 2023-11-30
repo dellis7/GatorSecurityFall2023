@@ -261,7 +261,10 @@ const createGame = (async(req,res) =>{
             topic: req.body.topic,
         })
         await question.save();
-        res.sendStatus(201);
+        res.status(201)
+        res.json({id: question._id})
+        
+        
         return;
     //Catch any errors
     } catch(error) {

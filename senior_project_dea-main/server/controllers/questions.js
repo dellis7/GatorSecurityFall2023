@@ -47,7 +47,7 @@ const getByTopic = (async(req,res)=>{
         //Else if the topic is a numerical id
 		} else if(!isNaN(parseInt(req.params.topic))) {
             //Find specific question information in database and send it
-			TraditionalQuestion.find({topic: req.params.topic.toString(), displayType: req.params.displayType.toString()}).then((data)=>{
+			TraditionalQuestion.find({topic: req.params.topic.toString(), displayType: "learn"}).then((data)=>{
                 //Ensure answers aren't sent to the frontend unless you are an admin
                 if(Number(isAdmin) !== Number(1)) {
                     for(const element of data) {

@@ -96,15 +96,15 @@ export default class Admin extends React.Component {
         });
 
       //Function that pulls all the teacher's students
-      apiRequest("API_ENDPOINT", {
-          method: "POST",
-          }
-        ).then((res)=>res.json())
+      // apiRequest("API_ENDPOINT", {
+      //     method: "POST",
+      //     }
+      //   ).then((res)=>res.json())
 
-        .then(data=>{
-            //Set user retrieved to myStudents variable
-            this.setState({myStudents: data});
-      });
+      //   .then(data=>{
+      //       //Set user retrieved to myStudents variable
+      //       this.setState({myStudents: data});
+      // });
 
       if (this.state.myClasses == null){
           this.state.myClasses = [{id: '0', className: 'You have no classes!'}]

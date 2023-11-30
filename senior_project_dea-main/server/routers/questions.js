@@ -17,7 +17,7 @@ const { validateQuestion } = require('../validators/questionValidator')
 
 router.get('/getcount/:displayType', getCount)
 
-router.get('/get/:topic/:displayType', getByTopic)
+router.get('/get/:topic/', getByTopic)
 
 router.delete('/delete/:id', deleteById)
 

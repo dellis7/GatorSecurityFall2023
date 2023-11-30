@@ -95,7 +95,8 @@ export default function QuestionForm() {
   };
 
   //this function makes a change to the gameName field
-  const handleGameNameChange = (value) => {
+  const handleGameNameChange = (e) => {
+    const { name, value } = e.target;
     setGameName(value);
   }
 
@@ -181,6 +182,9 @@ export default function QuestionForm() {
       });
     } else if (newDisplayType === "game") {
       //here will be the fetch function(s) that inserts a new game question
+      
+        
+      
         if (newGameType === "CYOA") {
           //apirequest
         }
@@ -205,13 +209,32 @@ export default function QuestionForm() {
             });
         }
         else if (newGameType === "MM") {
+          const qid = apiRequest('/games/create', {
+            method: "POST",
+            body: JSON.stringify({
+              questionData: JSON.stringify([]),
+              type: 2,
+              topic: newTopic,
+              name: gameName,
+            })
+          })
+          .then(response => response.json())
+          .then((res) => {
+            const qid = res.id
           //apirequest
-           fetch('MM_API_ENDPOINT', {
+           apiRequest('/games/matching/create', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(MMFormData),
+            body: JSON.stringify({
+              parentQuestionId: qid,
+              content: {
+                [MMFormData.term1]: MMFormData.definition1,
+                [MMFormData.term2]: MMFormData.definition2,
+                [MMFormData.term3]: MMFormData.definition3,
+                [MMFormData.term4]: MMFormData.definition4
+
+              }
+            })
+          })
         })
         .then(response => response.json())
         .then(data => {
@@ -225,6 +248,7 @@ export default function QuestionForm() {
         });
           
         }
+      
         
     }
   };
