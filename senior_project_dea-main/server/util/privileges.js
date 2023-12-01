@@ -1,3 +1,4 @@
+/** @module */
 //Imports
 const mongoose = require("mongoose")
 
@@ -12,7 +13,11 @@ const Jwt_secret_Obj = process.env.JWT_SECRET;
 //DB Models
 const User = mongoose.model("UserInfo")
 
-//Check administrative status of users
+/**
+ * Check administrative status of users
+ * @param {Request} req
+ * @returns {Number} 1 if user who initiated request is admin
+ */
 async function isAdmin(req)
 {
     try {

@@ -12,11 +12,14 @@ const User = mongoose.model("UserInfo")
 const dotenv = require("dotenv")
 dotenv.config('./.env')
 
-//JWT information
-const jwtObj = require("jsonwebtoken");
-const Jwt_secret_Obj = process.env.JWT_SECRET;
-
-//create class endpoint controller
+/**
+ * create class endpoint controller
+ * @function
+ * @async
+ * @param {string} req.body.cname class name
+ * @param {string} req.body.educatorEmail email of educator for class
+ * @memberof /classes
+ */
 const createClass = (async (req, res) => {
 
     const className = req.body.cname.toString();
@@ -47,6 +50,14 @@ const createClass = (async (req, res) => {
 })
 
 //TODO test functionality and add to website
+/**
+ * delete class endpoint controller
+ * @function
+ * @async
+ * @param {string} req.body.cname class name
+ * @param {string} req.body.educatorEmail email of educator for class
+ * @memberof /classes
+ */
 const removeClass = (async (req, res) => { //TODO allow admin to delete any class
 
     const className = req.body.cname.toString();
@@ -69,6 +80,15 @@ const removeClass = (async (req, res) => { //TODO allow admin to delete any clas
     }
 })
 
+/**
+ * add student to class endpoint controller
+ * @function
+ * @async
+ * @param {string} req.body.studentEmail email of student to add
+ * @param {string} req.body.className class to add student to
+ * @param {string} req.body.educatorEmail email of educator for class
+ * @memberof /classes
+ */
 const addStudent = (async (req, res) => {
 
     const studentEmail = req.body.studentEmail.toString();
@@ -110,6 +130,13 @@ const addStudent = (async (req, res) => {
 //
 // })
 //
+/**
+ * get all classes controller
+ * @function
+ * @async
+ * @returns {Class[]} list of classes
+ * @memberof /classes
+ */
 const getAllClasses = (async (req, res) => {
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);

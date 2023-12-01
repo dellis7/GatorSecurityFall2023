@@ -14,12 +14,15 @@ const AccountType = mongoose.model("AccountType")
 const dotenv = require("dotenv")
 dotenv.config('./.env')
 
-//JWT information
-const jwtObj = require("jsonwebtoken");
-const Jwt_secret_Obj = process.env.JWT_SECRET;
 
-
-//Get user info endpoint controller
+/**
+ * Get current user info endpoint controller
+ * @function
+ * @async
+ * @returns {User}
+ * @memberof /users
+ * @name userInfo
+ */
 const getUserInfo = (async (req, res) => {
     //"Grab" token from request body (req.body)
     const user = req.headers.authorization;
@@ -39,7 +42,15 @@ const getUserInfo = (async (req, res) => {
     }
 })
 
-//Update user info endpoint controller
+/**
+ * Update user info endpoint controller
+ * @function
+ * @async
+ * @param {string} req.params.id id of user to update
+ * @param {object} req.body object containing the attributes to update of id
+ * @memberof /users
+ * @name update
+ */
 const updateUser = (async (req, res) => {
     try{
         //Set _id to the value given in url under :id
@@ -82,7 +93,14 @@ const updateUser = (async (req, res) => {
     }
 })
 
-//Get all users endpoint controller for the admin panel
+/**
+ * Get all users endpoint controller for the admin panel
+ * @function
+ * @async
+ * @returns {User[]}
+ * @memberof /users
+ * @name allUsers
+ */
 const getAllUsers = (async (req, res) => {
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
@@ -111,7 +129,15 @@ const getAllUsers = (async (req, res) => {
     }
 })
 
-//Check answer and update score endpoint controller for learn questions
+/**
+ * Check answer and update score endpoint controller for learn questions
+ * @function
+ * @async
+ * @param {string} req.body.qid question id
+ * @param {string} req.body.answer answer to question
+ * @memberof /users
+ * @name updatelearnscore
+ */
 const checkAnswerAndUpdateScore = (async (req, res) => {
     try{
         //Retrieve the question being answered
@@ -169,7 +195,14 @@ const checkAnswerAndUpdateScore = (async (req, res) => {
     }
 })
 
-//Update score endpoint controller
+/**
+ * Update score endpoint controller
+ * @function
+ * @async
+ * @param {string} req.body.qid question id to mark complete
+ * @memberof /users
+ * @name updateScore
+ */
 const updateScore = (async (req,res) => {
     //For CYOA questions, we should score the question based on whether they got the whole thing correct,
     //so we only need to pass the parent question ID here to count it (along with the user token)
@@ -202,7 +235,14 @@ const updateScore = (async (req,res) => {
     }
 })
 
-//Check if a user is an admin endpoint controller
+/**
+ * Check if a user is an admin endpoint controller
+ * @function
+ * @async
+ * @returns status 200 if true
+ * @memberof /users
+ * @name checkPrivileges
+ */
 const checkPrivileges = (async (req, res) => {
     //Check administrative privileges
     const admin = await privileges.isAdmin(req);
@@ -219,6 +259,14 @@ const checkPrivileges = (async (req, res) => {
         return;
     }
 })
+/**
+ * Get list of account types
+ * @function
+ * @async
+ * @returns {AccountType[]}
+ * @memberof /users
+ * @name getAccountTypes
+ */
 const getAccountTypes = (async (req, res) => {
     res.send(await AccountType.distinct("name"))
 })

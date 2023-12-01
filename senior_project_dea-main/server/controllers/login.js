@@ -13,7 +13,18 @@ dotenv.config('./.env')
 const jwtObj = require("jsonwebtoken");
 const Jwt_secret_Obj = process.env.JWT_SECRET;
 
-//Register endpoint controller
+/**
+ * Register endpoint controller
+ * @function
+ * @async
+ * @param {object} req.body
+ * @param {string} req.body.fname user first name
+ * @param {string} req.body.lname user last name
+ * @param {string} req.body.email user email
+ * @param {string} req.body.password user password
+ * @memberof /login
+ * @name register
+ */
 const register = (async (req, res) => {
     //Obtain user information
     const fname = req.body.fname.toString();
@@ -46,7 +57,16 @@ const register = (async (req, res) => {
 })
 
 
-//Login endpoint controller
+/**
+ * Login endpoint controller
+ * @function
+ * @async
+ * @param {object} req.body
+ * @param {string} req.body.email user email
+ * @param {string} req.body.password user password
+ * @memberof /login
+ * @name login
+ */
 const login = (async (req, res) => {
     //Obtain user information
     const email = req.body.email.toString();
