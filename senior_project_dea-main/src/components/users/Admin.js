@@ -240,6 +240,17 @@ export default class Admin extends React.Component {
       }
   }
 
+    handleSubmitRemoveStudent(student){
+        apiRequest("/classes/removeStudent", {
+            method: "POST",
+            body: JSON.stringify({
+                studentEmail: student.email,
+                className: student.className
+            })
+        })
+        window.location.href = "./admin";
+    }
+
     
 
     render(){
@@ -475,6 +486,7 @@ export default class Admin extends React.Component {
                       <th>#</th>
                       <th>Email</th>
                       <th>Class</th>
+                        <th>Remove Student</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -483,6 +495,11 @@ export default class Admin extends React.Component {
                           <td>{index}</td>
                           <td>{student.email}</td>
                           <td>{student.className}</td>
+                          <td>
+                              <button onClick={() => this.handleSubmitRemoveStudent(student)}>
+                                  Remove
+                              </button>
+                          </td>
                       </tr>
                     ))}
                   </tbody>

@@ -119,9 +119,22 @@ const addStudent = (async (req, res) => {
 
 })
 
+/**
+ * Remove student from class endpoint controller
+ * @function
+ * @async
+ * @param (string) req.body.studentEmail email of student to remove
+ * @param (string) req.body.className name of class to remove from
+ * @memberof /classes
+ */
 const removeStudent = (async (req, res) => {
-    const student = req.body.studentEmail.toString();
+    const studentEmail = req.body.studentEmail.toString();
     const currentClass = req.body.className.toString();
+
+    await Class.updateOne(
+        {name: currentClass},
+        {$pull: {students: studentEmail}}
+    )
 })
 
 //
