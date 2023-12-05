@@ -8,7 +8,6 @@ const {
     removeClass,
     addStudent,
     removeStudent,
-    getAllStudents,
     getAllClasses
 } = require('../controllers/classes.js')
 
@@ -19,10 +18,8 @@ router.post('/createClass', createClass)
 router.delete('/removeClass', removeClass)
 
 router.post('/addStudent', addStudent)
-//
-// router.post('/removeStudent', removeStudent)
-//
-// router.post('/getAllStudents', getAllStudents)
+
+router.post('/removeStudent', removeStudent)
 
 router.post('/getAllClasses', getAllClasses)
 

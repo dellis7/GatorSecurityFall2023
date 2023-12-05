@@ -30,8 +30,6 @@ const createClass = (async (req, res) => {
         const existingClass = await Class.findOne({name: className})
 
         if (existingClass){
-            console.log("Class already exists!\n")
-            console.log(existingClass)
             return res.send({status: "classExists"})
         }
 
@@ -49,7 +47,7 @@ const createClass = (async (req, res) => {
 
 })
 
-//TODO test functionality and add to website
+
 /**
  * delete class endpoint controller
  * @function
@@ -58,7 +56,7 @@ const createClass = (async (req, res) => {
  * @param {string} req.body.educatorEmail email of educator for class
  * @memberof /classes
  */
-const removeClass = (async (req, res) => { //TODO allow admin to delete any class
+const removeClass = (async (req, res) => {
 
     const className = req.body.cname.toString();
     const educatorEmail = req.body.educatorEmail.toString();
@@ -99,7 +97,6 @@ const addStudent = (async (req, res) => {
     try{
         const studentToAdd = await User.findOne({email: studentEmail})
         const classToAddTo = await Class.findOne({name: className, educator: educatorEmail})
-        console.log(studentToAdd) //TODO
 
         if (studentToAdd == null){
             return res.send({status: "noSuchStudent"})
@@ -122,13 +119,11 @@ const addStudent = (async (req, res) => {
 
 })
 
-// const removeStudent = (async (req, res) => {
-//
-// })
-//
-// const getAllStudents = (async (req, res) => {
-//
-// })
+const removeStudent = (async (req, res) => {
+    const student = req.body.studentEmail.toString();
+    const currentClass = req.body.className.toString();
+})
+
 //
 /**
  * get all classes controller
@@ -171,7 +166,6 @@ module.exports = {
     createClass,
     removeClass,
     addStudent,
-    // removeStudent,
-    // getAllStudents,
+    removeStudent,
     getAllClasses
 }

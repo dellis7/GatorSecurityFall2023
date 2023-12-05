@@ -23,19 +23,21 @@ export default class Admin extends React.Component {
         cname: "",
         inviteClass:"",
         email:"",
-        myStudents:null,
-        myClasses:null,
+        myStudents:[{email: "You have no students!", className: "N/A"}],
+        myClasses:[{id: '0', className: 'You have no classes!'}],
+        currentClass: null
 
         // These are examples of how the myStudents and myClasses data is structured.
         // myClasses: [{id: '1', className: 'COP1000'},
         //             {id: '2', className: 'COP2000'},
         //             {id: '3', className: 'COP3000'} ],
-        // myStudents: [{email: 'EXAMPLE1@EX.COM', name: 'EXAMPLE1 JR.', classes: ['COP1000', 'COP2000']},
-        //              {email: 'EXAMPLE2@EX.COM', name: 'EXAMPLE2 JR.', classes: ['COP2000', 'COP3000']}],
+        // myStudents: [{email: 'EXAMPLE1@EX.COM', name: 'EXAMPLE1 JR.', class: 'COP1000'},
+        //              {email: 'EXAMPLE2@EX.COM', name: 'EXAMPLE2 JR.', class: 'COP2000'}],
       };
       this.handleSubmitAddClass = this.handleSubmitAddClass.bind(this);
       this.handleSubmitAddStudent = this.handleSubmitAddStudent.bind(this);
       this.handleSubmitRemoveClass = this.handleSubmitRemoveClass.bind(this);
+      // this.handleGatherClassStudents = this.handleGatherClassStudents.bind(this);
     }
 
     componentDidMount(){
@@ -93,7 +95,31 @@ export default class Admin extends React.Component {
         .then(data=>{
         //Set user retrieved to myClasses variable
             this.setState({myClasses: data});
-        });
+
+        }).then(() => {
+            if (this.state.myClasses == null){
+                this.setState({myClasses: [{id: '0', className: 'You have no classes!'}]})
+                this.setState({myStudents: {email: "You have no students!", className: "N/A"}});
+            }
+            else {
+                let students = [];
+                let id = 0;
+                this.state.myClasses.map((eachClass) => {
+                    if (eachClass.students != null) {
+                        for (let i = 0; i < eachClass.students.length; i++) {
+                            let student = {};
+                            student.email = eachClass["students"][i]
+                            student.className = eachClass["name"];
+                            student.key = id;
+                            students[id++] = student;
+                        }
+                    }
+                        this.setState({myStudents: students})
+                    }
+                )
+            }
+      })
+      ;
 
       //Function that pulls all the teacher's students
       // apiRequest("API_ENDPOINT", {
@@ -105,15 +131,6 @@ export default class Admin extends React.Component {
       //       //Set user retrieved to myStudents variable
       //       this.setState({myStudents: data});
       // });
-
-      if (this.state.myClasses == null){
-          this.state.myClasses = [{id: '0', className: 'You have no classes!'}]
-      }
-
-      if (this.state.myStudents == null){
-          this.state.myStudents = [{email: 'EXAMPLE1@EX.COM', name: 'You have no students!', classes: ['COP1000', 'COP2000']}]
-      }
-
     }
 
     //Inviting students or adding a new class
@@ -222,6 +239,7 @@ export default class Admin extends React.Component {
         alert("Update Failed")
       }
   }
+
     
 
     render(){
@@ -245,6 +263,14 @@ export default class Admin extends React.Component {
         let totalScore = ["Total Score: " + gameScore + "/" + gameMax + "\n", "\n"]
         return <th style={{whiteSpace:"pre-wrap", wordWrap:"break-word"}}>{totalScore}</th>
       }
+
+      // const self = this;
+      // //Function to handle selecting a class from your list of classes
+      // function selectClass(classInfo){
+      //   self.setState({currentClass: classInfo.name});
+      //   self.handleGatherClassStudents(classInfo);
+      //
+      // }
 
       if(this.state.allUsers.status === 403) {
         return (<>You are not authorized to access this page.</>)
@@ -377,7 +403,7 @@ export default class Admin extends React.Component {
                       <th>First Name</th>
                       <th>Last Name</th>
                       <th>Email</th>
-                      <th>Class</th>
+                      {/*<th>Class</th>*/}
                       <th>Learn Sections</th>
                       <th>Game Sections</th>
                       </tr>
@@ -390,7 +416,7 @@ export default class Admin extends React.Component {
                               <td>{user["fname"]}</td>
                               <td>{user["lname"]}</td>
                               <td>{user["email"]}</td>
-                              <td>COP3400</td>
+                              {/*<td>COP3400</td>*/}
                               {createLearnView(user)}
                               {createGameView(user)}
                               {
@@ -421,7 +447,6 @@ export default class Admin extends React.Component {
                   <thead>
                     <tr>
                       <th>#</th>
-                      <th>Class ID</th>
                       <th>Class Name</th>
                     </tr>
                   </thead>
@@ -429,7 +454,6 @@ export default class Admin extends React.Component {
                     {this.state.myClasses.map((classInfo, index) => (
                       <tr key={classInfo.id}>
                         <td>{index}</td>
-                        <td>{classInfo.id}</td>
                         <td>{classInfo.name}</td>
                         <td>
                           <button onClick={() => this.handleSubmitRemoveClass(classInfo)}>
@@ -450,20 +474,15 @@ export default class Admin extends React.Component {
                     <tr>
                       <th>#</th>
                       <th>Email</th>
-                      <th>Name</th>
+                      <th>Class</th>
                     </tr>
                   </thead>
                   <tbody>
                     {this.state.myStudents.map((student, index) => (
-                      <tr key={student.email}>
-                        <td>{index}</td>
-                        <td>{student.email}</td>
-                        <td>{student.name}</td>
-                        {/* <td>
-                          <button onClick={() => handleKickOutStudent(student.email)}>
-                            Remove
-                          </button>
-                        </td> */}
+                      <tr key={index}>
+                          <td>{index}</td>
+                          <td>{student.email}</td>
+                          <td>{student.className}</td>
                       </tr>
                     ))}
                   </tbody>
