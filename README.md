@@ -3,7 +3,7 @@
 ## Section 1: Cloning the repo:
 * Make a folder somewhere on your computer
 * `cd` to that folder from the command line
-* Run `git clone [https://github.com/cwojtak/GatorSecurity.git](https://github.com/dellis7/GatorSecurityFall2023.git)` to clone the repo
+* Run `git clone https://github.com/dellis7/GatorSecurityFall2023.git` to clone the repo
 
 ## Section 2: Installing Node.js packages
 Run the following commands from the `senior_project_dea-main` directory:
@@ -74,14 +74,5 @@ Quick references for how to add questions are below.
 
 ## How to add traditional questions
 Use the question edit page available to admin users to manipulate traditional questions.
-
-## How to add a game question
-First, use the Login example Postman request to login as an admin and obtain a token to perform these operations.           
-
-Then, use the documentation and the Create Game example Postman request in order to create a game. If you want it to be a CYOA game, set the type to 0. If you want it to be a DND game, set the type to 1. If you want it to be a Matching game, set the type to 2. Refer to the constants documentation in the PDF for more information.    
-
-After creating the game, use the Get Game by Type endpoint using the all type and find the ID of the game that was just created. You'll need to supply this to any CYOA, DND, or Matching questions you create.
-
-Then, use the documentation and either the Create CYOA, Create DND, or Create Matching example Postman requests in order to create subquestions for the game. Make sure that the question type matches the GameQuestion type.          
 
 After adding adding new questions, you should be able to refresh the Games page to see the game and play it.
