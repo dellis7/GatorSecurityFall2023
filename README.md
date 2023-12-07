@@ -27,8 +27,8 @@ LPORT=5000
 * In the `GatorSecurity` directory (parent to `senior_project_dea-main` directory) create a `.gitignore` file if one does not already exist
 * Add `.env` to the `gitignore` to prevent login credentials from being pushed to the repo
 
-From the 'senior_project_dea-main/src' directory, do the following:
-* Edit the 'Config.js' to have the 'SERVER_ADDRESS' variable set to the IP/Hostname of the backend server.
+From the `senior_project_dea-main/src` directory, do the following:
+* Edit the `Config.js` to have the `SERVER_ADDRESS` variable set to the IP/Hostname of the backend server.
 
 ## Section 4: Pulling in the latest changes to your local environment
 If changes are made in the repo, you will need to pull those changes in by doing the following:
@@ -66,7 +66,7 @@ To start the backend run the following commands from the `senior_project_dea-mai
 
 To start the frontend run, open a second terminal in the `senior_project_dea-main` directory and run `npm start`.
 
-Note: If PWD is 'senior_project_dea-main', 'npm run dev' will automatically run the server and front end concurrently without the need for a second console *EXTREMELY IMPORTANT FOR HOSTING*
+Note: If PWD is `senior_project_dea-main`, `npm run dev` will automatically run the server and front end concurrently without the need for a second console *EXTREMELY IMPORTANT FOR HOSTING*
 
 # About the Included Database    
 A database dump with an existing admin user and questions is included with distributions of this project. To see how to import this database dump, refer to `MongoDB Setup.pdf` in the Resources folder found in the root folder of this repository. The `Gator_Security_DB_Dump.zip` referred to in this document can be found in the same Resources folder.         
