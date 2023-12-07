@@ -74,8 +74,13 @@ A database dump with an existing admin user and questions is included with distr
 The administrative user included in this database dump has a default email `admin@localhost` and a default password `admin` that can be changed when using the application while logged in as the admin. It is highly recommended that these default credentials be changed when first using the application.         
 
 # Backend Documentation
-For the complete backend API documentation, please refer to `GatorSecurity Backend API Documentation.pdf` in the Resources folder found in the root folder of this repository. Accompanying this documentation are example Postman requests available under the Postman folder in the same Resources folder. You can refer to [this document](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-from-github-repositories:~:text=an%20API.-,Importing%20from%20GitHub%20repositories,-You%20can%20import) to see how to import these example requests into Postman.
-Quick references for how to add questions are below.
+The backend documentation is done with JsDoc. Most IDEs will pick up the JsDoc from the code and display it for you, but if you want to view a document, you can build it with JsDoc.
+
+```bash
+npm install -g jsdoc
+```
+
+You can then run either `build_docs.sh` or `build_docs.bat` depending on your terminal.
 
 ## How to add traditional questions
 Use the question edit page available to admin users to manipulate traditional questions.
