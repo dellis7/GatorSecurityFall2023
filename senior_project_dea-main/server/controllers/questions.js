@@ -15,10 +15,17 @@ dotenv.config('./.env')
 //Topic map
 const questionTopicMap = {other: 0, input_validation: 1, encoding_escaping: 2, xss: 3, sql_injection: 4, crypto: 5, auth: 6};
 
-//Get count of all traditional learn questions in the database endpoint controller
+/**
+ * Get count of all traditional learn questions in the database endpoint controller
+ * @function
+ * @async
+ * @returns {{status: Number, data: Number}} {status: Number, data: Number} http status code and count
+ * @memberof /questions
+ * @name getcount
+ */
 const getCount = (async(req,res) =>{
     //Count learn questions and return the count in the response
-    TraditionalQuestion.count({displayType:req.body.displayType.toString()}).then((count)=>{
+    TraditionalQuestion.count({displayType:req.params.displayType.toString()}).then((count)=>{
         res.send({status:200, data:count});
     })
     .catch((error)=>{
@@ -26,7 +33,16 @@ const getCount = (async(req,res) =>{
     });
 })
 
-//Get traditional learn questions by topic endpoint controller
+
+/**
+ * Get traditional learn questions by topic endpoint controller
+ * @function
+ * @async
+ * @param {string} req.params.topic the topic to get
+ * @returns {TraditionalQuestion[]} question data
+ * @memberof /questions
+ * @name get
+ */
 const getByTopic = (async(req,res)=>{
     //Check administrative status
     let isAdmin = await privileges.isAdmin(req);
@@ -47,7 +63,7 @@ const getByTopic = (async(req,res)=>{
         //Else if the topic is a numerical id
 		} else if(!isNaN(parseInt(req.params.topic))) {
             //Find specific question information in database and send it
-			TraditionalQuestion.find({topic: req.params.topic.toString(), displayType: req.body.displayType.toString()}).then((data)=>{
+			TraditionalQuestion.find({topic: req.params.topic.toString(), displayType: "learn"}).then((data)=>{
                 //Ensure answers aren't sent to the frontend unless you are an admin
                 if(Number(isAdmin) !== Number(1)) {
                     for(const element of data) {
@@ -77,7 +93,14 @@ const getByTopic = (async(req,res)=>{
     }
 })
 
-//Delete traditional question by id endpoint controller
+/**
+ * Delete traditional question by id endpoint controller
+ * @function
+ * @async
+ * @param {string} req.params.id question to delete
+ * @memberof /questions
+ * @name delete
+ */
 const deleteById = (async(req,res) => {
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
@@ -129,7 +152,20 @@ const deleteById = (async(req,res) => {
     }
 })
 
-//Update traditional question endpoint controller
+/**
+ * Update traditional question endpoint controller 
+ * @function
+ * @async
+ * @param {string} req.params.id question to update
+ * @param {object} req.body
+ * @param {Number} req.body.type question type
+ * @param {Number} req.body.topic question topic
+ * @param {string[]} req.body.options possible answer choices
+ * @param {string} req.body.answer answer to question
+ * @param {string} req.body.displayType should be learn
+ * @memberof /questions
+ * @name update
+ */
 const update = (async(req,res) => {
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
@@ -171,7 +207,20 @@ const update = (async(req,res) => {
     }
 })
 
-//Create traditional question endpoint controller
+
+/**
+ * Create traditional question endpoint controller
+ * @function
+ * @async
+ * @param {object} req.body
+ * @param {Number} req.body.type question type
+ * @param {Number} req.body.topic question topic
+ * @param {string[]} req.body.options possible answer choices
+ * @param {string} req.body.answer answer to question
+ * @param {string} req.body.displayType should be learn
+ * @memberof /questions
+ * @name create
+ */
 const create = (async(req,res)=>{
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);

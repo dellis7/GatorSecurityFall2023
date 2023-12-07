@@ -3,6 +3,7 @@ import GetConfig from '../../Config.js';
 import '../componentStyling/buttons.css';
 import '../componentStyling/textStyling.css';
 import '../componentStyling/Game.css';
+import apiRequest from '../../util/api.js';
 
 function GamePage() {
     const [cyoaGameQuestions, setCYOAGameQuestions] = React.useState('');
@@ -31,16 +32,7 @@ function GamePage() {
 
     //Function call to backend to get the game questions by each type (CYOA, DND, MM)
     const getGameQuestionsByType = (type_, setGameQuestionData_) => {
-        fetch(GetConfig().SERVER_ADDRESS + "/games/getByType/" + type_, {
-          method: "POST",
-          crossDomain:true,
-          headers:{
-              "Content-Type":"application/json",
-              Accept:"application/json",
-              "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-          },
-          body:JSON.stringify({}),
-          }).then((res) => res.json())
+        apiRequest("/games/getByType/" + type_).then((res) => res.json())
           .then((data)=>{
             //Set the data retrieved to their respective state variables (e.g., set CYOA data to cyoaGameQuestions)
             setGameQuestionData_(data);

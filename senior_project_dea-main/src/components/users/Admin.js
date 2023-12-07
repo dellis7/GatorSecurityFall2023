@@ -1,84 +1,254 @@
 import React from 'react';
 import Table from 'react-bootstrap/Table';
+import Form from 'react-bootstrap/Form'
 import GetConfig from '../../Config.js';
 import {CSVLink} from "react-csv";
 import { LinkContainer } from 'react-router-bootstrap';
 import "./css/tables.css"
 import "./css/admin.css"
+import "./css/inputs.css"
+import "./css/debug.css"
+import apiRequest from '../../util/api.js';
+
 
 export default class Admin extends React.Component {
     constructor(props){
       super(props)
       this.state = {
-        allUsers: null
+        userInfo: null,
+        allUsers: null,
+        accountTypes: null,
+        canEdit: false,
+        studentEmail: "",
+        cname: "",
+        inviteClass:"",
+        email:"",
+        myStudents:[{email: "You have no students!", className: "N/A"}],
+        myClasses:[{id: '0', className: 'You have no classes!'}],
+        currentClass: null
+
+        // These are examples of how the myStudents and myClasses data is structured.
+        // myClasses: [{id: '1', className: 'COP1000'},
+        //             {id: '2', className: 'COP2000'},
+        //             {id: '3', className: 'COP3000'} ],
+        // myStudents: [{email: 'EXAMPLE1@EX.COM', name: 'EXAMPLE1 JR.', class: 'COP1000'},
+        //              {email: 'EXAMPLE2@EX.COM', name: 'EXAMPLE2 JR.', class: 'COP2000'}],
       };
+      this.handleSubmitAddClass = this.handleSubmitAddClass.bind(this);
+      this.handleSubmitAddStudent = this.handleSubmitAddStudent.bind(this);
+      this.handleSubmitRemoveClass = this.handleSubmitRemoveClass.bind(this);
+      // this.handleGatherClassStudents = this.handleGatherClassStudents.bind(this);
     }
+
     componentDidMount(){
+
+      //Function that pulls the current user's profile info from the backend
+      apiRequest("/users/userInfo").then((res)=>res.json())
+          .then(data=>{
+              //Set userInfo with data retrieved from backend
+              this.setState({userInfo: data.data.dbUserData});
+          });
+
       //Function that pulls all user data from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/users/allUsers", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({
-        token:window.localStorage.getItem("token"),
-      }),
-      }).then((res)=>res.json())
+      apiRequest("/users/allUsers").then((res)=>res.json())
       .then(data=>{
         //Set user retrieved to allUsers variable
         this.setState({allUsers: data});
       });
 
       //Function that pulls the total number of questions from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({displayType:'learn'}),
-      }).then((res)=>res.json())
+      apiRequest("/questions/getCount/learn").then((res)=>res.json())
       .then(data=>{
         //Set the total number of learn questions to learnQuestionCount
         this.setState({learnQuestionCount: data.data})
       });
 
       //Function that pulls the total number of questions from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({displayType:'game'}),
-      }).then((res)=>res.json())
+      apiRequest("/questions/getCount/game").then((res)=>res.json())
       .then(data=>{
         //Set the total number of fill in the blank questions to gameQuestionCount
         this.setState({gameQuestionCount: data.data})
       });
 
       //Function that pulls the total number of games from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/games/getCount", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({}),
-      }).then((res)=>res.json())
+      apiRequest("/games/getCount").then((res)=>res.json())
       .then(data=>{
         //Set the total number of game questions (except for Fill in the Blank Questions) to allGamesCount
         this.setState({allGamesCount: data.data})
       });
+      apiRequest("/users/getAccountTypes").then((res) => res.json())
+        .then(data => {
+          //Set user retrieved to allUsers variable
+          this.setState({ accountTypes: data });
+        });
+      //Function that pulls the total number of questions from the backend
+      apiRequest("/users/checkPrivileges").then((res) => res.status === 200)
+        .then(status => {
+          //Set user retrieved to allUsers variable
+          this.setState({ canEdit: status.toString() });
+        });
+      
+      //Function that pulls all the teacher's classes
+      apiRequest("/classes/getAllClasses", {
+          method: "POST",
+        }).then((res) => res.json())
+        .then(data=>{
+        //Set user retrieved to myClasses variable
+            this.setState({myClasses: data});
+
+        }).then(() => {
+            if (this.state.myClasses == null){
+                this.setState({myClasses: [{id: '0', className: 'You have no classes!'}]})
+                this.setState({myStudents: {email: "You have no students!", className: "N/A"}});
+            }
+            else {
+                let students = [];
+                let id = 0;
+                this.state.myClasses.map((eachClass) => {
+                    if (eachClass.students != null) {
+                        for (let i = 0; i < eachClass.students.length; i++) {
+                            let student = {};
+                            student.email = eachClass["students"][i]
+                            student.className = eachClass["name"];
+                            student.key = id;
+                            students[id++] = student;
+                        }
+                    }
+                        this.setState({myStudents: students})
+                    }
+                )
+            }
+      })
+      ;
+
+      //Function that pulls all the teacher's students
+      // apiRequest("API_ENDPOINT", {
+      //     method: "POST",
+      //     }
+      //   ).then((res)=>res.json())
+
+      //   .then(data=>{
+      //       //Set user retrieved to myStudents variable
+      //       this.setState({myStudents: data});
+      // });
+    }
+
+    //Inviting students or adding a new class
+    handleSubmitAddClass(e) {
+        //Needed for Mozilla Firefox. Without it, forms won't be properly submitted to the backend.
+        e.preventDefault();
+
+        const cname = this.state.cname
+        const educatorEmail = this.state.userInfo["email"]
+
+        //Function that registers the user in the backend
+        apiRequest("/classes/createClass", {
+            method: "POST",
+            body:JSON.stringify({
+                cname,
+                educatorEmail
+            }),
+        }).then((res)=>res.json())
+            .then((data)=>{
+                if(data.status==="ok"){
+                    alert("Class Created!");
+                    window.location.href="./admin"
+                }
+                else if (data.status==="classExists"){
+                    alert("This class name already exists!")
+                }
+            })
+    }
+
+    //Remove class (current user must own class)
+    handleSubmitRemoveClass(classInfo){
+        //Needed for Mozilla Firefox. Without it, forms won't be properly submitted to the backend.
+        // e.preventDefault();
+
+        const cname = classInfo.name;
+        const educatorEmail = this.state.userInfo["email"]
+
+        //Function that removes class from backend
+        apiRequest("/classes/removeClass", {
+            method: "DELETE",
+            body:JSON.stringify({
+                cname,
+                educatorEmail
+            }),
+        }).then((res)=>res.json())
+            .then((data)=>{
+                if(data.status==="ok"){
+                    alert("Class Deleted!");
+                    window.location.href="./admin"
+                }
+                else if (data.status==="noSuchClass"){
+                    alert("This class name doesn't exist!")
+                }
+                else if (data.status==="notClassOwner"){
+                    alert("You aren't this class's owner!")
+                }
+            })
+    }
+
+    handleSubmitAddStudent(e){
+        //Needed for Mozilla Firefox. Without it, forms won't be properly submitted to the backend.
+        e.preventDefault();
+
+        const studentEmail = this.state.studentEmail;
+        const className = this.state.inviteClass;
+        const educatorEmail = this.state.userInfo["email"]
+
+        apiRequest("/classes/addStudent", {
+            method: "POST",
+            crossDomain:true,
+            body:JSON.stringify({
+                studentEmail,
+                className,
+                educatorEmail
+            }),
+        }).then((res)=>res.json())
+            .then((data)=>{
+                if(data.status==="ok"){
+                    alert(studentEmail + " added to class " + className);
+                    window.location.href="./admin"
+                }
+                else if (data.status==="noSuchStudent"){
+                    alert("This student doesn't exist!")
+                }
+                else if (data.status==="noSuchClass"){
+                    alert("You don't own a class with this name!")
+                }
+            });
+    }
+
+    async handleChangeAccountType(user, event) {
+    
+      this.value = event.target.value;
+      console.log(event)
+      let res = await apiRequest(`/users/update/${user}`, {
+        method: "PUT",
+        body: JSON.stringify(
+
+          { "accountType": event.target.value }
+        ),
+      }).then((res) => res);
+      if (res.status == 202) {
+        alert("Update Successful");
+      }
+      else {
+        alert("Update Failed")
+      }
+  }
+
+    handleSubmitRemoveStudent(student){
+        apiRequest("/classes/removeStudent", {
+            method: "POST",
+            body: JSON.stringify({
+                studentEmail: student.email,
+                className: student.className
+            })
+        })
+        window.location.href = "./admin";
     }
 
     
@@ -104,6 +274,14 @@ export default class Admin extends React.Component {
         let totalScore = ["Total Score: " + gameScore + "/" + gameMax + "\n", "\n"]
         return <th style={{whiteSpace:"pre-wrap", wordWrap:"break-word"}}>{totalScore}</th>
       }
+
+      // const self = this;
+      // //Function to handle selecting a class from your list of classes
+      // function selectClass(classInfo){
+      //   self.setState({currentClass: classInfo.name});
+      //   self.handleGatherClassStudents(classInfo);
+      //
+      // }
 
       if(this.state.allUsers.status === 403) {
         return (<>You are not authorized to access this page.</>)
@@ -137,9 +315,10 @@ export default class Admin extends React.Component {
       return (
           <div>
             {/* Functionality to invite a student to a class */}
-            <div className="tlmargins align-left flex-sa" style={{textAlign: 'left'}}>
-              <div>
-              <div style={{fontSize: '28px'}}>
+            <div className="tlrmargins align-left flex-sa" style={{textAlign: 'left'}}>
+              <div className='form-a' style={{width: '25vw', borderRadius: '15px', padding: '1vh'}}>
+              <form onSubmit={this.handleSubmitAddStudent}>
+              <div style={{fontSize: '28px', marginLeft: '5vw'}}>
                 Invite Students!
               </div>
               <div className="flex-sb" style={{marginTop: '2vh', width: '25%'}}>
@@ -147,7 +326,10 @@ export default class Admin extends React.Component {
 
                 <div>
                   <label htmlFor="email"></label>
-                  <input type="text" id="emails" name="emails" />
+                  <input type="text" id="emails" name="emails"
+                         placeholder={"Email to Invite"}
+                         onChange={e=>this.setState({studentEmail:e.target.value})}
+                  />
                 </div>
                 
               </div>
@@ -161,36 +343,47 @@ export default class Admin extends React.Component {
 
                 <div>
                   <label htmlFor="class"></label>
-                  <input type="text" id="class" name="class" />
+                  <input type="text" id="class" name="class"
+                         placeholder={"Name of Class"}
+                         onChange={e=>this.setState({inviteClass:e.target.value})}
+                  />
                 </div>
               </div>
 
-              <div className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
+              <button type="submit" className="btn btn-primary blue btn-lg" style={{marginTop: '5vh', marginLeft: '15vw'}}>
                   Submit
+              </button>
+              </form>
               </div>
+
+              <div className="form-b" style={{width: '25vw', padding: '2vh'}}>
+                <form onSubmit={this.handleSubmitAddClass}>
+                    <div style={{fontSize: '28px', paddingLeft: '5.5vw'}}>
+                      Add a Class!
+                    </div>
+
+                    <div className="flex-sb" style={{marginTop: '2vh', width: '25%'}}>
+                      <div style={{paddingLeft: '0.5 vw'}}>
+                        Class Name
+                      </div>
+
+                      <div>
+                        <label htmlFor="newclass"></label>
+                        <input type="text" id="newclass" name="newclass"
+                               placeholder={"Enter new class name"}
+                               onChange={e=>this.setState({cname:e.target.value})}
+                        />
+                      </div>
+                    </div>
+
+                    <button type="submit" className="btn btn-primary blue btn-lg" style={{marginTop: '10vh', marginLeft: '15vw'}}>
+                        Submit
+
+                    </button>
+                </form>
+
               </div>
 
-              <div>
-                <div style={{fontSize: '28px'}}>
-                  Add a Class!
-                </div>
-
-                <div className="flex-sb" style={{marginTop: '2vh', width: '25%'}}>
-                  <div style={{paddingLeft: '0.5vw'}}>
-                    Class Name
-                  </div>
-
-                  <div>
-                    <label htmlFor="newclass"></label>
-                    <input type="text" id="newclass" name="newclass" />
-                  </div>
-                </div>
-
-                <div className="btn btn-primary blue btn-lg" style={{marginTop: '5vh'}}>
-                  Submit
-                </div>
-
-              </div>
             </div>
 
             {/* Download Student Progress Data Button */}
@@ -211,8 +404,9 @@ export default class Admin extends React.Component {
             {/* <div style={emptyspace}></div> */}
 
             {/* Table that displays each individual user's data/scores */}
+
             <div className="table-container" style={{marginTop: '20vh'}}>
-              <Table striped bordered hover classname="scrollable-table" 
+              <Table striped bordered hover className="scrollable-table" 
                   style={{ width: '100%', overflowX: 'auto', whiteSpace: 'nowrap' }}>
                   <thead>
                       <tr>
@@ -220,7 +414,7 @@ export default class Admin extends React.Component {
                       <th>First Name</th>
                       <th>Last Name</th>
                       <th>Email</th>
-                      <th>Class</th>
+                      {/*<th>Class</th>*/}
                       <th>Learn Sections</th>
                       <th>Game Sections</th>
                       </tr>
@@ -233,9 +427,23 @@ export default class Admin extends React.Component {
                               <td>{user["fname"]}</td>
                               <td>{user["lname"]}</td>
                               <td>{user["email"]}</td>
-                              <td>COP3400</td>
+                              {/*<td>COP3400</td>*/}
                               {createLearnView(user)}
                               {createGameView(user)}
+                              {
+                                this.state.canEdit && this.state.accountTypes !== null ? <td>
+                                  <Form.Select aria-label="Account Type" defaultValue={user["accountType"]} onChange={async (event) => this.handleChangeAccountType(user["_id"], event)}>
+                                    {this.state.accountTypes.map((type, index) => <option key={index} value={type}>{type}</option>)}
+                                  </Form.Select>
+                                </td>
+                                  :
+                                  <td>{user["accountType"]}</td>
+                              }
+                              {/* <td>
+                                <button onClick={() => handleDeleteUser(user.email)}>
+                                  Delete
+                                </button>
+                              </td> */}
                           </tr>
                       ))
                       }
@@ -244,8 +452,59 @@ export default class Admin extends React.Component {
             </div>
             {/* Functionalities to delete a class, remove a student from a class*/}
             <div>
-              
+              <h2 style={{marginTop: '5vh'}}>All of Your Classes</h2>
+              <div className="table-container" style={{marginTop: '10vh'}}>
+                <Table striped bordered hover className="scrollable-table" style={{ width: '100%', overflowX: 'auto', whiteSpace: 'nowrap' }}>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Class Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.state.myClasses.map((classInfo, index) => (
+                      <tr key={classInfo.id}>
+                        <td>{index}</td>
+                        <td>{classInfo.name}</td>
+                        <td>
+                          <button onClick={() => this.handleSubmitRemoveClass(classInfo)}>
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
             </div>
+
+            <h2 style={{marginTop: '5vh'}}>All of Your Students</h2>
+            <div className="table-container" style={{marginTop: '10vh'}}>
+                <Table striped bordered hover className="scrollable-table" style={{ width: '100%', overflowX: 'auto', whiteSpace: 'nowrap' }}>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Email</th>
+                      <th>Class</th>
+                        <th>Remove Student</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.state.myStudents.map((student, index) => (
+                      <tr key={index}>
+                          <td>{index}</td>
+                          <td>{student.email}</td>
+                          <td>{student.className}</td>
+                          <td>
+                              <button onClick={() => this.handleSubmitRemoveStudent(student)}>
+                                  Remove
+                              </button>
+                          </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
           </div>
       );
     }

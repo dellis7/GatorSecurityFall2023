@@ -2,6 +2,7 @@ import React from 'react';
 import GetConfig from '../../Config.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../componentStyling/buttons.css';
+import apiRequest from '../../util/api.js';
 
 function GameAdventurePage() {
 
@@ -36,16 +37,7 @@ function GameAdventurePage() {
     //Function that pulls gameQuestion data from backend
     const getGameQuestion = (id_, setGameQuestionData_) => {
 
-        fetch(GetConfig().SERVER_ADDRESS + "/games/getById/" + id_, {
-          method: "POST",
-          crossDomain:true,
-          headers:{
-              "Content-Type":"application/json",
-              Accept:"application/json",
-              "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-          },
-          body:JSON.stringify({}),
-          }).then((res) => res.json())
+        apiRequest("/games/getById/" + id_).then((res) => res.json())
           .then((data)=>{
             setGameQuestionData_(data.data);
         })
@@ -54,16 +46,7 @@ function GameAdventurePage() {
     //Function that pulls CYOAQuestion data from backend
     const getCYOAQuestion = (questionNumber_, setCYOAQuestionData_) => {
 
-        fetch(GetConfig().SERVER_ADDRESS + "/games/cyoa/getById/" + questionNumber_, {
-          method: "POST",
-          crossDomain:true,
-          headers:{
-              "Content-Type":"application/json",
-              Accept:"application/json",
-              "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-          },
-          body:JSON.stringify({}),
-          }).then((res) => res.json())
+        apiRequest("/games/cyoa/getById/" + questionNumber_).then((res) => res.json())
           .then((data)=>{
             setCYOAQuestionData_(data.data);
         })
@@ -93,16 +76,9 @@ function GameAdventurePage() {
             //Else this is the last question
             else {
                 //Update the user's score via HTTP request
-                fetch(GetConfig().SERVER_ADDRESS + "/users/updateScore", {
+                apiRequest("/users/updateScore", {
                     method: "POST",
-                    crossDomain:true,
-                    headers:{
-                        "Content-Type":"application/json",
-                        Accept:"application/json",
-                        "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-                    },
                     body:JSON.stringify({
-                        token:window.localStorage.getItem("token"),
                         qid: gameQuestionData._id,
                     }),
                 }).then((res) => {

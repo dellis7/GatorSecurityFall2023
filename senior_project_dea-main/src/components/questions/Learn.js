@@ -6,6 +6,7 @@ import TradQuestion from './TraditionalQuestion';
 import GetConfig from '../../Config.js';
 import '../componentStyling/textStyling.css';
 import '../componentStyling/Navbar.css';
+import apiRequest from '../../util/api.js';
 
 function LearnPage() {
   
@@ -42,18 +43,7 @@ function LearnPage() {
 
   //Function that pulls the traditional questions from the backend
   const getQuestions = (topic_, setQuestionData_) => {
-    fetch(GetConfig().SERVER_ADDRESS + "/questions/get/" + topic_, {
-      method: "POST",
-      crossDomain:true,
-      headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({
-        displayType: 'learn'
-      }),
-      }).then((res)=>res.json())
+    apiRequest("/questions/get/" + topic_).then((res)=>res.json())
       .then((data)=>{
         setQuestionData_(data);
       })

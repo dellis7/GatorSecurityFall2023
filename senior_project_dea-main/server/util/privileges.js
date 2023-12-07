@@ -1,3 +1,4 @@
+/** @module */
 //Imports
 const mongoose = require("mongoose")
 
@@ -12,18 +13,17 @@ const Jwt_secret_Obj = process.env.JWT_SECRET;
 //DB Models
 const User = mongoose.model("UserInfo")
 
-//Check administrative status of users
+/**
+ * Check administrative status of users
+ * @param {Request} req
+ * @returns {Number} 1 if user who initiated request is admin
+ */
 async function isAdmin(req)
 {
     try {
-        //Check for the token
-        if(req.body.token === null || req.body.token === undefined) {
-            return 0; //Not an admin if no token is provided
-        }
-
+        const token = req.headers.authorization
         //Check the user in the database to verify they are an admin
-        const adminFromToken = jwtObj.verify(req.body.token, Jwt_secret_Obj);
-        const adminEmail = adminFromToken.email;
+        const adminEmail = token.email;
 
         let admin = await User.findOne({email: adminEmail});
         if(admin.isAdmin !== true) {

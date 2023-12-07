@@ -1,0 +1,11 @@
+.text-form {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    margin-bottom: 12px;
+}
+
+.text-label {
+    display: block;
+    margin-bottom: 8px;
+}

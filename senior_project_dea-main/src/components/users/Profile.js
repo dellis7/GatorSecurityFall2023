@@ -4,6 +4,9 @@ import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCar
 import { LinkContainer } from "react-router-bootstrap";
 import '../componentStyling/textStyling.css';
 import GetConfig from '../../Config.js';
+import "./css/profile.css"
+import "./css/debug.css"
+import apiRequest from '../../util/api.js';
 
 export default class ProfilePage extends React.Component {
     constructor(props){
@@ -16,67 +19,28 @@ export default class ProfilePage extends React.Component {
     componentDidMount(){
 
       //Function that pulls the current user's profile info from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/users/userInfo", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({
-        //User is identified by their cookie assigned at login
-        token:window.localStorage.getItem("token"),
-      }),
-      }).then((res)=>res.json())
+      apiRequest("/users/userInfo").then((res)=>res.json())
       .then(data=>{
         //Set userInfo with data retrieved from backend
         this.setState({userInfo: data.data.dbUserData});
       });
 
       //Function that pulls the total number of questions from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({displayType:'learn'}),
-      }).then((res)=>res.json())
+      apiRequest("/questions/getCount/learn").then((res)=>res.json())
       .then(data=>{
         //Set the total number of learn questions to learnQuestionCount
         this.setState({learnQuestionCount: data.data})
       });
 
       //Function that pulls the total number of questions from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/questions/getCount", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({displayType:'game'}),
-      }).then((res)=>res.json())
+      apiRequest("/questions/getCount/game").then((res)=>res.json())
       .then(data=>{
         //Set the total number of fill in the blank questions to gameQuestionCount
         this.setState({gameQuestionCount: data.data})
       });
 
       //Function that pulls the total number of games from the backend
-      fetch(GetConfig().SERVER_ADDRESS + "/games/getCount", {
-        method: "POST",
-        crossDomain:true,
-        headers:{
-          "Content-Type":"application/json",
-          Accept:"application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-      },
-      body:JSON.stringify({}),
-      }).then((res)=>res.json())
+      apiRequest("/games/getCount").then((res)=>res.json())
       .then(data=>{
         //Set the total number of game questions (except for Fill in the Blank Questions) to allGamesCount
         this.setState({allGamesCount: data.data})
@@ -111,8 +75,24 @@ export default class ProfilePage extends React.Component {
 
       //This is the HTML that is rendered to the webpage
       return (
+        <div>
+        <div style={{marginRight: '2vw'}}>
+          <form  style={{marginTop: '4vh', width: '25%', marginLeft: 'auto', textAlign: 'left'}}>
+            <div style={{marginTop: '1vh', fontSize: '28px'}}>Join a Class!</div>
+            <div>
+              <div>
+                <label htmlFor="class"></label>
+                <input type="text" id="class" name="class"
+                        placeholder={"Enter the Class ID"}/>
+              </div>
+            </div>
+
+            <button type="submit" className="btn btn-primary blue btn-lg" style={{marginTop: '5vh', marginLeft: '5vw'}}>
+                Submit
+            </button>
+          </form>
+        </div>
         <section style={container}>
-          <h1 className='h1-text'>My Profile</h1>
           <MDBContainer className="py-5 h-100">
             <MDBRow className="justify-content-center align-items-center h-100">
               <MDBCol lg="8" className="mb-4 mb-lg-0">
@@ -171,6 +151,7 @@ export default class ProfilePage extends React.Component {
             </MDBRow>
           </MDBContainer>
       </section>
+      </div>
     );
   }
 }

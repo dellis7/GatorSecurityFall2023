@@ -12,10 +12,15 @@ server.use(cors());
 server.use(express.json())
 server.use(express.urlencoded({extended:true}))
 
+// Import Validators
+const { validateAuthorizationHeader } = require('./validators/authenticationValidator')
+
 //Import routes
+const loginRoutes = require('./routers/login')
 const userRoutes = require('./routers/users')
 const questionRoutes = require('./routers/questions')
 const gameRoutes = require('./routers/games')
+const classRoutes = require('./routers/classes')
 
 //Connect database
 const connectDb = require('./database/conn')
@@ -31,7 +36,14 @@ server.use(express.static('/uploads'))
 server.use('/uploads/cyoa', express.static('./uploads/cyoa'))
 server.use('/uploads/dnd', express.static('./uploads/dnd'))
 
+// Ensure Authorization header is provided for all api calls
+
+
 //Use imported routes
+
+server.use('/login', loginRoutes)
+server.use(validateAuthorizationHeader)
 server.use('/users', userRoutes)
 server.use('/questions', questionRoutes)
 server.use('/games', gameRoutes)
+server.use('/classes', classRoutes)

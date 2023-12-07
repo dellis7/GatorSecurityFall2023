@@ -1,5 +1,6 @@
 import { useState } from "react";
 import GetConfig from '../../Config.js';
+import apiRequest from '../../util/api.js';
 
 export default function QuestionForm() {
   //these states store the data fields for the question being added
@@ -11,18 +12,33 @@ export default function QuestionForm() {
   const [newDisplayType, setNewDisplayType] = useState("");
   const [newGameType, setNewGameType] = useState("");
 
+  //GAMES
+  const [gameName, setGameName] = useState("");
+
   //CYOA
-  const [groupOfQuestions, setGroupOfQuestions] = useState([""]);
-  const [groupOfImagePaths, setGroupOfImagePaths] = useState([""]);
-  const [groupOfImages, setGroupOfImages] = useState([""]);
-  const [groupOfGroupOfAnswers,setGroupOfGroupOfAnswers] = useState([[""]]);
+  // const [groupOfQuestions, setGroupOfQuestions] = useState([""]);
+  // const [groupOfImagePaths, setGroupOfImagePaths] = useState([""]);
+  // const [groupOfImages, setGroupOfImages] = useState([""]);
+  // const [groupOfGroupOfAnswers,setGroupOfGroupOfAnswers] = useState([[""]]);
   
   //DND
-  const [image, setImage] = useState([""]);
-  const [pathOfImage, setPathOfImage] = useState("");
+  const [DNDFormData, setDNDFormData] = useState({
+    image: null,
+    question: '',
+    answers: ['', '', '', '', ''], // You can adjust the number of answers based on your requirements
+  });
 
   //MM
-  //const [setOfPairsOfAnswers]
+  const [MMFormData, setMMFormData] = useState({
+    term1: '',
+    definition1: '',
+    term2: '',
+    definition2: '',
+    term3: '',
+    definition3: '',
+    term4: '',
+    definition4: '',
+  });
 
   //this function changes the question field
   const handleQuestionChange = (value) => {
@@ -78,6 +94,51 @@ export default function QuestionForm() {
     setNewAnswer(value);
   };
 
+  //this function makes a change to the gameName field
+  const handleGameNameChange = (e) => {
+    const { name, value } = e.target;
+    setGameName(value);
+  }
+
+  //this function makes a change to the MMFormData fields
+  const handleMMInputChange = (e) => {
+    const { name, value } = e.target;
+    setMMFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  //this function makes a change to the DNDFormData fields
+  const handleDNDInputChange = (e) => {
+    const { name, value } = e.target;
+    setDNDFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  //this function makes a change to the DND Answers
+  const handleDNDAnswerChange = (index, value) => {
+    setDNDFormData((prevData) => {
+      const newAnswers = [...prevData.answers];
+      newAnswers[index] = value;
+      return {
+        ...prevData,
+        answers: newAnswers,
+      };
+    });
+  };
+
+  //this function makes a change to the DND Image
+  const handleDNDImageChange = (e) => {
+    const file = e.target.files[0];
+    setDNDFormData((prevData) => ({
+      ...prevData,
+      image: file,
+    }));
+  };
+
   //this function adds additional options to the question
   const handleAddOption = () => {
     setNewOptions((options) => [...options, ""]);
@@ -94,14 +155,8 @@ export default function QuestionForm() {
     e.preventDefault()
     
     if (newDisplayType === "learn" || newGameType === "FITB") {
-      fetch(GetConfig().SERVER_ADDRESS + "/questions/create", {
+      apiRequest("/questions/create", {
         method: "POST",
-        crossDomain: true,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Access-Control-Allow-Origin":GetConfig().SERVER_ADDRESS,
-        },
         body: JSON.stringify({
           question: newQuestion,
           type: newType,
@@ -109,7 +164,6 @@ export default function QuestionForm() {
           options: newOptions,
           answer: newAnswer,
           displayType: newDisplayType,
-          token: window.localStorage.getItem("token"),
         }),
       }).then((response) => {
         if(response.status === 500)
@@ -128,7 +182,74 @@ export default function QuestionForm() {
       });
     } else if (newDisplayType === "game") {
       //here will be the fetch function(s) that inserts a new game question
+      
+        
+      
+        if (newGameType === "CYOA") {
+          //apirequest
+        }
+        else if (newGameType === "DND") {
+          //apirequest
+          fetch('DND_API_ENDPOINT', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(DNDFormData),
+          })
+            .then(response => response.json())
+            .then(data => {
+              // Handle the response from the server
+              console.log('Success:', data);
+              // You can redirect the user to another page or show a success message
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+              // Handle errors, show an error message to the user, etc.
+            });
+        }
+        else if (newGameType === "MM") {
+          const qid = apiRequest('/games/create', {
+            method: "POST",
+            body: JSON.stringify({
+              questionData: JSON.stringify([]),
+              type: 2,
+              topic: newTopic,
+              name: gameName,
+            })
+          })
+          .then(response => response.json())
+          .then((res) => {
+            const qid = res.id
+          //apirequest
+           apiRequest('/games/matching/create', {
+            method: 'POST',
+            body: JSON.stringify({
+              parentQuestionId: qid,
+              content: {
+                [MMFormData.term1]: MMFormData.definition1,
+                [MMFormData.term2]: MMFormData.definition2,
+                [MMFormData.term3]: MMFormData.definition3,
+                [MMFormData.term4]: MMFormData.definition4
 
+              }
+            })
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response from the server
+            console.log('Success:', data);
+            // You can redirect the user to another page or show a success message
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            // Handle errors, show an error message to the user, etc.
+        });
+          
+        }
+      
+        
     }
   };
 
@@ -169,11 +290,48 @@ export default function QuestionForm() {
               <option value="game">Game Page</option>
             </select>
           </div>
+          <div
+            className="form-group"
+            style={{ textAlign: "left", marginTop: 10 }}
+            >
+              <label htmlFor="form-topic" style={text}>
+                Topic
+              </label>
+              <select
+                required
+                className="form-select"
+                id="form-topic"
+                onChange={(e) => {
+                  handleTopicChange(e.target.value);
+                }}
+              >
+                <option value="">Choose a Topic</option>
+                <option value="1">Input Validation</option>
+                <option value="2">Encoding & Escaping</option>
+                <option value="3">Cross-Site Scripting</option>
+                <option value="4">SQL Injection</option>
+                <option value="5">Cryptography</option>
+                <option value="6">User Authentication</option>
+              </select>
+            </div>
+          
           {newDisplayType === "game" && (
             <div
             className="form-group"
             style={{ textAlign: "left", marginTop: 10 }}
             >
+              <div style={{marginBottom: '0.5vh'}}>
+                <label htmlFor="gameName" style={text}>Game Name</label>
+                <input
+                  type="text"
+                  id="gameName"
+                  name="gameName"
+                  onChange={handleGameNameChange}
+                  required
+                  />
+              </div>
+              <br></br>
+
               <label htmlFor="form-topic" style={text}>
                 Game Type
               </label>
@@ -191,6 +349,8 @@ export default function QuestionForm() {
                 <option value="MM">Memory Matching</option>
                 <option value="FITB">Fill in the Blank</option>
               </select>
+              <br></br>
+              
               {newGameType === "CYOA" && (
               <div>
                 CYOA
@@ -198,12 +358,151 @@ export default function QuestionForm() {
               )}
               {newGameType === "DND" && (
               <div>
-                DND
+                <form>
+                  <label htmlFor="DNDimage">Image:</label>
+                  <input
+                    type="file"
+                    id="DNDimage"
+                    name="image"
+                    accept="image/*"
+                    onChange={handleDNDImageChange}
+                    required
+                  />
+                  <br></br>
+
+                  <label htmlFor="DNDquestion">Question:</label>
+                  <input
+                    type="text"
+                    id="DNDquestion"
+                    name="DNDquestion"
+                    value={DNDFormData.question}
+                    onChange={handleDNDInputChange}
+                    required
+                  />
+                  <br></br>
+
+                  <label>Answers (in order):</label>
+                  {DNDFormData.answers.map((answer, index) => (
+                    <div key={index}>
+                      <label>{index + 1}. </label>
+                      <input
+                        type="text"
+                        value={answer}
+                        onChange={(e) => handleDNDAnswerChange(index, e.target.value)}
+                        required
+                      />
+                    </div>
+                  ))}
+                  <br></br>
+                </form>
               </div>            
               )}
               {newGameType === "MM" && (
               <div>
-                MM
+                <form id="memoryGameForm">
+                  {/* <label for="term1">Term 1:</label>
+                  <input type="text" id="term1" name="term1" required></input>
+                  <label for="definition1">Definition 1:</label>
+                  <input type="text" id="definition1" name="definition1" required></input><br></br>
+
+                  <label for="term2">Term 2:</label>
+                  <input type="text" id="term2" name="term2" required></input>
+                  <label for="definition2">Definition 2:</label>
+                  <input type="text" id="definition2" name="definition2" required></input><br></br>
+
+                  <label for="term3">Term 3:</label>
+                  <input type="text" id="term3" name="term3" required></input>
+                  <label for="definition3">Definition 3:</label>
+                  <input type="text" id="definition3" name="definition3" required></input><br></br>
+
+                  <label for="term4">Term 4:</label>
+                  <input type="text" id="term4" name="term4" required></input>
+                  <label for="definition4">Definition 4:</label>
+                  <input type="text" id="definition4" name="definition4" required></input><br></br> */}
+                  <label htmlFor="term1">Term 1:</label>
+                  <input
+                    type="text"
+                    id="term1"
+                    name="term1"
+                    value={MMFormData.term1}
+                    onChange={handleMMInputChange}
+                    required
+                  />
+                  <label htmlFor="definition1">Definition 1:</label>
+                  <input
+                    type="text"
+                    id="definition1"
+                    name="definition1"
+                    value={MMFormData.definition1}
+                    onChange={handleMMInputChange}
+                    required
+                  />
+                  <br></br>
+
+                  <label htmlFor="term2">Term 2:</label>
+                  <input
+                    type="text"
+                    id="term2"
+                    name="term2"
+                    value={MMFormData.term2}
+                    onChange={handleMMInputChange}
+                    required
+                  />
+                  <label htmlFor="definition2">Definition 2:</label>
+                  <input
+                    type="text"
+                    id="definition2"
+                    name="definition2"
+                    value={MMFormData.definition2}
+                    onChange={handleMMInputChange}
+                    required
+                  />
+                  <br></br>
+
+
+                  <label htmlFor="term3">Term 3:</label>
+                  <input
+                    type="text"
+                    id="term3"
+                    name="term3"
+                    value={MMFormData.term3}
+                    onChange={handleMMInputChange}
+                    required
+                  />
+                  <label htmlFor="definition3">Definition 3:</label>
+                  <input
+                    type="text"
+                    id="definition3"
+                    name="definition3"
+                    value={MMFormData.definition3}
+                    onChange={handleMMInputChange}
+                    required
+                  />
+                  <br></br>
+
+
+
+                  <label htmlFor="term1">Term 4:</label>
+                  <input
+                    type="text"
+                    id="term4"
+                    name="term4"
+                    value={MMFormData.term4}
+                    onChange={handleMMInputChange}
+                    required
+                  />
+                  <label htmlFor="definition4">Definition 4:</label>
+                  <input
+                    type="text"
+                    id="definition4"
+                    name="definition4"
+                    value={MMFormData.definition4}
+                    onChange={handleMMInputChange}
+                    required
+                  />
+                  <br></br>
+
+                </form>
               </div>            
               )}
               {newGameType === "FITB" && (
@@ -222,30 +521,6 @@ export default function QuestionForm() {
                       handleQuestionChange(e.target.value);
                     }}
                   ></textarea>
-                </div>
-                <div
-                className="form-group"
-                style={{ textAlign: "left", marginTop: 10 }}
-                >
-                  <label htmlFor="form-topic" style={text}>
-                    Topic
-                  </label>
-                  <select
-                    required
-                    className="form-select"
-                    id="form-topic"
-                    onChange={(e) => {
-                      handleTopicChange(e.target.value);
-                    }}
-                  >
-                    <option value="">Choose a Topic</option>
-                    <option value="1">Input Validation</option>
-                    <option value="2">Encoding & Escaping</option>
-                    <option value="3">Cross-Site Scripting</option>
-                    <option value="4">SQL Injection</option>
-                    <option value="5">Cryptography</option>
-                    <option value="6">User Authentication</option>
-                  </select>
                 </div>
                 <div
                 className="form-group"
@@ -285,30 +560,6 @@ export default function QuestionForm() {
                     handleQuestionChange(e.target.value);
                   }}
                 ></textarea>
-              </div>
-              <div
-                className="form-group"
-                style={{ textAlign: "left", marginTop: 10 }}
-              >
-                <label htmlFor="form-topic" style={text}>
-                  Topic
-                </label>
-                <select
-                  required
-                  className="form-select"
-                  id="form-topic"
-                  onChange={(e) => {
-                    handleTopicChange(e.target.value);
-                  }}
-                >
-                  <option value="">Choose a Topic</option>
-                  <option value="1">Input Validation</option>
-                  <option value="2">Encoding & Escaping</option>
-                  <option value="3">Cross-Site Scripting</option>
-                  <option value="4">SQL Injection</option>
-                  <option value="5">Cryptography</option>
-                  <option value="6">User Authentication</option>
-                </select>
               </div>
               <div
                 className="form-group"

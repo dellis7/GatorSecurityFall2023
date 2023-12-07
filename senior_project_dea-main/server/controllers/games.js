@@ -261,7 +261,10 @@ const createGame = (async(req,res) =>{
             topic: req.body.topic,
         })
         await question.save();
-        res.sendStatus(201);
+        res.status(201)
+        res.json({id: question._id})
+        
+        
         return;
     //Catch any errors
     } catch(error) {
@@ -801,7 +804,17 @@ const getMatchingById = (async(req,res) =>{
     }
 })
 
-//Create matching question endpoint controller
+
+/**
+ * Create matching question endpoint controller
+ * @param {Request} req
+ * @param {object} req.body
+ * @param {string} req.body.parentQuestionId id of GameQuestion that this question belongs to
+ * @param {object} req.body.content object where each key is a term and the value is the terms definition
+ * @returns http 201 on success
+ * @memberof /games
+ * @name matching/create
+ */
 const createMatching = (async(req,res) =>{
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);

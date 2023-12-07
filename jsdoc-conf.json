@@ -1,0 +1,9 @@
+{
+    "source": {
+        "include": [ 
+            "./senior_project_dea-main/server"
+        ],
+        "includePattern": ".+\\.js(doc|x)?$",
+        "excludePattern": ".*node_modules.*" 
+    }
+}

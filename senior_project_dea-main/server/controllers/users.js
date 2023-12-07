@@ -8,80 +8,26 @@ const bcrypt = require("bcryptjs")
 //DB Models
 const User = mongoose.model("UserInfo")
 const TraditionalQuestion = mongoose.model("TraditionalQuestionInfo")
+const AccountType = mongoose.model("AccountType")
 
 //ENV preparation
 const dotenv = require("dotenv")
 dotenv.config('./.env')
 
-//JWT information
-const jwtObj = require("jsonwebtoken");
-const Jwt_secret_Obj = process.env.JWT_SECRET;
 
-//Register endpoint controller
-const register = (async (req, res) => {
-    //Obtain user information
-    const fname = req.body.fname.toString();
-    const lname = req.body.lname.toString();
-    const email = req.body.email.toString();
-    const password = req.body.password.toString();
-    const encryptedPass = await bcrypt.hash(password, 10);
-
-    //Create the user as long as they have a unique email
-    try {
-        const existingUser = await User.findOne({email});
-
-        //If user information already exists in database, return error
-        if (existingUser) {
-            return res.send({error: "A GatorSecurity account already exists with this email address."})
-        }
-
-        await User.create({
-            fname,
-            lname,
-            email,
-            password:encryptedPass,
-        });
-        res.send({status:"ok"});
-        return;
-    } catch(error) {
-        res.send({status: "error"});
-        return;
-    }
-})
-
-//Login endpoint controller
-const login = (async (req, res) => {
-    //Obtain user information
-    const email = req.body.email.toString();
-    const password = req.body.password.toString();
-    const user=await User.findOne({email});
-
-    //If user information was not found, return error
-    if (!user) {
-        return res.json({error: "User email not found."});
-    }
-
-    //Attempt to login with provided credentials
-    if (await bcrypt.compare(password, user.password)) {
-        const tempToken = jwtObj.sign({email:user.email}, Jwt_secret_Obj);
-
-        if (res.status(201)) {
-            return res.json({status:"ok", data: tempToken});
-        } else {
-            return res.json({error:"error"});
-        }
-    }
-
-    res.json({status:"error", error:"Invalid password."})
-})
-
-//Get user info endpoint controller
+/**
+ * Get current user info endpoint controller
+ * @function
+ * @async
+ * @returns {User}
+ * @memberof /users
+ * @name userInfo
+ */
 const getUserInfo = (async (req, res) => {
     //"Grab" token from request body (req.body)
-    const {token} = req.body;
+    const user = req.headers.authorization;
     try{
         //Decode token and get email
-        const user = jwtObj.verify(token, Jwt_secret_Obj);
         const uEmail = user.email;
         //Find a user based on email and return the data
         User.findOne({email: uEmail}).then((data)=>{
@@ -96,24 +42,28 @@ const getUserInfo = (async (req, res) => {
     }
 })
 
-//Update user info endpoint controller
+/**
+ * Update user info endpoint controller
+ * @function
+ * @async
+ * @param {string} req.params.id id of user to update
+ * @param {object} req.body object containing the attributes to update of id
+ * @memberof /users
+ * @name update
+ */
 const updateUser = (async (req, res) => {
     try{
         //Set _id to the value given in url under :id
         const _id = req.params.id;
 
-        //Hash the provided password
-        if (req.body.password !== undefined) {
-            req.body.password = await bcrypt.hash(req.body.password, 10);
-        }
-
+        const token = req.headers.authorization;
         //Use provided email to find existing user in the database
-        if (req.body.email !== undefined) {
-            const email = req.body.email
+        if (token.email !== undefined) {
+            const email = token.email;
             const existingUser = await User.findOne({email});
 
             //If another user besides the one we're updating has the same email
-            if (existingUser && existingUser._id !== _id) {
+            if (existingUser && existingUser._id !== _id && !privileges.isAdmin(req)) {
                 res.sendStatus(403);
                 return;
             }
@@ -143,7 +93,14 @@ const updateUser = (async (req, res) => {
     }
 })
 
-//Get all users endpoint controller for the admin panel
+/**
+ * Get all users endpoint controller for the admin panel
+ * @function
+ * @async
+ * @returns {User[]}
+ * @memberof /users
+ * @name allUsers
+ */
 const getAllUsers = (async (req, res) => {
     //Only allow access if the request has a valid admin token
     const admin = await privileges.isAdmin(req);
@@ -172,7 +129,15 @@ const getAllUsers = (async (req, res) => {
     }
 })
 
-//Check answer and update score endpoint controller for learn questions
+/**
+ * Check answer and update score endpoint controller for learn questions
+ * @function
+ * @async
+ * @param {string} req.body.qid question id
+ * @param {string} req.body.answer answer to question
+ * @memberof /users
+ * @name updatelearnscore
+ */
 const checkAnswerAndUpdateScore = (async (req, res) => {
     try{
         //Retrieve the question being answered
@@ -180,7 +145,7 @@ const checkAnswerAndUpdateScore = (async (req, res) => {
 
         //Check to see if they answered it correctly
         if(questionData.answer === req.body.answer) {
-            const user = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+            const user = req.headers.authorization;
             const uEmail = user.email;
 
             //Get existing scores
@@ -230,13 +195,20 @@ const checkAnswerAndUpdateScore = (async (req, res) => {
     }
 })
 
-//Update score endpoint controller
+/**
+ * Update score endpoint controller
+ * @function
+ * @async
+ * @param {string} req.body.qid question id to mark complete
+ * @memberof /users
+ * @name updateScore
+ */
 const updateScore = (async (req,res) => {
     //For CYOA questions, we should score the question based on whether they got the whole thing correct,
     //so we only need to pass the parent question ID here to count it (along with the user token)
     try{
         //Obtain user
-        const user = jwtObj.verify(req.body.token, Jwt_secret_Obj);
+        const user = req.headers.authorization;
         const uEmail = user.email;
 
         const dbUser = await User.findOne({email: uEmail});
@@ -263,7 +235,14 @@ const updateScore = (async (req,res) => {
     }
 })
 
-//Check if a user is an admin endpoint controller
+/**
+ * Check if a user is an admin endpoint controller
+ * @function
+ * @async
+ * @returns status 200 if true
+ * @memberof /users
+ * @name checkPrivileges
+ */
 const checkPrivileges = (async (req, res) => {
     //Check administrative privileges
     const admin = await privileges.isAdmin(req);
@@ -280,15 +259,24 @@ const checkPrivileges = (async (req, res) => {
         return;
     }
 })
-
+/**
+ * Get list of account types
+ * @function
+ * @async
+ * @returns {AccountType[]}
+ * @memberof /users
+ * @name getAccountTypes
+ */
+const getAccountTypes = (async (req, res) => {
+    res.send(await AccountType.distinct("name"))
+})
 //Exports
 module.exports = {
-    register,
-    login,
     getUserInfo,
     updateUser,
     getAllUsers,
     checkAnswerAndUpdateScore,
     updateScore,
-    checkPrivileges
+    checkPrivileges,
+    getAccountTypes
 }
