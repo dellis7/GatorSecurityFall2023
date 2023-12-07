@@ -74,15 +74,22 @@ export default class WelcomePage extends React.Component {
       <Carousel.Item>
         <div className='w-100 d-block' style={{backgroundColor:"#E7933A", height: "20rem"}}>
           <img src='./creatorImg.png' style={image} alt="Lightbulb"></img>
-          <h5 style={title}>The Creators</h5>
+          <h5 style={title}>The Creators Part 1</h5>
           <p style={caption}>This website was created by University of Florida students Daymao Silva, Erick Gonzalez, and Annalina Becker for their Fall 2022 senior project. They were advised under Professor Cheryl Resch.</p>
         </div>
       </Carousel.Item>
       <Carousel.Item>
         <div className='w-100 d-block' style={{backgroundColor:"#2613D8", height: "20rem"}}>
           <img src='./creatorImg.png' style={image} alt="Lightbulb"></img>
-          <h5 style={title}>The Creators</h5>
+          <h5 style={title}>The Creators Part 2</h5>
           <p style={caption}>Development of this website was continued in Spring 2023 by University of Florida seniors Jacob Boney, Kerry Hannigan, Brian Hoblin, Dylan Tosh, and Connor Wojtak under Professor Cheryl Resch.</p>
+        </div>
+      </Carousel.Item>
+      <Carousel.Item>
+        <div className='w-100 d-block' style={{backgroundColor:"#2613D8", height: "20rem"}}>
+          <img src='./creatorImg.png' style={image} alt="Lightbulb"></img>
+          <h5 style={title}>The Creators Part 3</h5>
+          <p style={caption}>Development of this website was continued in Fall 2023 by University of Florida seniors Deven Ellis, Hunter Ver Helst, Andrew Krawczyk, and Brien Boudreau under Professor Cheryl Resch.</p>
         </div>
       </Carousel.Item>
     </Carousel>
