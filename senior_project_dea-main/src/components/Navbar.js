@@ -107,11 +107,12 @@ const navbarStyle = {
                       Question Editor
                     </NavDropdown.Item>
                   </LinkContainer>
-                  <LinkContainer to="/admin/classmanagement" style={dropdownItem}>
+                  {/* <LinkContainer to="/admin/classmanagement" style={dropdownItem}>
                   <NavDropdown.Item style={dropdownItem} eventKey={3.3}>
                     Manage Classes
                   </NavDropdown.Item>
-                </LinkContainer></>
+                </LinkContainer> */}
+                </>
               }
               <LinkContainer to="/log-out" style={dropdownItem}>
                 <NavDropdown.Item style={dropdownItem} eventKey={3.4}>
