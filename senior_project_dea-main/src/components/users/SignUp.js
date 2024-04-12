@@ -25,7 +25,7 @@ export default class SignUp extends Component {
     const{fname, lname, email, password} = this.state;
 
     //Function that registers the user in the backend
-    apiRequest("/users/register", {
+    apiRequest("/login/register", {
       method: "POST",
       body:JSON.stringify({
         fname,
